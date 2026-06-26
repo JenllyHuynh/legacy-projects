@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Watering System - Flow Chart</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="flowchart-container">
+        <div class="controls">
+            <button class="control-btn back-btn" onclick="goBack()">← Back</button>
+        </div>
+
+        <div class="mermaid">
+            flowchart TD
+                Start[System startup] --> CheckWiFi{Have WiFi config ?}
+                CheckWiFi -->|No| APMode[Create Access Point Web Config]
+                APMode --> UserConfig[User enters WiFi]
+                UserConfig --> SaveRestart[Save and Restart]
+                SaveRestart --> Start
+                CheckWiFi -->|Yes| Connect[WiFi connection]
+                Connect --> Dashboard[Launch Web Dashboard]
+                Dashboard --> MainLoop[Main loop]
+                MainLoop --> CheckMode{Mode ?}
+                CheckMode -->|AUTO| ReadSensor[Read humidity sensor]
+                ReadSensor --> Compare{Humidity < Threshold ?}
+                Compare -->|Yes| PumpOn[Turn on the pump]
+                Compare -->|No| PumpOff[Turn off the pump]
+                CheckMode -->|MANUAL| WaitCommand[Waiting for command from Web]
+                WaitCommand --> WebRequest{Is there a watering order ?}
+                WebRequest -->|Yes| ManualPump[Turn on the pump for 10s]
+                WebRequest -->|No| WaitCommand
+                PumpOn --> UpdateStatus[Update Web Dashboard]
+                PumpOff --> UpdateStatus
+                ManualPump --> UpdateStatus
+                UpdateStatus --> MainLoop
+
+                style Start fill:#4CAF50,color:#fff
+                style APMode fill:#FF9800,color:#fff
+                style Dashboard fill:#2196F3,color:#fff
+                style PumpOn fill:#f44336,color:#fff
+                style PumpOff fill:#9E9E9E,color:#fff
+                style ManualPump fill:#9C27B0,color:#fff
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <script src="flowchart.js"></script>
+</body>
+
+</html>

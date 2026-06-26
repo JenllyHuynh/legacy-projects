@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatic watering machine</title>
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS/bootstrap-layout.css">
+</head>
+
+<body>
+    <!-- Setlogo FPT all slides-->
+    <div class="logo">
+        <img src="img/Logo_FPT.png" altL="Logo fpt">
+    </div>
+
+    <!-- Khung chứa chính của bài thuyết trình -->
+    <div class="presentation-container" id="presentation-container">
+
+        <!-- Slide: Tiêu đề -->
+        <div class="slide active">
+            <div class="slide-content centered">
+                <h1 class="title">Automatic Watering Machine</h1>
+                <h2 class="subtitle">Project Proposal IOT102</h2>
+                <div class="presenter-info">
+                    <p class="presenter">Presentation by: Group 2</p>
+                    <p class="presenter mentor">Mentor: HanhNH</p>
+                </div>
+            </div>
+            <div class="member-decoration decoration-1">🌱</div>
+            <div class="member-decoration decoration-2">💧</div>
+        </div>
+
+        <!-- Slide Member -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2 class="section-title">Team Members</h2>
+                <div class="member-container">
+                    <!-- Cột trái -->
+                    <div class="member-column left">
+                        <div class="member-card">
+                            <div class="member-name">Nguyễn Minh Triết</div>
+                            <div class="member-role">Team Leader + Web server</div>
+                        </div>
+                        <div class="member-card">
+                            <div class="member-name">Phan Bảo Thắng</div>
+                            <div class="member-role">Setup Waterpump + soil moisture</div>
+                        </div>
+                        <div class="member-card">
+                            <div class="member-name">Huỳnh Minh Khang</div>
+                            <div class="member-role">Setup Waterpump + Soil moisture</div>
+                        </div>
+                        <div class="member-card">
+                            <div class="member-name">Lê Trường An</div>
+                            <div class="member-role">Weather API + Config main.cpp</div>
+                        </div>
+                    </div>
+                    <!-- Cột phải -->
+                    <div class="member-column right">
+                        <div class="member-card">
+                            <div class="member-name">Nguyễn Tấn Vinh</div>
+                            <div class="member-role">Weather API + Config main.cpp</div>
+                        </div>
+                        <div class="member-card">
+                            <div class="member-name">Huỳnh Kim Huệ</div>
+                            <div class="member-role">Contents + UI/UX Des + Web server</div>
+                        </div>
+                        <div class="member-card">
+                            <div class="member-name">Trần Văn Cường</div>
+                            <div class="member-role">Hardware + WiFi</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="member-decoration decoration-1">🌱</div>
+                <div class="member-decoration decoration-2">💧</div>
+            </div>
+        </div>
+
+        <!-- Slide: Giới thiệu sơ qua về lý do chọn chủ đề -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2 class="section-title">Why We Chose This Topic</h2>
+                <div class="reason-container">
+                    <!-- Phần biểu đồ bên trái -->
+                    <div class="reason-chart">
+                        <div class="chart-wrapper">
+                            <div class="char-contentner">
+                                <canvas id="myPieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Phần nội dung bên phải -->
+                    <div class="reason-content">
+                        <div class="reason-text">
+                            <p>
+                                Agriculture is one of Vietnam's <span class="stat-highlight">key economic
+                                    sectors</span>,
+                                currently accounting for approximately <span class="stat-highlight">40%</span> of the
+                                national labor force.
+                                The sector contributes around <span class="stat-highlight">16%</span> to the country's
+                                GDP,
+                                with an average annual growth rate reaching up to <span
+                                    class="stat-highlight">13.5%</span>.
+                            </p>
+                        </div>
+                        <div class="reason-features">
+                            <div class="feature-item">
+                                <div class="feature-text">
+                                    <li>High applicability</li>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-text">
+                                    <li>Labor-saving</li>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-text">
+                                    <li>Promotes digital transformation in agriculture</li>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-text">
+                                    <li>Supports rural development</li>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reason-decoration decoration-text">🌱</div>
+            </div>
+        </div>
+
+        <!-- Slide: Mục Tiêu & Phạm Vi -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2 class="section-title">Project Objectives and Scope</h2>
+                <div class="objectives-container">
+                    <!-- Cột Objectives -->
+                    <div class="objectives-column">
+                        <h3 class="column-title">Project Objectives</h3>
+                        <div class="objective-card">
+                            <div class="objective-number">1</div>
+                            <div class="objective-content">
+                                <div class="objective-title">Build Automatic Watering System</div>
+                                <p class="objective-description">Develop a smart irrigation system using ESP32
+                                    microcontroller for automated plant care</p>
+                            </div>
+                        </div>
+                        <div class="objective-card">
+                            <div class="objective-number">2</div>
+                            <div class="objective-content">
+                                <div class="objective-title">Smart Environment Monitoring</div>
+                                <p class="objective-description">Measure soil moisture levels and integrate weather API
+                                    data to make intelligent watering decisions</p>
+                            </div>
+                        </div>
+                        <div class="objective-card">
+                            <div class="objective-number">3</div>
+                            <div class="objective-content">
+                                <div class="objective-title">Web-Based Control System</div>
+                                <p class="objective-description">Process sensor data and execute commands through a
+                                    responsive web server interface</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Cột Scope -->
+                    <div class="scope-column">
+                        <h3 class="column-title">Project Scope</h3>
+                        <div class="scope-card">
+                            <div class="scope-title">Implementation Focus</div>
+                            <ul class="scope-items">
+                                <li>Designed for potted plant systems</li>
+                                <li>Single plant monitoring and irrigation</li>
+                                <li>Indoor gardening applications</li>
+                            </ul>
+                        </div>
+                        <div class="scope-card">
+                            <div class="scope-title">Technical Specifications</div>
+                            <ul class="scope-items">
+                                <li>Utilizes simple humidity sensors</li>
+                                <li>ESP32-based control system</li>
+                                <li>Basic weather data integration</li>
+                                <li>Web server for remote monitoring</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="objectives-decoration decoration-scope">📋</div>
+            </div>
+        </div>
+
+        <!-- Slide về khó khăn của nhóm trong quá trình làm bài -->
+        <div class="slide">
+            <div class="slide-content difficulties-slide">
+                <h2 class="section-title">Project Implementation Challenges</h2>
+                <div class="difficulties-container">
+                    <!-- Cột trái -->
+                    <div class="difficulties-column left-column">
+                        <!-- System Configuration -->
+                        <div class="difficulty-card compact">
+                            <div class="difficulty-header">
+                                <div class="difficulty-number">1</div>
+                                <h3 class="difficulty-title">System Configuration</h3>
+                            </div>
+                            <ul class="difficulty-items">
+                                <li>Manual ESP32 Access Point connection</li>
+                                <li>No WiFi credential recovery</li>
+                                <li>Limited user feedback</li>
+                            </ul>
+                            <div class="difficulty-tag configuration">Config</div>
+                        </div>
+                        <!-- Hardware Constraints -->
+                        <div class="difficulty-card compact">
+                            <div class="difficulty-header">
+                                <div class="difficulty-number">2</div>
+                                <h3 class="difficulty-title">Hardware Constraints</h3>
+                            </div>
+                            <ul class="difficulty-items">
+                                <li>Frequent sensor calibration needed</li>
+                                <li>Single-point measurement limitation</li>
+                                <li>Relay noise interference</li>
+                            </ul>
+                            <div class="difficulty-tag hardware">Hardwaret</div>
+                        </div>
+                        <!-- Weather API Dependency -->
+                        <div class="difficulty-card compact">
+                            <div class="difficulty-header">
+                                <div class="difficulty-number">3</div>
+                                <h3 class="difficulty-title">Weather API Issues</h3>
+                            </div>
+                            <ul class="difficulty-items">
+                                <li>Internet dependency for forecasts</li>
+                                <li>API rate limits restriction</li>
+                                <li>Inaccurate local predictions</li>
+                            </ul>
+                            <div class="difficulty-tag api">API</div>
+                        </div>
+                    </div>
+                    <!-- Cột phải -->
+                    <div class="difficulties-column">
+                        <!-- Scalability Issues -->
+                        <div class="difficulty-card">
+                            <div class="difficulty-header">
+                                <div class="difficulty-number">4</div>
+                                <h3 class="difficulty-title">Scalability Issues</h3>
+                            </div>
+                            <ul class="difficulty-items">
+                                <li>Current design supports only one moisture sensor and one water pump</li>
+                                <li>Difficult to expand for multiple plant zones</li>
+                                <li>Web interface lacks multi-user access control</li>
+                            </ul>
+                            <div class="difficulty-tag scalability">Scalability</div>
+                        </div>
+                        <!-- Development Challenges -->
+                        <div class="difficulty-card">
+                            <div class="difficulty-header">
+                                <div class="difficulty-number">5</div>
+                                <h3 class="difficulty-title">Development Challenges</h3>
+                            </div>
+                            <ul class="difficulty-items">
+                                <li>Limited debugging capabilities on embedded systems</li>
+                                <li>Memory constraints when handling large HTML/CSS/JS content</li>
+                                <li>Team members had varying levels of experience with ESP32 platform</li>
+                            </ul>
+                            <div class="difficulty-tag development">Development</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Silde về phần cứng của project -->
+        <div class="slide">
+            <div class="slide-content hardware-slide">
+                <h2 class="title">Hardware Components</h2>
+                <div class="hardware-grid-modern">
+                    <!-- Board -->
+                    <div class="hardware-card">
+                        <div class="hardware-img-container">
+                            <img src="img/board.jpg" alt="Development Board">
+                        </div>
+                        <div class="hardware-content">
+                            <h4>Board</h4>
+                            <p class="hardware-description">Main microcontroller acting as the brain of the irrigation
+                                system</p>
+                        </div>
+                    </div>
+                    <!-- ESP32 Module-->
+                    <div class="hardware-card">
+                        <div class="hardware-img-container">
+                            <img src="img/esp32.jpg" alt="ESP32 Module">
+                        </div>
+                        <div class="hardware-content">
+                            <h4>ESP32 Module</h4>
+                            <p class="hardware-description">WiFi module for Internet connectivity and remote control</p>
+                        </div>
+                    </div>
+                    <!-- Environmental Sensors -->
+                    <div class="hardware-card">
+                        <div class="hardware-img-container">
+                            <img src="img/sensor.jpg" alt="Environmental Sensors">
+                        </div>
+                        <div class="hardware-content">
+                            <h4>Relay Module</h4>
+                            <p class="hardware-description">Temperature and humidity sensors for environment monitoring
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Soil Moisture Sensor -->
+                    <div class="hardware-card">
+                        <div class="hardware-img-container">
+                            <img src="img/soil.jpg" alt="Soil Moisture Sensor">
+                        </div>
+                        <div class="hardware-content">
+                            <h4>Soil Moisture Sensor</h4>
+                            <p class="hardware-description">Measures water content in soil for smart irrigation
+                                decisions</p>
+                        </div>
+                    </div>
+                    <!-- Water Pump -->
+                    <div class="hardware-card">
+                        <div class="hardware-img-container">
+                            <img src="img/pump.jpg" alt="Water Pump">
+                        </div>
+                        <div class="hardware-content">
+                            <h4>Water Pump</h4>
+                            <p class="hardware-description">Automated water supply controlled by the system</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Circuit Diagram Slide -->
+        <div class="slide">
+            <div class="slide-content circuit-slide">
+                <h2 class="section-title">Circuit Diagram</h2>
+                <div class="circuit-container">
+                    <div class="circuit-image-wrapper">
+                        <img src="img/0.4.png" alt="Circuit Diagram" class="circuit-image">
+                    </div>
+                    <div class="circuit-info">
+                        <div class="circuit-features">
+                            <div class="circuit-feature">
+                                <span class="feature-text">ESP32</span>
+                            </div>
+                            <div class="circuit-feature">
+                                <span class="feature-text">Soil Moisture Sensor</span>
+                            </div>
+                            <div class="circuit-feature">
+                                <span class="feature-text">Relay Module</span>
+                            </div>
+                            <div class="circuit-feature">
+                                <span class="feature-text">Water Pump</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+        <!-- Slide flow chart -->
+        <div class="slide">
+            <div class="slide-content centered">
+                <h2 class="section-title">System Flowchart</h2>
+                <button class="flowchart-btn" onclick="window.open('flowchart.html', '_blank')">
+                    View Detailed Flowchart
+                </button>
+            </div>
+        </div>
+
+        <!-- Slide: Sơ đồ diagram-->
+        <div class="slide">
+            <div class="slide-content diagram-slide">
+                <h2 class="diagram-title">System Architecture</h2>
+                <h3 class="diagram-subtitle">Class Diagram</h3>
+                <div class="diagram-container">
+                    <img src="img/classdiagram.png" alt="Class Diagram" class="diagram">
+                </div>
+                <!-- LinkDBdiagram -->
+                <div class="diagram-source">
+                    <span class="db-credit">
+                        Designed using <a
+                            href="https://dbdiagram.io/d/SE1908_Group2_Auto_Watering_System_ProjectProposal-68dc8f65d2b621e422b18755"
+                            target="_blank" class="source-link">DBdiagram</a>
+                    </span>
+                    <button class="source-btn" onclick="openDBDiagram()">
+                        View
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video demo của sản phẩm-->
+        <div class="slide">
+            <div class="slide-content video-slide">
+                <h2 class="section-title">Video Demo</h2>
+                <div class="video-container">
+                    <div class="video-wrapper">
+                        <video class="demo-video" controls poster="img/video-poster.jpg">
+                            <source src="vid/video.mp4" type="video/mp4">
+                            404 not found
+                        </video>
+                        <div class="video-overlay">
+                            <div class="play-button">
+                                <svg width="80" height="80" viewBox="0 0 80 80">
+                                    <circle cx="40" cy="40" r="38" fill="#4CAF50" fill-opacity="0.9" stroke="white"
+                                        stroke-width="2" />
+                                    <polygon points="32,25 32,55 52,40" fill="white" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Video description</h3>
+                        <p class="video-description">
+                            Watch our smart irrigation system automatically monitor soil moisture levels
+                            and activate the water pump when needed. The system integrates real-time
+                            sensor data with web-based controls for optimal plant care.
+                        </p>
+                        <div class="video-features">
+                            <div class="video-feature">
+                                <span class="feature-text">Smart moisture detection</span>
+                            </div>
+                            <div class="video-feature">
+                                <span class="feature-text">Real-time monitoring</span>
+                            </div>
+                            <div class="video-feature">
+                                <span class="feature-text">Web control interface</span>
+                            </div>
+                            <div class="video-feature">
+                                <span class="feature-text">Automatic pump control</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-controls">
+                    <button class="control-btn video-control" onclick="playVideo()">
+                        <span class="btn-icon">▶</span>
+                        Play
+                    </button>
+                    <button class="control-btn video-control secondary" onclick="pauseVideo()">
+                        <span class="btn-icon">⏸</span>
+                        Pause
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide: Giải pháp đề xuất cải thiện -->
+        <div class="slide">
+            <div class="slide-content solutions-slide">
+                <h2 class="section-title">Our Proposed Solutions</h2>
+                <div class="solutions-grid-compact">
+                    <!-- Giải pháp 1: Telegram Integration -->
+                    <div class="solution-card-compact">
+                        <div class="solution-header-compact">
+                            <div class="solution-number-compact">1</div>
+                            <div class="solution-title-section-compact">
+                                <h3 class="solution-title-compact">Telegram Notification Integration</h3>
+                                <div class="solution-tag-compact telegram">Bot Integration</div>
+                            </div>
+                        </div>
+                        <div class="problem-section-compact">
+                            <div class="problem-label-compact">Current Issue:</div>
+                            <div class="problem-text-compact">No remote monitoring or notification system</div>
+                        </div>
+                        <div class="divider-compact"></div>
+                        <div class="proposed-solution-compact">
+                            <div class="solution-label-compact">Proposed Solution:</div>
+                            <ul class="solution-features-compact">
+                                <li>
+                                    <span class="feature-text-compact">Integrate Telegram Bot API for real-time
+                                        notifications</span>
+                                </li>
+                                <li>
+                                    <span class="feature-text-compact">Send alerts when watering is completed</span>
+                                </li>
+                                <li>
+                                    <span class="feature-text-compact">Notify users about system errors or sensor
+                                        failures</span>
+                                </li>
+                                <li>
+                                    <span class="feature-text-compact">Allow basic remote control commands via Telegram
+                                        chat</span>
+                                </li>
+                                <li>
+                                    <span class="feature-text-compact">Receive daily moisture reports and watering
+                                        schedule updates</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="benefits-section-compact">
+                            <div class="benefits-tags-compact">
+                                <span class="benefit-tag-compact">Remote Monitoring</span>
+                                <span class="benefit-tag-compact">Instant Alerts</span>
+                                <span class="benefit-tag-compact">Mobile Control</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Giải pháp 2: Multiple Sensor Support -->
+                    <div class="solution-card-compact">
+                        <div class="solution-header-compact">
+                            <div class="solution-number-compact">2</div>
+                            <div class="solution-title-section-compact">
+                                <h3 class="solution-title-compact">Multiple Sensor & Zone Support</h3>
+                                <div class="solution-tag-compact hardware">Hardware Expansion</div>
+                            </div>
+                        </div>
+                        <div class="problem-section-compact">
+                            <div class="problem-label-compact">Current Issue:</div>
+                            <div class="problem-text-compact">Single sensor and pump configuration limits scalability
+                            </div>
+                        </div>
+                        <div class="divider-compact"></div>
+                        <div class="proposed-solution-compact">
+                            <div class="solution-label-compact">Proposed Solution:</div>
+                            <ul class="solution-features-compact">
+                                <li>
+                                    <span class="feature-text-compact">Support for multiple soil moisture sensors (up to
+                                        4-6 zones)</span>
+                                </li>
+                                <li>
+                                    <span class="feature-text-compact">Independent watering control for each zone</span>
+                                </li>
+                                <li>
+                                    <span class="feature-text-compact">Zone-specific moisture thresholds and
+                                        schedules</span>
+                                </li>
+                                <li>
+                                    <span class="feature-text-compact">Priority-based watering queue management</span>
+                                </li>
+                                <li>
+                                    <span class="feature-text-compact">Expandable architecture using I2C
+                                        multiplexers</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="features-breakdown-compact">
+                            <div class="features-grid-compact">
+                                <div class="feature-item-compact">
+                                    <span class="feature-text-small-compact">Zone naming</span>
+                                </div>
+                                <div class="feature-item-compact">
+                                    <span class="feature-text-small-compact">Custom durations</span>
+                                </div>
+                                <div class="feature-item-compact">
+                                    <span class="feature-text-small-compact">Weather integration</span>
+                                </div>
+                                <div class="feature-item-compact">
+                                    <span class="feature-text-small-compact">Zone mapping</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="benefits-section-compact">
+                            <div class="benefits-tags-compact">
+                                <span class="benefit-tag-compact">Scalability</span>
+                                <span class="benefit-tag-compact">Flexibility</span>
+                                <span class="benefit-tag-compact">Precision</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide: Tổng kết và Cảm ơn -->
+        <div class="slide">
+            <div class="slide-content centered">
+                <h1 class="title">Thank You !</h1>
+                <p class="presenter">Thanks for listening to the presentation.</p>
+                <p class="question">Question</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thanh điều khiển -->
+    <div class="controls">
+        <button id="prevBtn" class="control-btn">Before</button>
+        <span id="slideCounter" class="slide-counter">1 / 7</span>
+        <button id="nextBtn" class="control-btn">After</button>
+    </div>
+
+    <!-- Phần chức năng cho từng phần cứng -->
+    <div id="hardwareModal" class="hardware-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <img id="modalImage" src="" alt="">
+            <div class="modal-text">
+                <h3 id="modalTitle"></h3>
+                <p id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
