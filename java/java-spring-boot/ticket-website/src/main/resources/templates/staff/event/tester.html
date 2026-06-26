@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Poppins:wght@300;400;500;600;700;800;900&amp;display=swap"
+            rel="stylesheet" />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1E63FF",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Poppins", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .filled-star {
+            font-variation-settings: 'FILL' 1;
+            color: #fbbf24;
+        }
+    </style>
+    <style>
+        .tab-container{
+            position: relative;
+        }
+
+        .tab-content{
+            position: absolute;
+            width:100%;
+            top:0;
+            left:0;
+
+            opacity:0;
+            transform: translateX(30px);
+            pointer-events:none;
+
+            transition: all 0.35s ease;
+        }
+
+        .tab-content.active{
+            opacity:1;
+            transform: translateX(0);
+            pointer-events:auto;
+            position:relative;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+<div class="layout-container flex h-full grow flex-col">
+    <!-- Header / Navigation -->
+    <header
+            class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4 sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <div class="text-primary">
+                <span class="material-symbols-outlined text-3xl">event_available</span>
+            </div>
+            <h2 class="text-xl font-bold tracking-tight">Event Details</h2>
+        </div>
+        <div class="flex gap-3">
+            <button
+                    class="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                <span class="material-symbols-outlined text-slate-600 dark:text-slate-300">share</span>
+            </button>
+            <button
+                    class="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                <span class="material-symbols-outlined text-slate-600 dark:text-slate-300">favorite</span>
+            </button>
+            <button
+                    class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-xl font-bold transition-colors">
+                Register
+            </button>
+        </div>
+    </header>
+    <main class="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
+        <!-- Hero Section -->
+        <div class="@container mb-8">
+            <div class="relative h-80 w-full overflow-hidden rounded-xl shadow-lg">
+                <div class="absolute inset-0 bg-cover bg-center"
+                     data-alt="Modern tech conference stage with bright lighting"
+                     style="background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0,0,0,0) 50%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuClsXASx5dEN7HyWGYo1U5DvDBQonn71TXssBQPZk7RGbpnHki5aICt08LSQ_tOlVKuMjRDX4hHfEfFPVvvoVcae8fc5KMTqfEirhTwL50XhuOIR10NAg5-DZLqs86NdgSO7Bl86xNwBsjuMm0zkooqxewskcAmMP8kKOmbWiOWhmGwfQceM42IVyb9wN-ABy0S_bmggLi1so3cTCRkAUxACh0LVvjbLSHWoA0r_kdSpcJXyUT_IabKu39gxt8nV_gXS8NB4-BHDpLX');">
+                </div>
+                <div class="absolute bottom-0 left-0 p-8">
+                        <span
+                                class="inline-block bg-primary text-white text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wider">Tech
+                            Summit 2024</span>
+                    <h1 class="text-white text-4xl font-extrabold leading-tight">Future of Digital Innovation</h1>
+                    <p class="text-slate-200 mt-2 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">calendar_today</span> Oct 12-14, 2024 • San
+                        Francisco, CA
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Tabbed Navigation -->
+        <div class="border-b border-slate-200 dark:border-slate-800 mb-8 overflow-x-auto">
+            <nav class="flex gap-8 min-w-max" id="tab-navigation">
+                <a class="tab-link border-b-2 border-primary py-4 text-primary font-bold transition-colors"
+                   data-tab="overview" href="javascript:void(0)">Overview</a>
+                <a class="tab-link border-b-2 border-transparent py-4 text-slate-500 dark:text-slate-400 font-semibold hover:text-primary transition-colors"
+                   data-tab="venue" href="javascript:void(0)">Venue</a>
+                <a class="tab-link border-b-2 border-transparent py-4 text-slate-500 dark:text-slate-400 font-semibold hover:text-primary transition-colors"
+                   data-tab="tickets" href="javascript:void(0)">Ticket Types</a>
+                <a class="tab-link border-b-2 border-transparent py-4 text-slate-500 dark:text-slate-400 font-semibold hover:text-primary transition-colors"
+                   data-tab="reviews" href="javascript:void(0)">Reviews</a>
+            </nav>
+        </div>
+        <!-- Reviews Tab Content -->
+        <div class="relative min-h-[400px]" id="tab-container">
+            <!-- Overview Content -->
+            <div class="tab-content active" id="overview">
+                <div
+                        class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                    <h3 class="text-2xl font-bold mb-4">About the Event</h3>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+                        Join us for the Future of Digital Innovation 2024, the premier gathering for tech
+                        visionaries, developers, and industry leaders. This year, we're diving deep into AI ethics,
+                        scalable architecture, and the next generation of web technologies.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-primary">psychology</span>
+                            <div>
+                                <h4 class="font-bold">Expert Keynotes</h4>
+                                <p class="text-sm text-slate-500">Learn from industry giants and pioneers.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-primary">groups</span>
+                            <div>
+                                <h4 class="font-bold">Networking</h4>
+                                <p class="text-sm text-slate-500">Connect with over 1,000 professional attendees.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Venue Content -->
+            <div class="tab-content hidden-tab" id="venue">
+                <div
+                        class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                    <h3 class="text-2xl font-bold mb-4">The Venue</h3>
+                    <div
+                            class="aspect-video w-full bg-slate-100 dark:bg-slate-800 rounded-lg mb-6 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-4xl text-slate-400">map</span>
+                    </div>
+                    <h4 class="font-bold text-lg">Moscone Center</h4>
+                    <p class="text-slate-500 mb-4">747 Howard St, San Francisco, CA 94103</p>
+                    <p class="text-slate-600 dark:text-slate-300">Located in the heart of San Francisco, the Moscone
+                        Center is world-renowned for its modern facilities and central location.</p>
+                </div>
+            </div>
+            <!-- Tickets Content -->
+            <div class="tab-content hidden-tab" id="tickets">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div
+                            class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                        <h4 class="text-xl font-bold mb-2">General Admission</h4>
+                        <div class="text-3xl font-black text-primary mb-4">$499</div>
+                        <ul class="space-y-2 mb-6 text-slate-600 dark:text-slate-300">
+                            <li class="flex items-center gap-2"><span
+                                    class="material-symbols-outlined text-green-500 text-sm">check_circle</span> All
+                                main stage sessions</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                Exhibition hall access</li>
+                        </ul>
+                        <button
+                                class="w-full py-2 border-2 border-primary text-primary font-bold rounded-lg hover:bg-primary hover:text-white transition-colors">Select</button>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-primary shadow-lg">
+                        <div
+                                class="bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded absolute -top-3 right-6">
+                            POPULAR</div>
+                        <h4 class="text-xl font-bold mb-2">VIP Pass</h4>
+                        <div class="text-3xl font-black text-primary mb-4">$899</div>
+                        <ul class="space-y-2 mb-6 text-slate-600 dark:text-slate-300">
+                            <li class="flex items-center gap-2"><span
+                                    class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                Priority seating</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                Exclusive networking lounge</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                After-party invite</li>
+                        </ul>
+                        <button
+                                class="w-full py-2 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors">Select</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Reviews Content -->
+            <div class="tab-content hidden-tab" id="reviews">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left Column: Stats & Post Review -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <!-- Rating Summary Card -->
+                        <div
+                                class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                            <h3 class="text-lg font-bold mb-4">Attendee Rating</h3>
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="text-5xl font-black text-slate-900 dark:text-white">4.8</div>
+                                <div class="flex flex-col">
+                                    <div class="flex text-amber-400">
+                                        <span class="material-symbols-outlined filled-star">star</span>
+                                        <span class="material-symbols-outlined filled-star">star</span>
+                                        <span class="material-symbols-outlined filled-star">star</span>
+                                        <span class="material-symbols-outlined filled-star">star</span>
+                                        <span class="material-symbols-outlined filled-star">star_half</span>
+                                    </div>
+                                    <span class="text-sm text-slate-500">Based on 124 reviews</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">5</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" style="width: 85%"></div>
+                                    </div>
+                                    <span class="text-xs text-slate-500 w-8 text-right">85%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">4</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" style="width: 10%"></div>
+                                    </div>
+                                    <span class="text-xs text-slate-500 w-8 text-right">10%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">3</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" style="width: 3%"></div>
+                                    </div>
+                                    <span class="text-xs text-slate-500 w-8 text-right">3%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">2</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" style="width: 1%"></div>
+                                    </div>
+                                    <span class="text-xs text-slate-500 w-8 text-right">1%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">1</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" style="width: 1%"></div>
+                                    </div>
+                                    <span class="text-xs text-slate-500 w-8 text-right">1%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Leave a Review Section -->
+                        <div
+                                class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                            <h3 class="text-lg font-bold mb-4">Leave a Review</h3>
+                            <p class="text-sm text-slate-500 mb-4">Share your experience with other attendees.</p>
+                            <div class="flex gap-1 mb-4">
+                                <button
+                                        class="material-symbols-outlined text-slate-300 hover:text-amber-400 transition-colors cursor-pointer">star</button>
+                                <button
+                                        class="material-symbols-outlined text-slate-300 hover:text-amber-400 transition-colors cursor-pointer">star</button>
+                                <button
+                                        class="material-symbols-outlined text-slate-300 hover:text-amber-400 transition-colors cursor-pointer">star</button>
+                                <button
+                                        class="material-symbols-outlined text-slate-300 hover:text-amber-400 transition-colors cursor-pointer">star</button>
+                                <button
+                                        class="material-symbols-outlined text-slate-300 hover:text-amber-400 transition-colors cursor-pointer">star</button>
+                            </div>
+                            <textarea
+                                    class="w-full h-32 p-3 text-sm border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all dark:text-slate-100 mb-4"
+                                    placeholder="Describe your experience at the event..."></textarea>
+                            <button
+                                    class="w-full bg-primary text-white py-2.5 rounded-lg font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+                                Post Review
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Right Column: Review List -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-xl font-bold">What people are saying</h3>
+                            <div class="flex gap-2">
+                                <select
+                                        class="text-sm bg-transparent border-none font-medium text-slate-600 dark:text-slate-400 focus:ring-0 cursor-pointer">
+                                    <option>Most Recent</option>
+                                    <option>Highest Rating</option>
+                                    <option>Lowest Rating</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Sample Review 1 -->
+                        <div
+                                class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <img alt="Attendee Profile"
+                                         class="w-12 h-12 rounded-full object-cover border-2 border-primary/10"
+                                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuAndOxIg9cocskqhZMATETZ1zpaGFyE5gZwY4IrxzEMhKsNBiMSMUSgID1lwuU0pgH3i5S-VxWdrPBbS8SG-0uWjfRjECP9C_5IVT9DEo03XRiP58xIhKo4MIyWuxAfVsZw7QTf09k3UYZBNliKHbeCKHbmpj_qBzcTcrqdbI9K0nUxKa3g_E5bqVI-93ZlSYwHs9wDEVRWYwEd8J5GQg6EX6yCtoVvH1Vo8UT8K2pdSuit0ksKo7lALw_Tk-8kyjBtoXOot5kDgcId" />
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 dark:text-white">Marcus Sterling</h4>
+                                        <p class="text-xs text-slate-500">September 12, 2024</p>
+                                    </div>
+                                </div>
+                                <div class="flex text-amber-400">
+                                    <span class="material-symbols-outlined filled-star">star</span>
+                                    <span class="material-symbols-outlined filled-star">star</span>
+                                    <span class="material-symbols-outlined filled-star">star</span>
+                                    <span class="material-symbols-outlined filled-star">star</span>
+                                    <span class="material-symbols-outlined filled-star">star</span>
+                                </div>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed italic">
+                                "The networking opportunities this year were absolutely unparalleled. I've been to
+                                many tech summits, but the quality of workshops and the ease of connecting with
+                                founders made this one stand out. Definitely worth the VIP pass!"
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-12">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <div class="flex justify-center gap-4 mb-6">
+                <span class="material-symbols-outlined text-slate-400">language</span>
+                <span class="material-symbols-outlined text-slate-400">share</span>
+                <span class="material-symbols-outlined text-slate-400">info</span>
+            </div>
+            <p class="text-slate-500 text-sm">© 2024 Tech Summit Events. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tabLinks = document.querySelectorAll('.tab-link');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const targetTabId = link.getAttribute('data-tab');
+
+                // 1. Update UI: Active Tab Link
+                tabLinks.forEach(l => {
+                    l.classList.remove('border-primary', 'text-primary', 'font-bold');
+                    l.classList.add('border-transparent', 'text-slate-500', 'dark:text-slate-400', 'font-semibold');
+                });
+                link.classList.remove('border-transparent', 'text-slate-500', 'dark:text-slate-400', 'font-semibold');
+                link.classList.add('border-primary', 'text-primary', 'font-bold');
+
+                // 2. Animate Content Out
+                const currentActive = document.querySelector('.tab-content.active');
+                if (currentActive) {
+                    currentActive.classList.remove('active');
+                    currentActive.classList.add('hidden-tab');
+                }
+
+                // 3. Animate Content In
+                setTimeout(() => {
+                    const nextActive = document.getElementById(targetTabId);
+                    if (nextActive) {
+                        nextActive.classList.remove('hidden-tab');
+                        nextActive.classList.add('active');
+                    }
+                }, 50); // Small delay to trigger transition
+            });
+        });
+    });
+</script>
+</body>
+
+</html>

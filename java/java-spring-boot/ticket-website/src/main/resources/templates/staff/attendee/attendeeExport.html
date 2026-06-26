@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/frag::head('Attendee Export')}"></head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white flex overflow-hidden h-screen">
+<div th:replace="~{fragment/frag::loading}"></div>
+<script th:replace="~{fragment/frag::scriptLoading}"></script>
+<aside th:replace="~{fragment/staff/frag::staffSidebar('attendee')}"></aside>
+
+<div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    <header th:replace="~{fragment/staff/frag::header('Attendee Management')}"></header>
+
+    <main class="flex-1">
+        <div class="max-w-[1400px] mx-auto p-8">
+
+            <!-- Breadcrumbs -->
+            <nav aria-label="Breadcrumb" class="flex text-sm text-slate-500 mb-6">
+                <ol class="flex items-center space-x-2">
+                    <li><a class="hover:text-slate-700" href="/staff/attendee">Attendee Management</a></li>
+                    <li>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path clip-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" fill-rule="evenodd"/>
+                        </svg>
+                    </li>
+                    <li class="font-semibold text-slate-900" th:text="${event.title}"></li>
+                </ol>
+            </nav>
+
+            <!-- Event Summary Card -->
+            <section class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6 flex">
+                <div class="w-48 h-32 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+                    <div th:style="|background-image: url('@{/upload/event/thumbnail/{file}(file=${event.eventThumbnailURL})}');|"
+                         class="w-full h-full bg-cover bg-center"></div>
+                </div>
+                <div class="flex-grow p-6 flex justify-between items-center">
+                    <div class="flex-1">
+                        <h1 class="text-2xl font-bold text-slate-900" th:text="${event.title}"></h1>
+                        <div class="flex flex-wrap gap-x-6 gap-y-2 mt-2 text-sm text-slate-500">
+                            <div class="flex items-center">
+                                <svg class="h-4 w-4 mr-2 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path clip-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" fill-rule="evenodd"/>
+                                </svg>
+                                <span th:text="${event.venueName + ', ' + event.city}"></span>
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="h-4 w-4 mr-2 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                </svg>
+                                <span th:text="${event.formattedEventDate}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabs -->
+            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+                <div class="border-b border-gray-200 px-6">
+                    <nav class="flex space-x-8 -mb-px text-sm font-medium">
+                        <a th:href="@{/staff/attendee/list(eventId=${eventId})}"
+                           class="py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 transition-all duration-200">
+                            Attendee List
+                        </a>
+                        <a th:href="@{/staff/attendee/checkInStatus(eventId=${eventId})}"
+                           class="py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 transition-all duration-200">
+                            Check-in Status
+                        </a>
+                        <a th:href="@{/staff/attendee/export(eventId=${eventId})}"
+                           class="py-4 px-1 border-b-2 text-blue-600 border-blue-600 transition-all duration-200">
+                            Export
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Export Body -->
+                <div class="p-8">
+
+                    <!-- Empty State: chưa có attendee nào -->
+                    <div th:if="${totalAttendees == 0}"
+                         class="flex flex-col items-center justify-center py-20 text-center">
+                        <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-bold text-gray-800 mb-1">No attendees yet</h3>
+                        <p class="text-sm text-gray-400 max-w-xs">
+                            This event has no registered attendees. The export will be available once someone registers.
+                        </p>
+                    </div>
+
+
+                    <!-- Export Form: chỉ hiện khi có dữ liệu -->
+                    <form th:if="${totalAttendees > 0}"
+                          th:action="@{/staff/attendee/export/download}" method="get" id="exportForm">
+                        <input type="hidden" name="eventId" th:value="${eventId}"/>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                            <!-- LEFT: Column Selection -->
+                            <div class="lg:col-span-2 space-y-6">
+
+                                <!-- Select Columns Card -->
+                                <div class="border border-gray-100 rounded-2xl p-6 bg-white shadow-sm">
+                                    <div class="flex items-center justify-between mb-5">
+                                        <h3 class="text-base font-bold text-gray-900">Select Columns to Export</h3>
+                                        <div class="flex gap-2 text-xs">
+                                            <button type="button" onclick="selectAll()"
+                                                    class="text-blue-600 hover:underline font-medium">Select All</button>
+                                            <span class="text-gray-300">|</span>
+                                            <button type="button" onclick="deselectAll()"
+                                                    class="text-gray-400 hover:underline font-medium">Clear</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Attendee Info Group -->
+                                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Attendee Info</p>
+                                    <div class="grid grid-cols-3 gap-3 mb-5">
+                                        <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors col-checkbox">
+                                            <input type="checkbox" name="columns" value="fullName" checked
+                                                   class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"/>
+                                            <span class="text-sm font-medium text-gray-700">Full Name</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors col-checkbox">
+                                            <input type="checkbox" name="columns" value="email" checked
+                                                   class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"/>
+                                            <span class="text-sm font-medium text-gray-700">Email</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors col-checkbox">
+                                            <input type="checkbox" name="columns" value="phone" checked
+                                                   class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"/>
+                                            <span class="text-sm font-medium text-gray-700">Phone</span>
+                                        </label>
+                                    </div>
+
+                                    <!-- Ticket Info Group -->
+                                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Ticket Info</p>
+                                    <div class="grid grid-cols-3 gap-3 mb-5">
+                                        <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors col-checkbox">
+                                            <input type="checkbox" name="columns" value="ticketCode"
+                                                   class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"/>
+                                            <span class="text-sm font-medium text-gray-700">Ticket Number</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors col-checkbox">
+                                            <input type="checkbox" name="columns" value="ticketType"
+                                                   class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"/>
+                                            <span class="text-sm font-medium text-gray-700">Ticket Type</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors col-checkbox">
+                                            <input type="checkbox" name="columns" value="ticketStatus"
+                                                   class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"/>
+                                            <span class="text-sm font-medium text-gray-700">Ticket Status</span>
+                                        </label>
+                                    </div>
+
+                                    <!-- Order & Checkin Group -->
+                                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Order & Check-in</p>
+                                    <div class="grid grid-cols-3 gap-3">
+                                        <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors col-checkbox">
+                                            <input type="checkbox" name="columns" value="orderStatus"
+                                                   class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"/>
+                                            <span class="text-sm font-medium text-gray-700">Order Status</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors col-checkbox">
+                                            <input type="checkbox" name="columns" value="orderDate"
+                                                   class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"/>
+                                            <span class="text-sm font-medium text-gray-700">Registration Date</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors col-checkbox">
+                                            <input type="checkbox" name="columns" value="checkinTime"
+                                                   class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"/>
+                                            <span class="text-sm font-medium text-gray-700">Check-in Time</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RIGHT: Summary & Export -->
+                            <div class="space-y-4">
+
+                                <!-- Ticket Type Breakdown -->
+                                <div class="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm">
+                                    <h4 class="text-sm font-bold text-gray-900 mb-4">Ticket Type Breakdown</h4>
+                                    <div class="space-y-3" th:if="${distributions != null}">
+                                        <div th:each="d : ${distributions}"
+                                             class="flex items-center justify-between">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+                                                <span class="text-sm text-gray-600" th:text="${d.ticketTypeName}"></span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-sm font-semibold text-gray-900" th:text="${d.count}"></span>
+                                                <span class="text-xs text-gray-400"
+                                                      th:text="${'(' + #numbers.formatDecimal(d.percent,1,1) + '%)'}"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Export Info -->
+                                <div class="border border-blue-100 rounded-2xl p-5 bg-blue-50">
+                                    <div class="flex items-start gap-3">
+                                        <svg class="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <div class="text-xs text-blue-700 space-y-1">
+                                            <p class="font-semibold">Export includes:</p>
+                                            <p>• All attendees data with Excel AutoFilter enabled</p>
+                                            <p>• Summary sheet with statistics</p>
+                                            <p>• Ticket type breakdown</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Export Button -->
+                                <button type="submit"
+                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-3 transition-colors shadow-md">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Export Excel (.xlsx)
+                                </button>
+
+                                <p class="text-xs text-gray-400 text-center">
+                                    Generated as .xlsx with AutoFilter for easy in-Excel filtering
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Highlight checked labels
+    document.querySelectorAll('.col-checkbox input').forEach(cb => {
+        const label = cb.closest('label');
+        function update() {
+            label.classList.toggle('bg-blue-50', cb.checked);
+            label.classList.toggle('border-blue-200', cb.checked);
+            label.classList.toggle('bg-gray-50', !cb.checked);
+            label.classList.toggle('border-gray-100', !cb.checked);
+        }
+        update();
+        cb.addEventListener('change', update);
+    });
+
+    function selectAll() {
+        document.querySelectorAll('.col-checkbox input').forEach(cb => {
+            cb.checked = true;
+            cb.dispatchEvent(new Event('change'));
+        });
+    }
+
+    function deselectAll() {
+        document.querySelectorAll('.col-checkbox input').forEach(cb => {
+            cb.checked = false;
+            cb.dispatchEvent(new Event('change'));
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Payment Failed - EventPass</title>
+    <!-- Tailwind CSS v3 CDN with plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <style data-purpose="typography">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+    <style data-purpose="layout-styles">
+        /* Custom shadow and subtle background for the card to match high-fidelity design */
+        .custom-card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .bg-main-light {
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="bg-main-light min-h-screen flex flex-col">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+<!-- BEGIN: MainHeader -->
+<header class="w-full bg-white px-6 py-4 flex justify-between items-center border-b border-gray-100">
+    <div class="flex items-center gap-2" data-purpose="logo-container">
+        <!-- Simple blue triangle logo as seen in screenshot -->
+        <div class="w-6 h-6 bg-blue-600 rounded-sm" style="clip-path: polygon(50% 0%, 0% 100%, 100% 100%);"></div>
+        <span class="text-xl font-bold text-slate-800">EventPass</span>
+    </div>
+    <!-- Close Button -->
+    <button aria-label="Close" class="text-gray-400 hover:text-gray-600 transition-colors">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+        </svg>
+    </button>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: ContentArea -->
+<main class="flex-grow flex items-center justify-center p-4">
+    <article class="bg-white w-full max-w-lg rounded-2xl overflow-hidden custom-card-shadow" data-purpose="error-card">
+        <!-- Top Error Icon Section -->
+        <div class="bg-red-50 flex justify-center py-10 border-b border-red-100">
+            <div class="bg-red-500 rounded-full w-16 h-16 flex items-center justify-center text-white shadow-lg">
+                <!-- Exclamation Icon -->
+                <svg class="h-10 w-10" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+                </svg>
+            </div>
+        </div>
+        <!-- Error Message Content -->
+        <section class="p-8 text-center">
+            <h1 class="text-3xl font-bold text-slate-800 mb-4">Payment Failed</h1>
+            <p class="text-slate-500 leading-relaxed mb-8 max-w-sm mx-auto">
+                We're sorry, but we couldn't process your transaction. Please check your payment details, ensure you have sufficient funds, and try again.
+            </p>
+            <!-- BEGIN: OrderSummary -->
+            <div class="bg-slate-50 rounded-xl p-6 text-left mb-8 border border-slate-100" data-purpose="order-details">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Order Summary</h2>
+                <div class="flex flex-col gap-4">
+                    <div class="flex justify-between items-start">
+                        <span class="text-slate-500 text-sm font-medium">Event</span>
+                        <span class="text-slate-800 text-sm font-semibold text-right max-w-[200px]">Global Tech Conference 2024 - Platinum Pass</span>
+                    </div>
+                    <div class="pt-4 border-t border-slate-200 flex justify-between items-center">
+                        <span class="text-slate-500 text-sm font-medium">Total Amount</span>
+                        <span class="text-blue-600 text-xl font-bold">$250.00</span>
+                    </div>
+                </div>
+            </div>
+            <!-- END: OrderSummary -->
+            <!-- Action Buttons -->
+            <div class="flex flex-col gap-3">
+                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    Try Again
+                </button>
+                <button class="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    Back to Home
+                </button>
+            </div>
+            <p class="mt-8 text-slate-400 text-sm">
+                Need help? <a class="text-blue-600 font-medium hover:underline" href="#">Contact Support</a>
+            </p>
+        </section>
+    </article>
+</main>
+<!-- END: ContentArea -->
+<!-- BEGIN: MainFooter -->
+<footer class="w-full py-6 text-center text-slate-400 text-xs border-t border-gray-100 bg-white">
+    © 2024 EventPass Management System. All rights reserved.
+</footer>
+<!-- END: MainFooter -->
+</body></html>

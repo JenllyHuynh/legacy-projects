@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận mua vé - Event Go</title>
+    <style type="text/css">
+        @media only screen and (max-width: 600px) {
+            .full-width { width: 100% !important; display: block !important; }
+            .mobile-padding { padding-left: 20px !important; padding-right: 20px !important; }
+            .mobile-center { text-align: center !important; }
+        }
+    </style>
+</head>
+<body style="margin:0;padding:0;background-color:#f6f9fc; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f6f9fc; padding: 20px 0;">
+    <tr>
+        <td align="center">
+            <table border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                <!-- Header -->
+                <tr>
+                    <td style="padding: 30px 40px; background-color: #ffffff; border-bottom: 1px solid #eef2f7;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td width="50%" align="left">
+                                    <img src="https://eventgo.pro.vn/images/logo_whitebg.png" alt="Event Go" width="50" style="display: block; border: 0; outline: none; text-decoration: none;">
+                                </td>
+                                <td width="50%" align="right" style="color: #2563eb; font-size: 20px; font-weight: bold;">
+                                    Event Go
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Hero Section -->
+                <tr>
+                    <td style="padding: 40px 40px 20px 40px; text-align: center;">
+                        <h1 style="margin: 0; color: #1e293b; font-size: 24px; font-weight: 800; line-height: 1.3;">Xác nhận đặt vé thành công!</h1>
+                        <p th:text="|Chào ${customer.fullName}, cảm ơn bạn đã mua vé. Hẹn gặp bạn tại sự kiện!|" style="margin: 15px 0 0 0; color: #64748b; font-size: 16px; line-height: 1.5;">Chào {{CUSTOMER_NAME}}, cảm ơn bạn đã mua vé. Hẹn gặp bạn tại sự kiện!</p>
+                    </td>
+                </tr>
+                <!-- Customer Info Section -->
+                <tr>
+                    <td style="padding: 0 40px 40px 40px; border-top: 1px solid #f1f5f9;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 30px;">
+                            <tr>
+                                <td width="50%" valign="top" class="full-width mobile-padding" style="padding-right: 15px;">
+                                    <h4 style="margin: 0 0 10px 0; color: #1e293b; font-size: 14px; font-weight: 700;">Khách hàng</h4>
+                                    <p style="margin: 0; color: #64748b; font-size: 13px; line-height: 1.6;">
+                                        <span><strong>Họ và tên: </strong></span>
+                                        <span th:text="${customer.fullName}"></span> <br>
+                                        <span><strong>Email: </strong></span>
+                                        <span th:text="${customer.email}"></span> <br>
+                                        <span><strong>Điện thoại: </strong></span>
+                                        <span th:text="${customer.phone}"></span> <br>
+                                    </p>
+                                </td>
+                                <td width="50%" valign="top" class="full-width mobile-padding" style="padding-left: 15px;">
+                                    <br>
+                                    <h4 style="margin: 0 0 10px 0; color: #1e293b; font-size: 14px; font-weight: 700;">Địa chỉ thanh toán</h4>
+                                    <p th:text="|${order.streetAddress}, ${order.ward}, ${order.city}, ${order.country}|" style="margin: 0; color: #64748b; font-size: 13px; line-height: 1.6;">
+                                        {{BILLING_ADDRESS}}
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- Main CTA -->
+                <tr>
+                    <td align="center" style="padding: 20px 40px 40px 40px;">
+                        <a th:href="'https://eventgo.pro.vn/myticket'" target="_blank" style="background-color: #2563eb; color: #ffffff; display: inline-block; padding: 16px 32px; font-size: 16px; font-weight: 700; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);">Xem vé của bạn</a>
+                    </td>
+                </tr>
+
+                <!-- Event Info Card -->
+                <tr>
+                    <td style="padding: 0 40px 30px 40px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+                            <tr>
+                                <td style="padding: 24px;">
+                                    <h3 th:text="|Bạn đã đặt vé của ${eventTickets.size()} sự kiện:|" style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">Thông tin sự kiện</h3>
+                                    <table th:each="entry : ${eventTickets}" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td style="padding-bottom: 12px; color: #64748b; font-size: 14px;">Tên sự kiện: </td>
+                                            <td th:text="${entry.key.title}" style="padding-bottom: 12px; color: #1e293b; font-size: 14px; font-weight: 600; text-align: right;">{{EVENT_DATE}} lúc {{EVENT_TIME}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="color: #64748b; font-size: 14px;">Địa điểm: </td>
+                                            <td th:text="${entry.key.venue.name}" style="color: #1e293b; font-size: 14px; font-weight: 600; text-align: right;">{{EVENT_VENUE}}</td>
+                                        </tr>
+
+                                        <br>
+                                        <hr>
+                                        <br>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Tickets Section -->
+                <tr>
+                    <td style="padding: 0 40px 30px 40px;">
+                        <h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 18px; font-weight: 700;">Danh sách vé</h3>
+                        <div th:each="entry : ${eventTickets}" style="margin-bottom: 20px; padding: 20px; border: 1px dashed #cbd5e1; border-radius: 8px;">
+                            <div th:text="${entry.key.title}" style="font-weight: bold; color: #475569; margin-bottom: 10px; font-size: 13px;">NHÓM VÉ: {{CART_NAME}}</div>
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 15px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;">
+                                <tr>
+                                    <td style="padding: 15px; width: 80px;">
+                                        <img th:src="'https://eventgo.pro.vn/upload/event/thumbnail/' + ${entry.key.thumbnailUrl}" width="80" height="80" style="display: block;">
+                                    </td>
+                                    <td th:each="ticket : ${entry.value}" style="padding: 15px; vertical-align: middle;">
+                                        <div th:text="${ticket.name}" style="font-size: 14px; font-weight: bold; color: #1e293b;">{{TICKET_TYPE}}</div>
+                                        <div th:text="|Mã vé: ${ticket.ticketId}|" style="font-size: 12px; color: #64748b; margin-top: 4px;">Mã vé: {{TICKET_CODE}}</div>
+                                        <div style="font-size: 12px; color: #64748b;">Chỗ ngồi: null</div>
+                                    </td>
+                                    <td style="padding: 15px; text-align: right;">
+                                        <a th:href="'https://eventgo.pro.vn/myticket'" style="color: #2563eb; font-size: 13px; font-weight: 600; text-decoration: none;">Chi tiết</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Bill Summary -->
+                <tr>
+                    <td style="padding: 0 40px 30px 40px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #e2e8f0; padding-top: 24px;">
+                            <tr>
+                                <td><h3 style="margin: 0 0 16px 0; color: #1e293b; font-size: 16px; font-weight: 700;">Tóm tắt đơn hàng</h3></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Tạm tính</td>
+                                            <td th:text="|${#numbers.formatDecimal(order.totalAmount, 0, 'POINT', 0, 'DEFAULT')} VND|" style="padding: 8px 0; color: #1e293b; font-size: 14px; text-align: right;">{{SUBTOTAL}} {{CURRENCY}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Thuế</td>
+                                            <td th:text="|${#numbers.formatDecimal(0, 0, 'POINT', 0, 'DEFAULT')} VND|" style="padding: 8px 0; color: #1e293b; font-size: 14px; text-align: right;">+ {{TAX}} {{CURRENCY}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Giảm giá</td>
+                                            <td th:text="|${#numbers.formatDecimal(0, 0, 'POINT', 0, 'DEFAULT')} VND|" style="padding: 8px 0; color: #10b981; font-size: 14px; text-align: right;">- {{DISCOUNT}} {{CURRENCY}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Phí dịch vụ</td>
+                                            <td th:text="|${#numbers.formatDecimal(0, 0, 'POINT', 0, 'DEFAULT')} VND|" style="padding: 8px 0; color: #1e293b; font-size: 14px; text-align: right;">+ {{FEES}} {{CURRENCY}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 16px 0 8px 0; color: #1e293b; font-size: 18px; font-weight: 800; border-top: 1px solid #f1f5f9;">Tổng thanh toán</td>
+                                            <td th:text="|${#numbers.formatDecimal(order.totalAmount, 0, 'POINT', 0, 'DEFAULT')} VND|" style="padding: 16px 0 8px 0; color: #2563eb; font-size: 20px; font-weight: 800; text-align: right; border-top: 1px solid #f1f5f9;">{{TOTAL}} {{CURRENCY}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Payment Details Box -->
+                <tr>
+                    <td style="padding: 0 40px 40px 40px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f1f5f9; border-radius: 8px;">
+                            <tr>
+                                <td style="padding: 20px;">
+                                    <h4 style="margin: 0 0 12px 0; color: #475569; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Chi tiết thanh toán</h4>
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td style="padding-bottom: 6px; color: #64748b; font-size: 13px;">Phương thức:</td>
+                                            <td th:text="${payment.paymentMethod}" style="padding-bottom: 6px; color: #1e293b; font-size: 13px; font-weight: 600; text-align: right;">{{PAYMENT_METHOD}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-bottom: 6px; color: #64748b; font-size: 13px;">Mã giao dịch:</td>
+                                            <td th:text="${payment.vnpTransactionno}" style="padding-bottom: 6px; color: #1e293b; font-size: 13px; font-weight: 600; text-align: right;">{{GATEWAY_TRANSACTION_NO}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: #64748b; font-size: 13px;">Ngày thanh toán:</td>
+                                            <td th:text="${#temporals.format(payment.updatedAt, 'MMM dd yyyy : HH:mm:ss')}" style="color: #1e293b; font-size: 13px; font-weight: 600; text-align: right;">{{PAID_AT}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+
+
+                <!-- Footer Info -->
+                <tr>
+                    <td style="padding: 0 40px 40px 40px; text-align: center;">
+                        <p style="margin: 0 0 20px 0; color: #64748b; font-size: 14px; line-height: 1.6;">Vui lòng trình diện mã vé QR tại cổng an ninh để thực hiện check-in vào sự kiện. Quý khách vui lòng <strong>bảo mật thông tin vé</strong>. Trong trường hợp để lộ QR vé, quý khách chịu hoàn toàn trách nhiệm. Nếu có thắc mắc, vui lòng liên hệ <a href="https://eventgo.pro.vn/" style="color: #2563eb; text-decoration: none; font-weight: 600;">Trung tâm hỗ trợ</a> của chúng tôi.</p>
+                        <a th:text="|Xem chi tiết đơn hàng #${payment.transactionId}|" th:href="'https://eventgo.pro.vn/invoice/' + ${payment.transactionId}" style="color: #64748b; text-decoration: underline; font-size: 13px;">Xem chi tiết đơn hàng #{{ORDER_ID}}</a>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Footer Copyright -->
+            <table border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%;">
+                <tr>
+                    <td style="padding: 30px 40px; text-align: center; color: #94a3b8; font-size: 12px; line-height: 1.5;">
+                        <span>© 2026 Event Go Team. Mọi quyền được bảo lưu.</span><br>
+                        <span>Đây là email tự động, vui lòng không trả lời email này.</span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

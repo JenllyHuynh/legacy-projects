@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/frag::head('Payment Success')}">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+          rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+          rel="stylesheet" />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1f62ff",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#0f1523",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <title>Payment Success - Event Go</title>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+<div class="layout-container flex flex-col min-h-screen">
+    <!-- Navigation Bar -->
+    <header th:replace="~{fragment/customer/frag::header}"
+            class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 lg:px-20 py-4 sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="text-primary">
+                <span class="material-symbols-outlined text-3xl">confirmation_number</span>
+            </div>
+            <h2 class="text-xl font-bold tracking-tight">Event Go</h2>
+        </div>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Events</a>
+            <a class="text-sm font-medium hover:text-primary transition-colors" href="#">My Tickets</a>
+            <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Orders</a>
+            <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Support</a>
+            <div
+                    class="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden">
+                <img alt="Profile" class="w-full h-full object-cover" data-alt="User profile avatar circle"
+                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHzjUJfN4KEY1J-CMaPT2zvUTB3_FTRoGJYmdjPIae4ObpckklnyVVxkDwpAZYm6dp_yGKywSv-fPKxRzGr-pDlR5wrIg6z5WjlJmFTSsZY384YXPIgQVGR-bWZIqmtpL8rUG1YeKCk7HkmhikUGa7EVxdvTu3-PhqrbfCvcTOo1IyzGrDmmDVVDs3hWZaiqmz-k69GXDx3NOeprfar4x7Cboqlr3g24kxH_BJtmH30Y64UbfhHrxZXpAyB0__DsYIP3H7aWnOpPzt" />
+            </div>
+        </div>
+    </header>
+    <main class="flex-1 px-4 lg:px-20 py-8">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left Column (65%) -->
+            <div class="lg:col-span-8 space-y-6">
+                <!-- Top Success Section -->
+                <div
+                        class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-8 text-center">
+                    <div class="flex justify-center mb-4">
+                        <div
+                                class="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                            <span class="material-symbols-outlined text-5xl">check_circle</span>
+                        </div>
+                    </div>
+                    <h1 class="text-3xl font-bold mb-2">Payment Successful</h1>
+                    <p class="text-slate-600 dark:text-slate-400 max-w-lg mx-auto">
+                        Your payment has been processed successfully. Your e-tickets have been issued and sent to
+                        <span th:text="${customer.fullName}" class="font-semibold text-slate-900 dark:text-slate-100">alex.j@example.com</span>.
+                    </p>
+                    <!-- Transaction IDs -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                        <div
+                                class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-200 dark:border-slate-800 text-left">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+                                Transaction No</p>
+                            <div class="flex items-center justify-between">
+                                <p th:text="${payment.vnpTransactionno}" class="font-bold text-slate-900 dark:text-slate-100 truncate">vnp_778899</p>
+                                <button class="text-primary hover:bg-primary/10 p-1 rounded transition-colors">
+                                    <span class="material-symbols-outlined text-sm">content_copy</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                                class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-200 dark:border-slate-800 text-left">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Order Id
+                            </p>
+                            <p th:text="${payment.transactionId}" class="font-bold text-slate-900 dark:text-slate-100">REF123456</p>
+                        </div>
+                        <div
+                                class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-200 dark:border-slate-800 text-left">
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Payment
+                                Date</p>
+                            <p th:text="${#temporals.format(payment.updatedAt, 'yyyy-MM-dd HH:mm:ss')}" class="font-bold text-slate-900 dark:text-slate-100">Oct 27, 2023</p>
+                        </div>
+                    </div>
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap gap-4 mt-8 justify-center">
+                        <a th:href="@{/myticket}"
+                                class="bg-primary text-white px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 hover:bg-primary/90 transition-all">
+                            <span class="material-symbols-outlined">download</span>
+                            Your Tickets
+                        </a>
+                        <a th:href="@{/invoice/{id}(id=${txnRef})}" target="_blank"
+                                class="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-6 py-2.5 rounded-lg font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                            View Invoice
+                        </a>
+                        <a th:href="@{/home}"
+                                class="bg-slate-100 text-slate-600 dark:text-slate-400 px-6 py-2.5 rounded-lg font-bold hover:text-primary transition-all">
+                            Back to Events
+                        </a>
+                    </div>
+                </div>
+                <!-- Customer Information Card -->
+                <div
+                        class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+                    <div class="flex items-center gap-2 mb-6">
+                        <span class="material-symbols-outlined text-primary">person</span>
+                        <h3 class="text-lg font-bold">Customer Information</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        <div class="space-y-1">
+                            <p class="text-sm text-slate-500">Full Name</p>
+                            <p th:text="${customer.fullName}" class="font-medium">Alex Johnson</p>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-sm text-slate-500">Phone Number</p>
+                            <p th:text="${customer.phone}" class="font-medium">+1 (555) 012-3456</p>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-sm text-slate-500">Email Address</p>
+                            <p th:text="${customer.email}" class="font-medium">alex.j@example.com</p>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-sm text-slate-500">Payment Method</p>
+                            <p class="font-medium flex items-center gap-2">
+                                <span class="material-symbols-outlined text-blue-600 text-sm">credit_card</span>
+                                VNPAY
+                            </p>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-sm text-slate-500">Card Type &amp; Bank</p>
+                            <p th:text="|${payment.vnp_CardType} • ${payment.vnp_BankCode}|" class="font-medium uppercase">Visa • Chase Bank</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Payment Details Card -->
+                <div
+                        class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">receipt_long</span>
+                            <h3 class="text-lg font-bold">Payment Details</h3>
+                        </div>
+                    </div>
+                    <div class="divide-y divide-slate-100 dark:divide-slate-800">
+                        <div class="p-6 flex justify-between items-center">
+                            <span class="text-slate-600 dark:text-slate-400">Amount Paid</span>
+                            <span th:text="|${#numbers.formatDecimal(payment.amount, 0, 'POINT', 0, 'DEFAULT')} VND|" class="font-bold text-primary">$450.00</span>
+                        </div>
+                        <div class="p-6 flex justify-between items-center">
+                            <span class="text-slate-600 dark:text-slate-400">Bank Transaction No</span>
+                            <span th:text="${payment.vnp_BankTranNo}" class="font-medium">BANK_ID_99001122</span>
+                        </div>
+                        <div class="p-6 flex justify-between items-center">
+                            <span class="text-slate-600 dark:text-slate-400">Status</span>
+                            <span th:text="|${payment.gatewayResponse} • ${payment.paymentStatus}|"
+                                    class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">00
+                                    - Success</span>
+                        </div>
+                        <div class="p-6 flex justify-between items-center">
+                            <span class="text-slate-600 dark:text-slate-400">Response Code</span>
+                            <span th:text="${payment.gatewayResponse}" class="font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">200 OK</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Column (35%, sticky) -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="sticky top-24 space-y-6">
+                    <!-- Order Summary Card -->
+                    <div
+                            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+                        <h2 class="text-lg font-bold mb-6">Order Summary</h2>
+                        <div class="space-y-4 mb-6">
+                            <div th:each="entry : ${eventTickets}">
+                                <div th:each="ticket : ${entry.value}" class="flex gap-4 pt-5">
+                                    <div class="w-16 h-16 rounded-lg bg-slate-200 overflow-hidden flex-shrink-0">
+                                        <img alt="Event" class="w-full h-full"
+                                             data-alt="Concert stage with colorful lights"
+                                             th:src="@{/upload/event/thumbnail/{file}(file=${entry.key.thumbnailUrl})}"
+                                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8oE5nf1mSdLstUH33-5DQl_Pl2d7KasShxxCnf3ZsiODNy4apFsgtrQam9iI8zIpVNn8_R1RWiic7PRcTAz43A7nUHmlIqh04blScUf3I6ty15ZL86MaktiXITSAe9zKHXXLfl-W2nO0b-8IydEP40GD34uaoA9Xl7mO0phvWC8ZaLFEirj8jRvpY044Ix36R87w38V53igLJumrzF8i5j4cJfAZnKblWylLRc3h9kmiWkOe6efON5kVohzy8LUUUTu9oTdr_bbBi"/>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 th:text="${entry.key.title}" class="font-bold text-sm truncate">Sunset Music Festival 2023</h4>
+                                        <p th:text="|${ticket.name} x ${ticket.qty}|" class="text-xs text-slate-500">VIP Ticket x 2</p>
+                                        <p th:text="|${#numbers.formatDecimal(ticket.totalPrice, 0, 'POINT', 0, 'DEFAULT')} VND|" class="text-sm font-bold text-primary mt-1">$400.00</p>
+                                    </div>
+                                </div>
+                            </div>
+<!--                            <div class="flex gap-4">-->
+<!--                                <div class="w-16 h-16 rounded-lg bg-slate-200 overflow-hidden flex-shrink-0">-->
+<!--                                    <img alt="Workshop" class="w-full h-full object-cover"-->
+<!--                                         data-alt="People sitting in a conference hall"-->
+<!--                                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuAH7wyN9MUNc09j7RV6N0KG6R7J7_JH-bsCzAxhj6VgC8DaQ1uBpIszuqoXe4iMtz8h3PFTXAeo5haLLjL6o808YBEHD8AN-lOU_eia7_9g5KbZYYNw6Vx9M1hUw3VxRAlB7bGKeoHpFWyJRN2sF1gBqpf2BsfcmKMf-xmYnCTT1dCtBU1c5tknJSYHKGEp6uvIdT22JK7BSlQmpq6-qnDw43I8C6b2gNcZq-9-NyHaBxKT_lGKqS2ORUMQ55-oRv84RNleYtKEWet7" />-->
+<!--                                </div>-->
+<!--                                <div class="flex-1 min-w-0">-->
+<!--                                    <h4 class="font-bold text-sm truncate">Artist Backstage Access</h4>-->
+<!--                                    <p class="text-xs text-slate-500">Add-on x 2</p>-->
+<!--                                    <p class="text-sm font-bold text-primary mt-1">$50.00</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                        </div>
+                        <div class="space-y-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500">Subtotal</span>
+                                <span th:text="|${#numbers.formatDecimal(subTotal, 0, 'POINT', 0, 'DEFAULT')} VND|" class="font-medium">$450.00</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span th:if="${discountCode != null}" th:text="|Discount (${#numbers.formatDecimal(discountCode.discountValue, 0, 'POINT', 0, 'DEFAULT')}%)|" class="text-slate-500">Discount (WELCOME10)</span>
+                                <span th:if="${discountCode != null}" th:text="|- ${#numbers.formatDecimal(discountTotal, 0, 'POINT', 0, 'DEFAULT')} VND|" class="font-medium text-emerald-600">- 0 VND</span>
+                                <span th:if="${discountCode == null}" class="text-slate-500">Discount</span>
+                                <span th:if="${discountCode == null}" class="font-medium text-emerald-600">- 0 VND</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500">Service Fee</span>
+                                <span class="font-medium">0 VND</span>
+                            </div>
+                            <div th:if="${discountCode != null}">
+                                <span class="text-black text-xs">
+                                    This discount is valid only for the event:
+                                </span>
+                                <br>
+                                <span class="text-blue-500 text-xs italic" th:text="|${discountCode.event.title}|"></span>
+                            </div>
+                            <div
+                                    class="flex justify-between text-lg font-bold pt-4 border-t border-slate-100 dark:border-slate-800 mt-4">
+                                <span>Total Paid</span>
+                                <span th:text="|${#numbers.formatDecimal(payment.amount, 0, 'POINT', 0, 'DEFAULT')} VND|" class="text-primary">$450.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Your E-Tickets Section -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-bold flex items-center gap-2 px-1">
+                            <span class="material-symbols-outlined text-primary">local_activity</span>
+                            Your E-Tickets
+                        </h3>
+                        <!-- Ticket Card 1 -->
+                        <div th:each="entry : ${eventTickets}"
+                                class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+                            <div th:each="ticket : ${entry.value}">
+                                <div class="p-4 bg-primary/5 border-b border-primary/10">
+                                    <h4 th:text="${entry.key.title}" class="font-bold text-sm truncate">Sunset Music
+                                        Festival 2023</h4>
+<!--                                    <p th:text="${ticket.}" class="text-xs text-slate-500">VIP Section • Row-->
+<!--                                        A-12</p>-->
+                                </div>
+                                <div class="p-4 flex gap-4 items-center">
+                                    <div class="w-20 h-20 bg-white border border-slate-200 p-1 rounded">
+                                        <img alt="QR Code" class="w-full h-full"
+                                             data-alt="Black and white pixelated QR code"
+                                             th:src="@{/upload/event/thumbnail/{file}(file=${entry.key.thumbnailUrl})}"
+                                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEMea1gh5J_dk3hpBblWpCUisHEb84koAgPrH1251cE1B9Gf50ZwJmzibSQaMUXQbDs9Q9TEnbxg_J_ZnEVXIes0P5cvppLvSCSq-y9_PH-Em96qNSPk2NlSpQnqj41JD79vZbMZTyN-jfM2JSrEumCX_iutVx7w_gsZTMQS0MzydzpQEx69Tri6G-8ubGHZFzbYmTuY9fHqinWQ8i67dWBLYwl2E5MuHPhhTn86DXhsGFeaGtF1D4j9TRfYu-99TSYv0CiKfGOlZ5"/>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                                            Ticket Type</p>
+                                        <p th:text="${ticket.name}" class="text-sm font-mono font-bold mb-2">TKT-VVIP-001</p>
+                                        <a th:href="@{/myticket}"
+                                                class="w-full py-1.5 px-3 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold rounded flex items-center justify-center gap-1">
+                                            <span class="material-symbols-outlined text-xs">download</span>
+                                            Download QR
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer
+            class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-10 px-6 lg:px-20 mt-12">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-slate-400">confirmation_number</span>
+                <p class="text-sm font-medium text-slate-500">© 2026 Event Go. All rights reserved.</p>
+            </div>
+            <div class="flex gap-8">
+                <a class="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Privacy Policy</a>
+                <a class="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Terms of Service</a>
+                <a class="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Refund Policy</a>
+            </div>
+        </div>
+    </footer>
+</div>
+<div th:replace="~{fragment/customer/frag::headerScripts}" ></div>
+</body>
+<script>
+    async function downloadTicketQR(ticketId) {
+        const response = await fetch(`/api/tickets/${ticketId}/qr`);
+        const blob = await response.blob();
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `ticket-${ticketId}.png`;
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+    }
+</script>
+</html>

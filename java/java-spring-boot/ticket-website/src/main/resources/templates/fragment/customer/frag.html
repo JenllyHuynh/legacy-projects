@@ -1,0 +1,441 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<header th:fragment="header"
+        class="sticky top-0 z-50 flex items-center justify-between border-b border-[#e6eaf4] dark:border-gray-800 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm px-6 py-3 lg:px-10">
+    <!-- LEFT: Logo -->
+    <div class="flex items-center gap-8">
+        <a th:href="@{/home}" class="flex items-center gap-3 text-text-main dark:text-white group">
+            <div class="size-8 text-primary">
+                <svg class="w-full h-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"/>
+                </svg>
+            </div>
+            <h2 class="text-lg font-bold leading-tight tracking-[-0.015em] group-hover:text-primary transition-colors">
+                Event Go</h2>
+        </a>
+    </div>
+
+    <!-- RIGHT: Nav + Actions -->
+    <div class="flex items-center gap-6">
+        <nav class="hidden lg:flex items-center gap-6">
+            <a th:href="@{/search}"
+               class="text-sm font-medium hover:text-primary transition-colors dark:text-gray-300">Events</a>
+        </nav>
+
+        <!-- ══ ĐÃ ĐĂNG NHẬP ══ -->
+        <div sec:authorize="isAuthenticated()" class="flex items-center gap-3">
+
+            <!-- Cart -->
+            <!-- Cart -->
+            <a th:href="@{/cart}"
+               class="relative flex size-10 items-center justify-center rounded-lg bg-[#e6eaf4] dark:bg-gray-800 text-text-main dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+
+                <span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+
+                <!-- Badge -->
+<!--                <span id="cartBadge"-->
+<!--                      class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center-->
+<!--                rounded-full bg-red-500 text-white text-[10px] font-bold shadow"-->
+<!--                      style="display:none;">-->
+<!--                    0-->
+<!--                </span>-->
+
+                <span id="cartBadge" class="notif-count-badge" style="display:none;">0</span>
+            </a>
+
+            <!-- 🔔 Notification Bell + Popup -->
+            <div class="relative" id="notifDropdown">
+                <button id="notifTrigger"
+                        class="relative flex size-10 items-center justify-center rounded-lg bg-[#e6eaf4] dark:bg-gray-800 text-text-main dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none"
+                        aria-haspopup="true" aria-expanded="false">
+                    <span class="material-symbols-outlined text-[20px]">notifications</span>
+                    <span id="notifBadge" class="notif-count-badge" style="display:none;">0</span>
+                </button>
+
+                <!-- Popup -->
+                <div class="notif-popup" id="notifPopup">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-700">
+                        <h3 class="text-sm font-bold text-slate-900 dark:text-white">Notifications</h3>
+                        <button id="markAllReadBtn"
+                                class="text-xs font-semibold text-primary hover:underline">
+                            Mark all as read
+                        </button>
+                    </div>
+
+                    <!-- List — JS render vào đây -->
+                    <div id="notifList" class="max-h-[340px] overflow-y-auto">
+                        <div id="notifLoading" class="flex items-center justify-center py-10 gap-2 text-slate-400">
+                            <span class="material-symbols-outlined text-[20px]">hourglass_empty</span>
+                            <span class="text-sm">Loading...</span>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <a th:href="@{/user/notifications}"
+                       class="flex items-center justify-center gap-1.5 py-3 text-sm font-bold text-primary bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border-t border-slate-100 dark:border-slate-700">
+                        View all notifications
+                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Avatar + Dropdown -->
+            <div class="relative flex justify-center align-content-center" id="userDropdown">
+
+                <!-- Trigger: avatar động từ sessionUser -->
+                <button id="avatarTrigger"
+                        class="avatar-trigger size-10 rounded-full bg-cover bg-center border-2 bg-[#e6eaf4] dark:border-gray-700 shadow-sm focus:outline-none"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        th:style="'background-image: url(' +
+                            (${sessionUser != null and sessionUser.avatarUrl != null}
+                                ? ${sessionUser.avatarUrl}
+                                : '/images/avt_guest.png')
+                            + ')'">
+                </button>
+
+                <!-- Dropdown menu -->
+                <div class="user-dropdown-menu" id="userDropdownMenu" role="menu">
+
+                    <!-- User info -->
+                    <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-700">
+                        <p class="text-sm font-semibold text-slate-900 dark:text-white truncate"
+                           th:text="${sessionUser != null ? sessionUser.fullName : 'User'}">
+                            Nguyễn Văn A
+                        </p>
+                        <p class="text-xs text-slate-400 truncate mt-0.5"
+                           th:text="${sessionUser != null ? sessionUser.email : ''}">
+                            user@example.com
+                        </p>
+                    </div>
+
+                    <!-- Menu items -->
+                    <div class="py-1.5">
+                        <a th:href="@{/user/profile}" class="dropdown-item" role="menuitem">
+                            <span class="material-symbols-outlined">person</span>
+                            <span>My Profile</span>
+                        </a>
+                        <a th:href="@{/myticket}" class="dropdown-item" role="menuitem">
+                            <span class="material-symbols-outlined">confirmation_number</span>
+                            <span>My Tickets</span>
+                        </a>
+                        <a th:href="@{/history}" class="dropdown-item" role="menuitem">
+                            <span class="material-symbols-outlined">receipt_long</span>
+                            <span>Payment History</span>
+                        </a>
+                    </div>
+
+                    <div class="dropdown-divider"></div>
+
+                    <!-- Logout -->
+                    <div class="py-1.5">
+                        <form th:action="@{/auth/logout}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <button type="submit" class="dropdown-item" role="menuitem"
+                                    style="color: #ef4444;">
+                                <span class="material-symbols-outlined" style="color: #ef4444;">logout</span>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ CHƯA ĐĂNG NHẬP ══ -->
+        <div sec:authorize="!isAuthenticated()" class="flex items-center gap-3">
+            <a th:href="@{/auth/login}"
+               class="text-sm font-medium text-text-main dark:text-gray-300 hover:text-primary transition-colors px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                Login
+            </a>
+            <a th:href="@{/auth/register}"
+               class="text-sm font-semibold text-white bg-primary hover:bg-blue-700 transition-colors px-5 py-2 rounded-lg shadow-sm">
+                Register
+            </a>
+        </div>
+
+    </div>
+</header>
+
+<!-- ══ DROPDOWN SCRIPT — đặt cuối <body> hoặc include qua headerScripts ══ -->
+<th:block th:fragment="headerScripts">
+    <th:block th:fragment="headerScripts">
+        <script>
+            (function () {
+
+                // ── Helpers ──────────────────────────────────────────────
+
+                function formatTime(instantStr) {
+                    if (!instantStr) return '';
+                    const diff = Date.now() - new Date(instantStr).getTime();
+                    const m = Math.floor(diff / 60000);
+                    const h = Math.floor(diff / 3600000);
+                    const d = Math.floor(diff / 86400000);
+                    if (m < 1)  return 'Just now';
+                    if (m < 60) return m + ' minutes ago';
+                    if (h < 24) return h + ' hours ago';
+                    if (d < 7)  return d + ' days ago';
+                    return new Date(instantStr).toLocaleDateString('en-US');
+                }
+
+                function getIconInfo(title, type) {
+                    const t = (title || '').toLowerCase();
+
+                    if (t.includes('booking') || t.includes('ticket'))
+                        return { icon: 'confirmation_number', cls: 'notif-icon-BOOKING' };
+
+                    if (t.includes('payment') || t.includes('refund'))
+                        return { icon: 'payments', cls: 'notif-icon-PAYMENT' };
+
+                    if (t.includes('cancel'))
+                        return { icon: 'cancel', cls: 'notif-icon-CANCELLATION' };
+
+                    if (t.includes('update') || t.includes('reminder') || t.includes('schedule'))
+                        return { icon: 'campaign', cls: 'notif-icon-EVENT_UPDATE' };
+
+                    if (t.includes('welcome'))
+                        return { icon: 'waving_hand', cls: 'notif-icon-BOOKING' };
+
+                    if (type === 'Email') return { icon: 'mail',          cls: 'notif-icon-DEFAULT' };
+                    if (type === 'SMS')   return { icon: 'sms',           cls: 'notif-icon-DEFAULT' };
+                    return                       { icon: 'notifications', cls: 'notif-icon-DEFAULT' };
+                }
+
+                function renderNotifItem(n) {
+                    const { icon, cls } = getIconInfo(n.title, n.notificationType);
+                    const unreadClass = n.isRead ? '' : 'unread';
+                    const dot = n.isRead ? '' : '<div class="size-2 bg-primary rounded-full shrink-0 mt-1.5"></div>';
+                    return `
+        <div class="notif-item ${unreadClass}" data-id="${n.id}"
+             onclick="handleNotifClick(${n.id}, this)">
+            <div class="size-10 rounded-full flex items-center justify-center shrink-0 ${cls}">
+                <span class="material-symbols-outlined icon-filled text-[20px]">${icon}</span>
+            </div>
+            <div class="flex flex-col gap-0.5 flex-1 min-w-0">
+                <p class="text-sm font-bold text-slate-900 dark:text-white leading-snug">${n.title}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">${n.message}</p>
+                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider mt-0.5">
+                    ${formatTime(n.sentAt)}
+                </p>
+            </div>
+            ${dot}
+        </div>`;
+                }
+
+                function renderEmpty() {
+                    return `
+    <div class="flex flex-col items-center justify-center py-10 gap-2 text-slate-400">
+        <span class="material-symbols-outlined text-[36px]">notifications_off</span>
+        <p class="text-sm font-medium">No notifications yet</p>
+    </div>`;
+                }
+
+                // ── Load 5 thông báo gần nhất ─────────────────────────────
+                async function loadNotifications() {
+                    const list = document.getElementById('notifList');
+                    if (!list) return;
+                    try {
+                        const res  = await fetch('/api/notifications/recent');
+                        if (!res.ok) throw new Error();
+                        const data = await res.json();
+                        list.innerHTML = data.length > 0
+                            ? data.map(renderNotifItem).join('')
+                            : renderEmpty();
+                    } catch {
+                        list.innerHTML = `<p class="text-xs text-center text-slate-400 py-8">Unable to load notifications.</p>`;
+                    }
+                }
+
+                // ── Load badge số chưa đọc ────────────────────────────────
+                async function loadUnreadCount() {
+                    const badge = document.getElementById('notifBadge');
+                    if (!badge) return;
+                    try {
+                        const res   = await fetch('/api/notifications/unread-count');
+                        if (!res.ok) return;
+                        const data  = await res.json();
+                        const count = data.count || 0;
+                        if (count > 0) {
+                            badge.textContent   = count > 99 ? '99+' : count;
+                            badge.style.display = 'flex';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    } catch { /* bỏ qua */ }
+                }
+
+                // ── Click vào 1 thông báo → đánh dấu đã đọc ─────────────
+                window.handleNotifClick = async function(id, el) {
+                    if (!el.classList.contains('unread')) return;
+                    try {
+                        await fetch(`/api/notifications/${id}/read`, { method: 'PUT' });
+                        el.classList.remove('unread');
+                        const dot = el.querySelector('.size-2.bg-primary');
+                        if (dot) dot.remove();
+                        // Giảm badge
+                        const badge = document.getElementById('notifBadge');
+                        if (badge && badge.style.display !== 'none') {
+                            const cur = parseInt(badge.textContent) || 1;
+                            if (cur <= 1) badge.style.display = 'none';
+                            else badge.textContent = cur - 1;
+                        }
+                    } catch { /* bỏ qua */ }
+                };
+
+                // ── Đánh dấu tất cả đã đọc ───────────────────────────────
+                document.getElementById('markAllReadBtn')?.addEventListener('click', async function () {
+                    try {
+                        await fetch('/api/notifications/read-all', { method: 'PUT' });
+                        document.querySelectorAll('.notif-item.unread').forEach(el => {
+                            el.classList.remove('unread');
+                            el.querySelector('.size-2.bg-primary')?.remove();
+                        });
+                        const badge = document.getElementById('notifBadge');
+                        if (badge) badge.style.display = 'none';
+                    } catch { /* bỏ qua */ }
+                });
+
+                // ── Toggle notification popup ─────────────────────────────
+                const notifTrigger = document.getElementById('notifTrigger');
+                const notifPopup   = document.getElementById('notifPopup');
+                const notifWrapper = document.getElementById('notifDropdown');
+                let   notifLoaded  = false;
+
+                notifTrigger?.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const isOpen = notifPopup.classList.toggle('open');
+                    notifTrigger.setAttribute('aria-expanded', String(isOpen));
+                    // Đóng user dropdown
+                    document.getElementById('userDropdownMenu')?.classList.remove('open');
+                    document.getElementById('avatarTrigger')?.classList.remove('open');
+                    // Chỉ load 1 lần
+                    if (isOpen && !notifLoaded) { notifLoaded = true; loadNotifications(); }
+                });
+
+                // ── Toggle user dropdown ──────────────────────────────────
+                const avatarTrigger    = document.getElementById('avatarTrigger');
+                const userDropdownMenu = document.getElementById('userDropdownMenu');
+                const userWrapper      = document.getElementById('userDropdown');
+
+                avatarTrigger?.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const isOpen = userDropdownMenu.classList.toggle('open');
+                    avatarTrigger.classList.toggle('open', isOpen);
+                    avatarTrigger.setAttribute('aria-expanded', String(isOpen));
+                    // Đóng notif popup
+                    notifPopup?.classList.remove('open');
+                });
+
+                // ── Đóng tất cả khi click ra ngoài / Escape ──────────────
+                document.addEventListener('click', function (e) {
+                    if (!notifWrapper?.contains(e.target)) notifPopup?.classList.remove('open');
+                    if (!userWrapper?.contains(e.target)) {
+                        userDropdownMenu?.classList.remove('open');
+                        avatarTrigger?.classList.remove('open');
+                    }
+                });
+                document.addEventListener('keydown', function (e) {
+                    if (e.key !== 'Escape') return;
+                    notifPopup?.classList.remove('open');
+                    userDropdownMenu?.classList.remove('open');
+                    avatarTrigger?.classList.remove('open');
+                });
+
+                // ── Load badge ngay khi trang load ───────────────────────
+                loadUnreadCount();
+
+            })();
+        </script>
+        <script id="g4k1fj">
+            async function loadCartCount() {
+                try {
+                    const res = await fetch('/api/cart/count');
+
+                    const count = await res.json();
+                    if (!res.ok) return;
+
+                    const badge = document.getElementById('cartBadge');
+
+                    if (count > 0) {
+                        badge.style.display = 'flex';
+                        badge.innerText = count;
+                    } else {
+                        badge.style.display = 'none';
+                    }
+
+                } catch (e) {
+                    console.error("Error loading cart count", e);
+                }
+            }
+        </script>
+        <script th:if="${#authorization.expression('isAuthenticated()')}">
+            document.addEventListener("DOMContentLoaded", loadCartCount);
+        </script>
+    </th:block>
+</th:block>
+
+<!-- END: Utility Scripts -->
+<aside th:fragment="sidebar(activePage)"
+        class="w-64 flex-none flex-col justify-between border-r border-border-light bg-surface-light hidden lg:flex">
+    <div class="flex flex-col gap-2 p-4">
+        <div class="flex flex-col gap-1">
+            <a th:classappend="${activePage == 'cart' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"
+                    class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"
+               th:href="@{/cart}">
+                <span class="material-symbols-outlined text-[24px]">shopping_cart</span>
+                <span class="text-sm font-medium">Cart</span>
+            </a>
+            <a th:classappend="${activePage == 'myticket' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"
+                    class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"
+               th:href="@{/myticket}">
+                <span class="material-symbols-outlined text-[24px]">confirmation_number</span>
+                <span class="text-sm font-medium">My Ticket</span>
+            </a>
+            <a th:classappend="${activePage == 'history' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"
+                    class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"
+               th:href="@{/history}">
+                <span class="material-symbols-outlined text-[24px]">payments</span>
+                <span class="text-sm font-medium">Payment History</span>
+            </a>
+            <a th:classappend="${activePage == 'notification' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"
+               class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"
+               th:href="@{/user/notifications}">
+                <span class="material-symbols-outlined text-[24px]">notifications</span>
+                <span class="text-sm font-medium">My Notifications</span>
+            </a>
+
+<!--            <a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"-->
+<!--               href="#">-->
+<!--                <span class="material-symbols-outlined fill-1 text-[24px]">confirmation_number</span>-->
+<!--                <span class="text-sm font-semibold">My Ticket</span>-->
+<!--            </a>-->
+        </div>
+        <div class="my-2 h-[1px] bg-border-light w-full"></div>
+        <div class="flex flex-col gap-1">
+            <a th:classappend="${activePage == 'help' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"
+               class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"
+               th:href="@{/help}">
+                <span class="material-symbols-outlined text-[24px]">help</span>
+                <span class="text-sm font-medium">Suport</span>
+            </a>
+        </div>
+
+    </div>
+    <!-- <div class="p-4">
+        <div class="rounded-xl bg-gradient-to-br from-primary to-blue-600 p-4 text-white shadow-lg">
+            <p class="mb-1 text-sm font-bold">Premium Access</p>
+            <p class="mb-3 text-xs opacity-90">Unlock exclusive backstage content.</p>
+            <button
+                class="w-full rounded bg-white py-1.5 text-xs font-bold text-primary hover:bg-gray-50">Upgrade
+                Now</button>
+        </div>
+    </div> -->
+</aside>
+
+</body>
+</html>
+
+

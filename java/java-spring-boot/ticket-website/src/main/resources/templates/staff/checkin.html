@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <title>Scan QR Check-in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <style>
+        /* ===================== RESET & BASE ===================== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:        #0a0a0f;
+            --surface:   #13131a;
+            --border:    #2a2a3a;
+            --accent:    #2464f9;
+            --accent2:   #1a3a8f;
+            --danger:    #ff4d6d;
+            --danger-bg: #2a0d14;
+            --warn:      #ffb830;
+            --warn-bg:   #2a1f00;
+            --text:      #e8e8f0;
+            --muted:     #6b6b80;
+            --radius:    16px;
+            --font-mono: 'Space Mono', monospace;
+            --font-sans: 'DM Sans', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+        }
+
+        /* ===================== LAYOUT ===================== */
+        .app {
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 0 0 env(safe-area-inset-bottom);
+        }
+
+        /* ===================== HEADER ===================== */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-icon {
+            width: 40px; height: 40px;
+            background: var(--accent2);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .header-icon svg { width: 20px; height: 20px; stroke: var(--accent); }
+
+        .header-text h1 {
+            font-family: var(--font-mono);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.3px;
+        }
+
+        .header-text p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .event-badge {
+            margin-left: auto;
+            font-size: 11px;
+            font-family: var(--font-mono);
+            color: var(--accent);
+            background: var(--accent2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+            display: none; /* hiện khi có eventId */
+        }
+
+        /* ===================== SCANNER AREA ===================== */
+        .scanner-wrapper {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .scanner-container {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: #000;
+            aspect-ratio: 1;
+            width: 100%;
+        }
+
+        /* Thymeleaf reader renders vào đây */
+        #qr-reader {
+            width: 100% !important;
+            border: none !important;
+        }
+
+        #qr-reader video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover;
+        }
+
+        /* Ẩn UI mặc định xấu của html5-qrcode */
+        #qr-reader img { display: none !important; }
+        #qr-reader__dashboard_section_csr button,
+        #qr-reader__dashboard_section_swaplink { display: none !important; }
+        #qr-reader__status_span { display: none !important; }
+        #qr-reader__filescan_input { display: none !important; }
+        #qr-reader__dashboard { display: none !important; }
+
+        /* Khung ngắm tự vẽ */
+        .scanner-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scan-frame {
+            width: 64%;
+            aspect-ratio: 1;
+            position: relative;
+        }
+
+        .scan-frame::before,
+        .scan-frame::after,
+        .scan-frame > span::before,
+        .scan-frame > span::after {
+            content: '';
+            position: absolute;
+            width: 24px; height: 24px;
+            border-color: var(--accent);
+            border-style: solid;
+        }
+
+        .scan-frame::before       { top: 0;    left: 0;  border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+        .scan-frame::after        { top: 0;    right: 0; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+        .scan-frame > span::before{ bottom: 0; left: 0;  border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+        .scan-frame > span::after { bottom: 0; right: 0; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+
+        /* Laser scan line animation */
+        .scan-line {
+            position: absolute;
+            left: 4px; right: 4px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            animation: scan 2s ease-in-out infinite;
+            top: 0;
+        }
+
+        @keyframes scan {
+            0%   { top: 4px;  opacity: 1; }
+            50%  { top: calc(100% - 4px); opacity: 1; }
+            100% { top: 4px;  opacity: 1; }
+        }
+
+        /* ===================== STATUS BAR ===================== */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .status-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--muted);
+            flex-shrink: 0;
+            transition: background 0.3s;
+        }
+
+        .status-dot.active { background: var(--accent); animation: pulse 1.5s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .status-text {
+            font-size: 13px;
+            color: var(--muted);
+            font-family: var(--font-mono);
+        }
+
+        .status-count {
+            margin-left: auto;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        /* ===================== CONTROLS ===================== */
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: var(--font-sans);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .btn-primary:active { transform: scale(0.97); }
+        .btn-primary:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:active { transform: scale(0.97); }
+
+        /* ===================== HISTORY ===================== */
+        .history-section {
+            padding: 0 20px 20px;
+        }
+
+        .history-label {
+            font-size: 11px;
+            font-family: var(--font-mono);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--surface);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .history-icon {
+            width: 28px; height: 28px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .history-icon.ok   { background: var(--accent2); }
+        .history-icon.fail { background: var(--danger-bg); }
+
+        .history-info { flex: 1; min-width: 0; }
+
+        .history-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-sub {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .history-time {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+
+        /* ===================== MODAL ===================== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 100;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .modal-backdrop.show {
+            display: flex;
+            animation: backdropIn 0.2s ease;
+        }
+
+        @keyframes backdropIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 480px;
+            background: var(--surface);
+            border-radius: 24px 24px 0 0;
+            padding: 12px 24px 36px;
+            border-top: 1px solid var(--border);
+            animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to   { transform: translateY(0); }
+        }
+
+        .modal-handle {
+            width: 40px; height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 0 auto 20px;
+        }
+
+        /* SUCCESS modal */
+        .modal-success .modal-icon-wrap {
+            width: 72px; height: 72px;
+            background: var(--accent2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .modal-success .modal-icon-wrap svg { width: 36px; height: 36px; stroke: var(--accent); }
+
+        .modal-success h2 {
+            font-family: var(--font-mono);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* FAIL modal */
+        .modal-fail .modal-icon-wrap {
+            width: 72px; height: 72px;
+            background: var(--danger-bg);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .modal-fail .modal-icon-wrap svg { width: 36px; height: 36px; stroke: var(--danger); }
+
+        .modal-fail h2 {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--danger);
+            text-align: center;
+        }
+
+        .modal-message {
+            font-size: 14px;
+            color: var(--muted);
+            text-align: center;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .modal-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
+        .modal-info-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--muted);
+            font-family: var(--font-mono);
+        }
+
+        .info-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            text-align: right;
+            max-width: 60%;
+        }
+
+        .ticket-number-badge {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            background: var(--border);
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: var(--accent);
+        }
+
+        .modal-btn-close {
+            margin-top: 24px;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: var(--font-sans);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-success .modal-btn-close {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .modal-fail .modal-btn-close {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .modal-btn-close:active { transform: scale(0.98); }
+
+        /* Prevent body scroll when modal open */
+        body.modal-open { overflow: hidden; }
+    </style>
+</head>
+<body th:data-event-id="${eventId}">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+
+<div class="app">
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                <path d="M14 14h2v2h-2zM18 14h3M14 18h3M18 18v3M14 21h2"/>
+            </svg>
+        </div>
+        <div class="header-text">
+            <h1>QR CHECK-IN</h1>
+            <p>Scan a QR code to verify ticket</p>
+        </div>
+        <span class="event-badge" id="eventBadge" th:if="${eventId != null}"
+              th:text="'Event #' + ${eventId}">Event #0</span>
+    </div>
+
+    <!-- SCANNER -->
+    <div class="scanner-wrapper">
+
+        <!-- Camera view -->
+        <div class="scanner-container">
+            <div id="qr-reader"></div>
+            <div class="scanner-overlay">
+                <div class="scan-frame">
+                    <span></span>
+                    <div class="scan-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="status-bar">
+            <div class="status-dot" id="statusDot"></div>
+            <span class="status-text" id="statusText">Starting camera...</span>
+            <span class="status-count" id="scanCount"></span>
+        </div>
+
+        <!-- Buttons -->
+        <div class="controls">
+            <button class="btn btn-primary" id="btnStart" onclick="startScanner()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M5 3l14 9-14 9V3z"/>
+                </svg>
+                Start
+            </button>
+            <button class="btn btn-secondary" id="btnStop" onclick="stopScanner()" disabled>
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <rect x="4" y="4" width="16" height="16" rx="2"/>
+                </svg>
+                Stop
+            </button>
+        </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="history-section">
+        <div class="history-label">Scan History Today</div>
+        <div class="history-list" id="historyList">
+            <div style="text-align:center; padding: 16px; color: var(--muted); font-size:13px;">
+                No scans yet
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== MODAL SUCCESS ===================== -->
+<div class="modal-backdrop" id="modalSuccess">
+    <div class="modal modal-success">
+        <div class="modal-handle"></div>
+        <div class="modal-icon-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+        </div>
+        <h2>CHECK-IN SUCCESSFUL</h2>
+        <p class="modal-message" id="successMsg">Valid ticket. Welcome!</p>
+        <div class="modal-divider"></div>
+        <div class="modal-info-grid">
+            <div class="info-row">
+                <span class="info-label">Event</span>
+                <span class="info-value" id="infoEventName">—</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">TICKET TYPE</span>
+                <span class="info-value" id="infoTicketType">—</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">TICKET NO.</span>
+                <span class="ticket-number-badge" id="infoTicketNumber">—</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">TIME</span>
+                <span class="info-value" id="infoTime">—</span>
+            </div>
+        </div>
+        <button class="modal-btn-close" onclick="closeModal()">Next scan</button>
+    </div>
+</div>
+
+<!-- ===================== MODAL FAIL ===================== -->
+<div class="modal-backdrop" id="modalFail">
+    <div class="modal modal-fail">
+        <div class="modal-handle"></div>
+        <div class="modal-icon-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </div>
+        <h2 id="failTitle">CHECK-IN FAILED</h2>
+        <p class="modal-message" id="failMsg">Invalid ticket.</p>
+        <button class="modal-btn-close" onclick="closeModal()">Try again</button>
+    </div>
+</div>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+    /*<![CDATA[*/
+    let html5QrCode = null;
+    let isProcessing = false;
+    let scanCount = 0;
+
+    // --- Khởi động scanner ---
+    function startScanner() {
+        setStatus('scanning', 'Opening camera...');
+        document.getElementById('btnStart').disabled = true;
+        document.getElementById('btnStop').disabled = false;
+
+        // Nếu instance cũ còn tồn tại thì clear hẳn trước khi tạo mới
+        if (html5QrCode) {
+            html5QrCode.stop()
+                .catch(() => {})
+                .finally(() => {
+                    html5QrCode.clear();
+                    html5QrCode = null;
+                    doStart();
+                });
+        } else {
+            doStart();
+        }
+    }
+
+    function doStart() {
+        // Đảm bảo div reader sạch trước khi khởi tạo
+        const readerEl = document.getElementById('qr-reader');
+        readerEl.innerHTML = '';
+        html5QrCode = new Html5Qrcode("qr-reader", { verbose: false });
+
+        const config = {
+            fps: 10,
+            qrbox: { width: 220, height: 220 },
+            aspectRatio: 1.0
+            // Bỏ showTorchButtonIfSupported vì gây lỗi trên một số iOS
+        };
+
+        // iOS Safari: thử "environment" trước, fallback sang "user" nếu lỗi
+        html5QrCode.start(
+            { facingMode: { exact: "environment" } },
+            config,
+            onScanSuccess,
+            () => {}
+        ).then(() => {
+            setStatus('scanning', 'Scanning...');
+        }).catch(() => {
+            // Fallback: không dùng "exact", để browser tự chọn camera
+            html5QrCode.start(
+                { facingMode: "environment" },
+                config,
+                onScanSuccess,
+                () => {}
+            ).then(() => {
+                setStatus('scanning', 'Scanning...');
+            }).catch(err => {
+                setStatus('error', 'Cannot open camera — check permissions');
+                document.getElementById('btnStart').disabled = false;
+                document.getElementById('btnStop').disabled = true;
+                console.error('Camera error:', err);
+                // Hiện thông báo rõ ràng hơn cho user
+                alert('Cannot open camera.\\n\\nPlease allow camera access in your browser settings and reload the page.');
+            });
+        });
+    }
+
+    // --- Dừng scanner ---
+    function stopScanner() {
+        if (html5QrCode) {
+            html5QrCode.stop()
+                .catch(() => {})
+                .finally(() => {
+                    html5QrCode.clear();
+                    html5QrCode = null;
+                    setStatus('idle', 'Camera stopped');
+                    document.getElementById('btnStart').disabled = false;
+                    document.getElementById('btnStop').disabled = true;
+                });
+        }
+    }
+
+    // --- Xử lý khi đọc được QR ---
+    async function onScanSuccess(decodedText) {
+        if (isProcessing) return; // chặn double-scan
+        isProcessing = true;
+
+        setStatus('processing', 'Verifying...');
+
+        try {
+            // Parse URL từ QR (định dạng: /api/checkin?t=...&c=...)
+            const url = new URL(decodedText);
+            const t = url.searchParams.get('t');
+            const c = url.searchParams.get('c');
+
+            if (!t || !c) {
+                showFail('INVALID QR', 'This QR code is not a valid ticket.');
+                addHistory(false, 'INVALID QR', '');
+                return;
+            }
+
+            // Gọi API check-in
+            const eventId = document.body.dataset.eventId;
+            const eParam = eventId ? ('&e=' + encodeURIComponent(eventId)) : '';
+            const response = await fetch('/api/checkin?t=' + encodeURIComponent(t) + '&c=' + encodeURIComponent(c) + eParam, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            });
+
+            const data = await response.json();
+            scanCount++;
+            document.getElementById('scanCount').textContent = scanCount + ' scans';
+
+            if (data.success) {
+                // Format thời gian
+                const timeStr = formatTime(data.checkedInAt);
+                showSuccess(data.eventName, data.ticketType, data.ticketNumber, timeStr);
+                addHistory(true, data.eventName || 'Event', data.ticketType || '', timeStr);
+            } else {
+                const titles = {
+                    'ALREADY_CHECKED_IN': 'ALREADY USED',
+                    'TICKET_NOT_FOUND':   'TICKET NOT FOUND',
+                    'SIG_INVALID':        'INVALID / TAMPERED',
+                    'QR_INVALID':         'INVALID QR',
+                    'SERVER_ERROR':       'SYSTEM ERROR',
+                    'WRONG_EVENT':        'WRONG EVENT'
+                };
+                showFail(titles[data.code] || 'FAILED', data.message);
+                addHistory(false, titles[data.code] || data.code, data.message);
+            }
+
+        } catch (e) {
+            showFail('CONNECTION ERROR', 'Cannot connect to server. Check your connection.');
+            addHistory(false, 'Connection error', '');
+            console.error(e);
+        }
+    }
+
+    // --- Hiện modal thành công ---
+    function showSuccess(eventName, ticketType, ticketNumber, time) {
+        document.getElementById('infoEventName').textContent    = eventName   || '—';
+        document.getElementById('infoTicketType').textContent   = ticketType  || '—';
+        document.getElementById('infoTicketNumber').textContent = ticketNumber || '—';
+        document.getElementById('infoTime').textContent         = time        || '—';
+        openModal('modalSuccess');
+
+        // Vibrate nếu điện thoại hỗ trợ
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+    }
+
+    // --- Hiện modal thất bại ---
+    function showFail(title, message) {
+        document.getElementById('failTitle').textContent = title;
+        document.getElementById('failMsg').textContent   = message;
+        openModal('modalFail');
+        if (navigator.vibrate) navigator.vibrate(400);
+    }
+
+    // --- Modal controls ---
+    function openModal(id) {
+        document.getElementById(id).classList.add('show');
+        document.body.classList.add('modal-open');
+        setStatus('idle', 'Waiting...');
+    }
+
+    function closeModal() {
+        document.getElementById('modalSuccess').classList.remove('show');
+        document.getElementById('modalFail').classList.remove('show');
+        document.body.classList.remove('modal-open');
+        isProcessing = false;
+        setStatus('scanning', 'Scanning...');
+    }
+
+    // Đóng modal khi tap ngoài
+    document.querySelectorAll('.modal-backdrop').forEach(el => {
+        el.addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    });
+
+    // --- History list ---
+    function addHistory(success, title, subtitle, time) {
+        const list = document.getElementById('historyList');
+
+        // Xóa placeholder
+        if (list.querySelector('div[style]')) list.innerHTML = '';
+
+        const now = time || new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.innerHTML =
+            '<div class="history-icon ' + (success ? 'ok' : 'fail') + '">' + (success ? '✓' : '✕') + '</div>' +
+            '<div class="history-info">' +
+            '<div class="history-name">' + escHtml(title) + '</div>' +
+            '<div class="history-sub">' + escHtml(subtitle) + '</div>' +
+            '</div>' +
+            '<span class="history-time">' + now + '</span>';
+        list.prepend(item);
+    }
+
+    // --- Status bar ---
+    function setStatus(state, text) {
+        const dot  = document.getElementById('statusDot');
+        const span = document.getElementById('statusText');
+        span.textContent = text;
+        dot.className = 'status-dot' + (state === 'scanning' ? ' active' : '');
+    }
+
+    // --- Helpers ---
+    function formatTime(isoStr) {
+        if (!isoStr) return '';
+        try {
+            return new Date(isoStr).toLocaleTimeString('vi-VN', {
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+        } catch { return isoStr; }
+    }
+
+    function escHtml(str) {
+        return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // --- Init khi load trang ---
+    // iOS Safari KHÔNG cho phép auto-start camera (cần user gesture)
+    // Chỉ hiện badge, KHÔNG gọi startScanner() tự động
+    window.addEventListener('load', () => {
+        const badge = document.getElementById('eventBadge');
+        if (badge) badge.style.display = 'block';
+        setStatus('idle', 'Press "Start" to open the camera.');
+    });
+    /*]]>*/
+</script>
+<th:block th:replace="~{fragment/staff/frag::staffBellScript}"></th:block>
+</body>
+</html>

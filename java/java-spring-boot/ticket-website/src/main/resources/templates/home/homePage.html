@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/frag::head('Home Page')}"></head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-white antialiased transition-colors duration-200">
+<div th:replace="~{fragment/ai-chat::ai-chat}"></div>
+<div th:replace="~{fragment/frag::loading}"></div>
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+    <!-- Top Navigation -->
+    <header th:replace="~{fragment/customer/frag::header}"></header>
+<!--    &lt;!&ndash; Banner Container &ndash;&gt;-->
+<!--    <div class="w-full overflow-hidden bg-yellow-400 py-3">-->
+<!--        <div class="whitespace-nowrap animate-marquee text-black font-semibold text-lg">🚀Event Go Môi trường test - -->
+<!--            Cập nhật gần nhất: 12:34 AM - Thân chào tất cả các bạn, đây là phiên bản thử nghiệm của hệ thống EventGo.-->
+<!--            Trong quá trình sử dụng nếu phát hiện lỗi hoặc trải nghiệm chưa tốt,-->
+<!--            rất mong bạn đóng góp để chúng tôi cải thiện sản phẩm.-->
+<!--        </div>-->
+<!--    </div>-->
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col items-center">
+        <!-- Hero Section -->
+        <div class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+            <div class="relative overflow-hidden rounded-2xl bg-cover bg-center"
+                 data-alt="Crowd at a concert with stage lights"
+                 style='background-image: linear-gradient(rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.6) 100%), url("/images/homeBanner.webp");'>
+                <div class="flex min-h-[400px] flex-col items-center justify-center gap-8 p-6 text-center sm:min-h-[500px]">
+                    <div class="flex flex-col gap-4 max-w-3xl">
+                        <h1 class="font-display text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl md:text-6xl drop-shadow-lg">
+                            Find your next experience
+                        </h1>
+                        <h2 class="text-lg font-medium text-white/90 sm:text-xl drop-shadow-md">
+                            Discover concerts, workshops, and community events happening near you.
+                        </h2>
+                    </div>
+                    <form th:action="@{/search}" method="get"
+                          class="w-full max-w-2xl bg-white dark:bg-gray-900 p-2 rounded-xl shadow-xl">
+                        <div class="flex flex-col sm:flex-row items-center gap-2">
+                            <div class="flex-1 w-full relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                    <span class="material-symbols-outlined">search</span>
+                                </div>
+                                <input class="w-full border-0 bg-transparent py-3 pl-10 pr-4 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-0 sm:text-sm"
+                                       placeholder="Event name..."
+                                       name="keyword"
+                                       th:value="${keyword}"
+                                       type="text"/>
+                            </div>
+
+                            <!-- Submit Search -->
+                            <button type="submit"
+                                    class="w-full sm:w-auto px-8 py-3 bg-primary hover:bg-blue-600 text-white font-bold rounded-lg transition-colors shadow-md">
+                                Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Categories Chips -->
+        <div class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-8">
+            <div class="flex gap-3 justify-center overflow-x-auto p-4 scrollbar-hide no-scrollbar">
+                <a th:each="category : ${listCategory}" th:href="@{/search(category=${category.id})}"
+                   class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-6 text-text-main dark:text-gray-200 shadow-sm transition-all hover:border-primary hover:text-primary dark:hover:text-primary hover:scale-105">
+                    <span th:text="${category.iconName}" class="material-symbols-outlined text-[20px]">music_note</span>
+                    <span th:text="${category.name}" class="text-sm font-bold">Music</span>
+                </a>
+            </div>
+        </div>
+
+
+        <!--        <div class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-8">-->
+        <!--            <div class="flex gap-3 overflow-x-auto pb-4 scrollbar-hide no-scrollbar">-->
+        <!--                <button class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-6 text-white shadow-md transition-transform hover:scale-105">-->
+        <!--                    <span class="material-symbols-outlined text-[20px]">music_note</span>-->
+        <!--                    <span class="text-sm font-bold">Music</span>-->
+        <!--                </button>-->
+        <!--                <button class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-full">-->
+        <!--                    <span class="material-symbols-outlined text-[20px]">business_center</span>-->
+        <!--                    <span class="text-sm font-medium">Business</span>-->
+        <!--                </button>-->
+        <!--                <button class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-6 text-text-main dark:text-gray-200 shadow-sm transition-all hover:border-primary hover:text-primary dark:hover:text-primary">-->
+        <!--                    <span class="material-symbols-outlined text-[20px]">restaurant</span>-->
+        <!--                    <span class="text-sm font-medium">Food &amp; Drink</span>-->
+        <!--                </button>-->
+        <!--                <button class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-6 text-text-main dark:text-gray-200 shadow-sm transition-all hover:border-primary hover:text-primary dark:hover:text-primary">-->
+        <!--                    <span class="material-symbols-outlined text-[20px]">diversity_3</span>-->
+        <!--                    <span class="text-sm font-medium">Community</span>-->
+        <!--                </button>-->
+        <!--                <button class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-6 text-text-main dark:text-gray-200 shadow-sm transition-all hover:border-primary hover:text-primary dark:hover:text-primary">-->
+        <!--                    <span class="material-symbols-outlined text-[20px]">palette</span>-->
+        <!--                    <span class="text-sm font-medium">Arts</span>-->
+        <!--                </button>-->
+        <!--                <button class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-6 text-text-main dark:text-gray-200 shadow-sm transition-all hover:border-primary hover:text-primary dark:hover:text-primary">-->
+        <!--                    <span class="material-symbols-outlined text-[20px]">sports_soccer</span>-->
+        <!--                    <span class="text-sm font-medium">Sports</span>-->
+        <!--                </button>-->
+        <!--                <button class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-6 text-text-main dark:text-gray-200 shadow-sm transition-all hover:border-primary hover:text-primary dark:hover:text-primary">-->
+        <!--                    <span class="material-symbols-outlined text-[20px]">science</span>-->
+        <!--                    <span class="text-sm font-medium">Tech</span>-->
+        <!--                </button>-->
+        <!--            </div>-->
+        <!--        </div>-->
+
+        <!-- Event Live -->
+        <!-- Event Live -->
+        <div class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between pb-6">
+                <h2 class="text-2xl font-bold text-text-main dark:text-white tracking-tight">
+                    🔵 Happening Now
+                </h2>
+                <a class="text-blue-500 text-sm font-bold flex items-center gap-1 hover:underline"
+                   th:href="@{/search(tab='live')}">
+                    View all
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div th:each="event : ${listLiveEvents}" class="group flex flex-col gap-3 cursor-pointer">
+
+                    <a th:href="@{/event/{id}(id=${event.getId()})}"
+                       class="group flex flex-col gap-3 cursor-pointer">
+
+                        <!-- Image -->
+                        <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-sm transition-all duration-300 group-hover:shadow-xl">
+
+                            <!-- 🔵 LIVE badge -->
+                            <div class="absolute top-3 left-3 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-bold shadow-md">
+                                <span class="w-2 h-2 bg-white rounded-full animate-ping"></span>
+                                LIVE
+                            </div>
+
+                            <!-- Background -->
+                            <div th:style="|background-image: url('@{/upload/event/thumbnail/{file}(file=${event.eventThumbnailURL})}');|"
+                                 class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110">
+                            </div>
+
+                            <!-- Category -->
+                            <div class="absolute bottom-3 left-3 z-10 bg-white/90 dark:bg-black/80 backdrop-blur px-3 py-1 rounded-md">
+                        <span th:text="${event.getCategory().name}"
+                              class="text-xs font-bold text-text-main dark:text-white uppercase tracking-wider">
+                        </span>
+                            </div>
+
+                        </div>
+
+                        <!-- Content -->
+                        <div class="space-y-1">
+
+                            <!-- Title -->
+                            <h3 th:text="${event.getTitle()}"
+                                class="text-lg font-bold text-text-main dark:text-white leading-tight
+                               group-hover:text-blue-500 transition-colors">
+                            </h3>
+
+                            <!-- Time -->
+                            <p th:text="${event.getStartDateTimeString()}"
+                               class="text-blue-500 text-sm font-semibold">
+                            </p>
+
+                            <!-- Venue -->
+                            <p th:text="${event.getVenue().name}"
+                               class="text-text-secondary dark:text-gray-400 text-sm truncate">
+                            </p>
+
+                        </div>
+
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <!--Event Completed-->
+        <div class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between pb-6">
+                <h2 class="text-2xl font-bold text-text-main dark:text-white tracking-tight">
+                    Some fantastic event in the past
+                </h2>
+                <a class="text-blue-500 text-sm font-bold flex items-center gap-1 hover:underline"
+                   th:href="@{/search(tab='completed')}">
+                    View all <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div th:each="event : ${listCompletedEvents}" class="group flex flex-col gap-3 cursor-pointer">
+
+                    <a th:href="@{/event/{id}(id=${event.getId()})}" class="group flex flex-col gap-3 cursor-pointer">
+
+                        <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-sm transition-all duration-300 group-hover:shadow-xl">
+
+                            <!-- badge refined -->
+                            <div class="absolute top-3 left-3 z-10 px-3 py-1 rounded-full
+            bg-black/60 backdrop-blur text-white text-xs font-medium
+            transition-all duration-200 group-hover:bg-black/80">
+                                <p class="font-semibold tracking-wide">Completed</p>
+                            </div>
+                            <div th:style="|background-image: url('@{/upload/event/thumbnail/{file}(file=${event.eventThumbnailURL})}');|"
+                                 class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                                 data-alt="Colorful festival lights at night">
+                            </div>
+
+                            <div class="absolute bottom-3 left-3 bg-white/90 dark:bg-black/80 backdrop-blur px-3 py-1 rounded-md">
+                        <span th:text="${event.getCategory().name}"
+                              class="text-xs font-bold text-text-main dark:text-white uppercase tracking-wider">
+                            Music
+                        </span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+
+                            <h3 th:text="${event.getTitle()}"
+                                class="text-lg font-bold text-text-main dark:text-white leading-tight
+                               group-hover:text-blue-500 transition-colors duration-200">
+                                Neon Nights Music Festival
+                            </h3>
+
+                            <p th:text="${event.getStartDateTimeString()}"
+                               class="text-gray-500 dark:text-gray-400 text-sm font-medium">
+                                Sat, Nov 12 • 7:00 PM
+                            </p>
+
+                            <p th:text="${event.getVenue().name}"
+                               class="text-text-secondary dark:text-gray-400 text-sm truncate">
+                                Grand Arena, NY
+                            </p>
+
+                            <div class="flex items-center gap-1 mt-1">
+                        <span th:text="${event.ratinAvg}"
+                              class="text-sm font-semibold text-gray-700 dark:text-gray-300 mr-1">
+                            5.0
+                        </span>
+
+                                <span th:each="i : ${#numbers.sequence(1,5)}"
+                                      class="material-symbols-outlined cursor-pointer hover:scale-110 transition-transform text-amber-400"
+                                      th:text="${i <= T(java.lang.Math).floor(event.ratinAvg) ? 'star' :
+                                                       (i == T(java.lang.Math).ceil(event.ratinAvg) && event.ratinAvg - T(java.lang.Math).floor(event.ratinAvg) >= 0.5 ? 'star_half' : 'star_outline')}"
+                                      th:classappend="${i <= T(java.lang.Math).floor(event.ratinAvg) ||
+                                                               (i == T(java.lang.Math).ceil(event.ratinAvg) && event.ratinAvg - T(java.lang.Math).floor(event.ratinAvg) >= 0.5) ? ' filled' : 'filled text-gray-300 dark:text-gray-600'}">
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Featured Events -->
+        <div th:if="${!listFeatureEvents.isEmpty()}" class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between pb-6">
+                <h2 class="text-2xl font-bold text-text-main dark:text-white tracking-tight">Featured Events</h2>
+                <a th:href="@{/search(tab='featured')}"
+                   class="text-primary text-sm font-bold flex items-center gap-1">
+                    View all <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div th:each="event : ${listFeatureEvents}" class="group flex flex-col gap-3 cursor-pointer">
+                    <!--Create a link to event detail-->
+                    <a th:href="@{/event/{id}(id=${event.getId()})}" class="group flex flex-col gap-3 cursor-pointer">
+                        <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-sm transition-all duration-300 group-hover:shadow-lg">
+                            <div class="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white hover:text-red-500 transition-colors">
+                                <span class="material-symbols-outlined block text-[20px]">favorite</span>
+                            </div>
+                            <div th:style="|background-image: url('@{/upload/event/thumbnail/{file}(file=${event.eventThumbnailURL})}');|"
+                                 class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                 data-alt="Colorful festival lights at night">
+
+                            </div>
+                            <div class="absolute bottom-3 left-3 bg-white/90 dark:bg-black/80 backdrop-blur px-3 py-1 rounded-md">
+                            <span th:text="${event.getCategory().name}"
+                                  class="text-xs font-bold text-text-main dark:text-white uppercase tracking-wider">Music</span>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 th:text="${event.getTitle()}"
+                                class="text-lg font-bold text-text-main dark:text-white leading-tight group-hover:text-primary transition-colors">
+                                Neon Nights Music Festival</h3>
+                            <p th:text="${event.getStartDateTimeString()}" class="text-primary text-sm font-semibold">
+                                Sat, Nov 12
+                                • 7:00 PM</p>
+                            <p th:text="${event.getVenue().name}"
+                               class="text-text-secondary dark:text-gray-400 text-sm truncate">Grand Arena, NY</p>
+                            <p th:text="|From ${#numbers.formatDecimal(event.minPrice, 1, 'POINT', 0, 'DEFAULT')} ${event.currency}|"
+                               class="text-text-main dark:text-gray-200 text-sm font-bold text-blue-600">From $45</p>
+                        </div>
+
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <!-- Trending Events -->
+        <div th:if="${!listTrendingEvents.isEmpty()}" class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between pb-6">
+                <h2 class="text-2xl font-bold text-text-main dark:text-white tracking-tight">Trending Events</h2>
+                <a th:href="@{/search(tab='trending')}"
+                   class="text-primary text-sm font-bold flex items-center gap-1">
+                    View all <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div th:each="event : ${listTrendingEvents}" class="group flex flex-col gap-3 cursor-pointer">
+                    <!--Create a link to event detail-->
+                    <a th:href="@{/event/{id}(id=${event.getId()})}" class="group flex flex-col gap-3 cursor-pointer">
+                        <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-sm transition-all duration-300 group-hover:shadow-lg">
+                            <div class="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white hover:text-red-500 transition-colors">
+                                <span class="material-symbols-outlined block text-[20px]">favorite</span>
+                            </div>
+                            <div th:style="|background-image: url('@{/upload/event/thumbnail/{file}(file=${event.eventThumbnailURL})}');|"
+                                 class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                 data-alt="Colorful festival lights at night">
+
+                            </div>
+                            <div class="absolute bottom-3 left-3 bg-white/90 dark:bg-black/80 backdrop-blur px-3 py-1 rounded-md">
+                            <span th:text="${event.getCategory().name}"
+                                  class="text-xs font-bold text-text-main dark:text-white uppercase tracking-wider">Music</span>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 th:text="${event.getTitle()}"
+                                class="text-lg font-bold text-text-main dark:text-white leading-tight group-hover:text-primary transition-colors">
+                                Neon Nights Music Festival</h3>
+                            <p th:text="${event.getStartDateTimeString()}" class="text-primary text-sm font-semibold">
+                                Sat, Nov 12
+                                • 7:00 PM</p>
+                            <p th:text="${event.getVenue().name}"
+                               class="text-text-secondary dark:text-gray-400 text-sm truncate">Grand Arena, NY</p>
+                            <p th:text="|From ${#numbers.formatDecimal(event.minPrice, 1, 'POINT', 0, 'DEFAULT')} ${event.currency}|"
+                               class="text-text-main dark:text-gray-200 text-sm font-bold text-blue-600">From $45</p>
+                        </div>
+
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <!-- Upcoming Events -->
+        <div th:if="${!listUpcomingEvents.isEmpty()}" class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between pb-6">
+                <h2 class="text-2xl font-bold text-text-main dark:text-white tracking-tight">Upcoming Events</h2>
+                <a th:href="@{/search(tab='upcoming')}"
+                   class="text-primary text-sm font-bold flex items-center gap-1">
+                    View all <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div th:each="event : ${listUpcomingEvents}" class="group flex flex-col gap-3 cursor-pointer">
+                    <!--Create a link to event detail-->
+                    <a th:href="@{/event/{id}(id=${event.getId()})}" class="group flex flex-col gap-3 cursor-pointer">
+                        <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-sm transition-all duration-300 group-hover:shadow-lg">
+                            <div class="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white hover:text-red-500 transition-colors">
+                                <span class="material-symbols-outlined block text-[20px]">favorite</span>
+                            </div>
+                            <div th:style="|background-image: url('@{/upload/event/thumbnail/{file}(file=${event.eventThumbnailURL})}');|"
+                                 class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                 data-alt="Colorful festival lights at night">
+
+                            </div>
+                            <div class="absolute bottom-3 left-3 bg-white/90 dark:bg-black/80 backdrop-blur px-3 py-1 rounded-md">
+                            <span th:text="${event.getCategory().name}"
+                                  class="text-xs font-bold text-text-main dark:text-white uppercase tracking-wider">Music</span>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 th:text="${event.getTitle()}"
+                                class="text-lg font-bold text-text-main dark:text-white leading-tight group-hover:text-primary transition-colors">
+                                Neon Nights Music Festival</h3>
+                            <p th:text="${event.getStartDateTimeString()}" class="text-primary text-sm font-semibold">
+                                Sat, Nov 12
+                                • 7:00 PM</p>
+                            <p th:text="${event.getVenue().name}"
+                               class="text-text-secondary dark:text-gray-400 text-sm truncate">Grand Arena, NY</p>
+                            <p th:text="|From ${#numbers.formatDecimal(event.minPrice, 1, 'POINT', 0, 'DEFAULT')} ${event.currency}|"
+                               class="text-text-main dark:text-gray-200 text-sm font-bold text-blue-600">From $45</p>
+                        </div>
+
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <!-- Events by categories -->
+        <div th:each="mapEvent : ${mapEventByCategories}" th:if="${!mapEvent.value.isEmpty()}"
+             class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between pb-6">
+                <h2 th:text="${mapEvent.key.name} + ' Events'"
+                    class="text-2xl font-bold text-text-main dark:text-white tracking-tight">Category 1 Events</h2>
+                <a th:href="@{/search(category=${mapEvent.key.id})}"
+                   class="text-primary text-sm font-bold flex items-center gap-1">
+                    View all <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div th:each="event : ${mapEvent.value}" class="group flex flex-col gap-3 cursor-pointer">
+                    <!--Create a link to event detail-->
+                    <a th:href="@{/event/{id}(id=${event.getId()})}" class="group flex flex-col gap-3 cursor-pointer">
+                        <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-sm transition-all duration-300 group-hover:shadow-lg">
+                            <div class="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white hover:text-red-500 transition-colors">
+                                <span class="material-symbols-outlined block text-[20px]">favorite</span>
+                            </div>
+                            <div th:style="|background-image: url('@{/upload/event/thumbnail/{file}(file=${event.eventThumbnailURL})}');|"
+                                 class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                 data-alt="Colorful festival lights at night">
+                            </div>
+                            <div class="absolute bottom-3 left-3 bg-white/90 dark:bg-black/80 backdrop-blur px-3 py-1 rounded-md">
+                            <span th:text="${event.getCategory().name}"
+                                  class="text-xs font-bold text-text-main dark:text-white uppercase tracking-wider">Music</span>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 th:text="${event.getTitle()}"
+                                class="text-lg font-bold text-text-main dark:text-white leading-tight group-hover:text-primary transition-colors">
+                                Neon Nights Music Festival</h3>
+                            <p th:text="${event.getStartDateTimeString()}" class="text-primary text-sm font-semibold">
+                                Sat, Nov 12
+                                • 7:00 PM</p>
+                            <p th:text="${event.getVenue().name}"
+                               class="text-text-secondary dark:text-gray-400 text-sm truncate">Grand Arena, NY</p>
+                            <p th:text="|From ${#numbers.formatDecimal(event.minPrice, 1, 'POINT', 0, 'DEFAULT')} ${event.currency}|"
+                               class="text-text-main dark:text-gray-200 text-sm font-bold text-blue-600">From $45</p>
+                        </div>
+
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <!-- Events Near You -->
+<!--        <div class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-4">-->
+<!--            <div class="flex items-center justify-between pb-6">-->
+<!--                <h2 class="text-2xl font-bold text-text-main dark:text-white tracking-tight">Events Near You</h2>-->
+<!--                <a class="text-primary text-sm font-bold flex items-center gap-1" href="#">-->
+<!--                    View all <span class="material-symbols-outlined text-sm">arrow_forward</span>-->
+<!--                </a>-->
+<!--            </div>-->
+<!--            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">-->
+<!--                &lt;!&ndash; Card 1 &ndash;&gt;-->
+<!--                <div th:each="event : ${listFeatureEvents}" class="group flex flex-col gap-3 cursor-pointer">-->
+<!--                    &lt;!&ndash;Create a link to event detail&ndash;&gt;-->
+<!--                    <a th:href="@{/event/{id}(id=${event.getId()})}" class="group flex flex-col gap-3 cursor-pointer">-->
+<!--                        <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-sm transition-all duration-300 group-hover:shadow-lg">-->
+<!--                            <div class="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white hover:text-red-500 transition-colors">-->
+<!--                                <span class="material-symbols-outlined block text-[20px]">favorite</span>-->
+<!--                            </div>-->
+<!--                            <div th:style="|background-image: url('@{/upload/event/thumbnail/{file}(file=${event.eventThumbnailURL})}');|"-->
+<!--                                 class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"-->
+<!--                                 data-alt="Colorful festival lights at night">-->
+
+<!--                            </div>-->
+<!--                            <div class="absolute bottom-3 left-3 bg-white/90 dark:bg-black/80 backdrop-blur px-3 py-1 rounded-md">-->
+<!--                            <span th:text="${event.getCategory().name}"-->
+<!--                                  class="text-xs font-bold text-text-main dark:text-white uppercase tracking-wider">Music</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="space-y-1">-->
+<!--                            <h3 th:text="${event.getTitle()}"-->
+<!--                                class="text-lg font-bold text-text-main dark:text-white leading-tight group-hover:text-primary transition-colors">-->
+<!--                                Neon Nights Music Festival</h3>-->
+<!--                            <p th:text="${event.getStartDateTimeString()}" class="text-primary text-sm font-semibold">-->
+<!--                                Sat, Nov 12-->
+<!--                                • 7:00 PM</p>-->
+<!--                            <p th:text="${event.getVenue().name}"-->
+<!--                               class="text-text-secondary dark:text-gray-400 text-sm truncate">Grand Arena, NY</p>-->
+<!--                            <p th:text="|From ${#numbers.formatDecimal(event.minPrice, 1, 'POINT', 0, 'DEFAULT')} ${event.currency}|"-->
+<!--                               class="text-text-main dark:text-gray-200 text-sm font-bold text-blue-600">From $45</p>-->
+<!--                        </div>-->
+
+<!--                    </a>-->
+
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+        <footer th:replace="~{fragment/frag::footer}" ></footer>
+    </main>
+</div>
+<th:block th:replace="~{fragment/customer/frag::headerScripts}"></th:block>
+<!-- AI Chat Assistant -->
+<script th:replace="~{fragment/frag::scriptLoading}"></script>
+</body>
+</html>

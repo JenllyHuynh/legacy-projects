@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/frag::head('Check Out')}">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Order Checkout Summary</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+          rel="stylesheet"/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1f62ff",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#0f1523",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom scrollbar for better aesthetic */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body
+        class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col font-display text-gray-900 dark:text-gray-100 transition-colors duration-200">
+<div th:replace="~{fragment/frag::loading}"></div>
+<script th:replace="~{fragment/frag::scriptLoading}"></script>
+<header th:replace="~{fragment/customer/frag::header}"
+        class="sticky top-0 z-50 w-full border-b border-[#e6eaf4] dark:border-gray-800 bg-white/95 dark:bg-[#0f1523]/95 backdrop-blur px-6 py-3">
+    <div class="mx-auto max-w-7xl flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center size-8 rounded-lg bg-primary/10 text-primary">
+                <span class="material-symbols-outlined">event_available</span>
+            </div>
+            <h2 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">EventManager</h2>
+        </div>
+        <nav class="hidden md:flex items-center gap-8">
+            <a class="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-white transition-colors"
+               href="#">Events</a>
+            <a class="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-white transition-colors"
+               href="#">My Bookings</a>
+            <a class="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-white transition-colors"
+               href="#">Help</a>
+        </nav>
+        <div class="flex items-center gap-4">
+            <div class="size-9 rounded-full bg-cover bg-center border border-gray-200 dark:border-gray-700"
+                 data-alt="User profile avatar placeholder"
+                 style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAh1c8JkwC3fOh9oNNQqp1Dgek67e8_YP7eOA2mmS6mmHQ0rElPGwetkIE_eov0pgX7Gg0TTEBJnU4voWi7-Vmkozl4v3vW1wkFjzJ1Y1jYuwCsVzvrJ-06l5OQIaRn2b_JAyyK6btcnaPu0k-vzm2SYz3w5TA7O0wDcdjLMeKnvZJHpGLJeS41eao1xhBnlALFzvKH1_3L5T3y33Svso7faVIW0jTQ2Q1HthyKrQycOk8LuhZYTdCf8BtQWP74YvSnx09V35FeRxG7");'>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-3 py-3">
+    <!-- Breadcrumbs -->
+    <nav class="flex mb-6 text-sm font-medium text-gray-500 dark:text-gray-400">
+        <ol class="flex flex-wrap items-center gap-2">
+            <li><a class="hover:text-primary transition-colors" href="#">Home</a></li>
+            <li><span class="material-symbols-outlined text-base align-middle">chevron_right</span></li>
+            <li><a class="hover:text-primary transition-colors" href="#">Cart</a></li>
+            <li><span class="material-symbols-outlined text-base align-middle">chevron_right</span></li>
+            <li><span class="text-gray-900 dark:text-white">Checkout</span></li>
+        </ol>
+    </nav>
+    <!-- Page Heading -->
+    <div class="mb-10">
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight text-gray-900 dark:text-white mb-2">Secure
+            Checkout</h1>
+        <p class="text-gray-500 dark:text-gray-400 text-lg">Complete your purchase for cart</p>
+    </div>
+    <div class="lg:grid lg:grid-cols-12 lg:gap-12 items-start">
+        <!-- Left Column: Forms -->
+        <div class="lg:col-span-7 flex flex-col gap-8">
+            <form th:action="@{/checkout}" method="post" th:object="${checkoutFormDTO}">
+                <!-- Payment Method Selection -->
+                <section
+                        class="bg-white dark:bg-[#1a202c] rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Payment Method</h3>
+                        <span
+                                class="flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400 px-2 py-1 rounded">
+                                <span class="material-symbols-outlined text-sm">lock</span> Secure SSL
+                            </span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+
+                        <!-- VNPAY option -->
+                        <label th:classappend="*{paymentMethod == 'vnpay'} ? 'border-primary' : ''"
+                               class="payment-option relative flex items-center gap-3 cursor-pointer rounded-lg border-2  bg-primary/5 p-4 shadow-sm">
+
+                            <input th:field="*{paymentMethod}" class="sr-only" type="radio" value="vnpay"/>
+
+                            <!-- Logo -->
+                            <div class="w-15 h-15 flex items-center justify-center rounded-md bg-white border">
+                                <img th:src="@{/images/vnpay-logo-vinadesign-25-12-59-16.jpg}"
+                                     alt="VNPAY" class="w-10 h-10 object-contain"/>
+                            </div>
+
+                            <!-- Text -->
+                            <span class="flex flex-1">
+                                    <span class="flex flex-col">
+                                        <span class="block text-sm font-extrabold text-gray-900 dark:text-white">
+                                            VNPAY
+                                        </span>
+                                        <span class="mt-1 text-sm text-gray-500">
+                                            Redirect to VNPAY
+                                        </span>
+                                    </span>
+                                </span>
+
+                            <!-- Icon -->
+                            <span th:if="*{paymentMethod == 'vnpay'}"
+                                  class="payment-icon material-symbols-outlined text-primary">
+                                    check_circle
+                            </span>
+                            <span th:if="*{paymentMethod != 'vnpay'}"
+                                  class="payment-icon material-symbols-outlined text-gray-400">
+                                    radio_button_unchecked
+                            </span>
+
+
+                        </label>
+
+                        <!-- MOMO option -->
+                        <!--                        <label th:classappend="*{paymentMethod == 'momo'} ? 'border-primary' : ''"-->
+                        <!--                                class="payment-option relative flex items-center gap-3 cursor-pointer rounded-lg border-2  bg-primary/5 p-4 shadow-sm">-->
+
+                        <!--                            <input th:field="*{paymentMethod}" class="sr-only" type="radio" value="momo" />-->
+
+                        <!--                            &lt;!&ndash; Logo &ndash;&gt;-->
+                        <!--                            <div class="w-15 h-15 flex items-center justify-center rounded-md bg-white border">-->
+                        <!--                                <img th:src="@{/images/MoMo_Logo_App.svg.png}"-->
+                        <!--                                     alt="MOMO" class="w-10 h-10 object-contain" />-->
+                        <!--                            </div>-->
+
+                        <!--                            &lt;!&ndash; Text &ndash;&gt;-->
+                        <!--                            <span class="flex flex-1">-->
+                        <!--                                    <span class="flex flex-col">-->
+                        <!--                                        <span class="block text-sm font-extrabold text-gray-900 dark:text-white">-->
+                        <!--                                            MOMO-->
+                        <!--                                        </span>-->
+                        <!--                                        <span class="mt-1 text-sm text-gray-500">-->
+                        <!--                                            Redirect to MOMO-->
+                        <!--                                        </span>-->
+                        <!--                                    </span>-->
+                        <!--                                </span>-->
+
+                        <!--                            &lt;!&ndash; Icon &ndash;&gt;-->
+                        <!--                            <span th:if="*{paymentMethod == 'momo'}" class="payment-icon material-symbols-outlined text-primary">-->
+                        <!--                                    check_circle-->
+                        <!--                            </span>-->
+                        <!--                            <span th:if="*{paymentMethod != 'momo'}" class="payment-icon material-symbols-outlined text-gray-400">-->
+                        <!--                                    radio_button_unchecked-->
+                        <!--                            </span>-->
+
+                        <!--                        </label>-->
+
+                        <!-- MOMO option -->
+                        <label
+                                class="payment-option relative flex items-center gap-3 cursor-not-allowed rounded-lg border-2 border-gray-300 bg-gray-100 p-4 shadow-sm opacity-60">
+
+                            <input class="sr-only" name="payment-method" type="radio" value="momo" disabled/>
+
+                            <!-- Logo -->
+                            <div class="w-15 h-15 flex items-center justify-center rounded-md bg-white border">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/MoMo_Logo_App.svg/1280px-MoMo_Logo_App.svg.png"
+                                     alt="MOMO" class="w-10 h-10 object-contain opacity-70"/>
+                            </div>
+
+                            <!-- Text -->
+                            <span class="flex flex-1">
+                                    <span class="flex flex-col">
+                                        <span class="block text-sm font-extrabold text-gray-500">
+                                            MOMO
+                                        </span>
+                                        <span class="mt-1 text-sm text-gray-400">
+                                            Coming soon...
+                                        </span>
+                                    </span>
+                                </span>
+
+                            <!-- Icon -->
+                            <span class="payment-icon material-symbols-outlined text-gray-400">
+                                    radio_button_unchecked
+                                </span>
+
+                        </label>
+                    </div>
+                </section>
+                <!-- Billing Information -->
+                <section
+                        class="mt-5 bg-white dark:bg-[#1a202c] rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Billing Information</h3>
+                    <div class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                        <div class="sm:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                                   for="email">Email</label>
+                            <input th:field="*{email}" name="email" readonly
+                                   th:title="'You do not change the email of bill. Please setting your account to change!'"
+                                   class="cursor-not-allowed block w-full rounded-lg border-gray-300 dark:border-gray-600 border-gray-200 bg-gray-100 dark:bg-gray-700/50 shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-3 text-gray-900 dark:text-white placeholder-gray-400"
+                                   id="email" placeholder="Email" type="email"/>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Payment Policy & Important Information
+                            </label>
+
+                            <div
+                                    class="rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 p-4 text-sm text-gray-700 dark:text-gray-200 space-y-3">
+
+                                <ul class="list-decimal pl-5 space-y-2 leading-relaxed">
+                                    <li>
+                                        You are responsible for protecting your ticket after a successful purchase.
+                                        Do not share your ticket code or QR ticket with others.
+                                    </li>
+
+                                    <li>
+                                        Electronic tickets are valid only for the first attendee who completes check-in.
+                                        The system is not responsible for unauthorized ticket usage.
+                                    </li>
+
+                                    <li>
+                                        Please carefully review your order information before completing payment.
+                                        Ticket details may not be editable after the transaction is completed.
+                                    </li>
+
+                                    <li>
+                                        During payment, you will be redirected to the
+                                        <span class="font-semibold text-primary">VNPay</span>
+                                        payment gateway — our official secure payment partner.
+                                    </li>
+
+                                    <li>
+                                        <span class="font-semibold">Refund Policy:</span>
+                                        <ul class="list-disc pl-5 mt-1 space-y-1">
+                                            <li>The system currently does not support MoMo payments.</li>
+                                            <li>Completed ticket purchases may be non-refundable depending on the event
+                                                organizer's policy.
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="text-red-500 dark:text-red-400 font-medium">
+                                        If you suspect your ticket information has been exposed or compromised
+                                        before the event starts, please contact us immediately for assistance.
+                                    </li>
+                                </ul>
+
+                                <!-- Agreement Checkbox -->
+                                <div class="flex items-start gap-2 pt-2">
+                                    <input required
+                                           th:field="*{agreePolicy}"
+                                           id="agreePolicy"
+                                           name="agreePolicy"
+                                           type="checkbox"
+                                           class="mt-1 rounded border-gray-300 text-primary focus:ring-primary">
+
+                                    <label for="agreePolicy"
+                                           class="text-sm text-blue-500 font-bold dark:text-gray-300">
+                                        I have read and agree to the payment policy and terms of service.
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!--                        <div>-->
+                        <!--                            <label-->
+                        <!--                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Country</label>-->
+                        <!--                            <select th:field="*{country}" name="country" required id="country"-->
+                        <!--                                    class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-3 text-gray-900 dark:text-white placeholder-gray-400">-->
+                        <!--                                <option value="Việt Nam" selected>Việt Nam</option>-->
+                        <!--                            </select>-->
+                        <!--                        </div>-->
+                        <!--                        <div>-->
+                        <!--                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">City /-->
+                        <!--                                Province</label>-->
+                        <!--                            <select th:field="*{city}" name="province" required id="province"-->
+                        <!--                                    class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-3 text-gray-900 dark:text-white placeholder-gray-400">-->
+                        <!--                                <option value="" selected hidden></option>-->
+                        <!--                            </select>-->
+                        <!--                        </div>-->
+                        <!--                        <div>-->
+                        <!--                            <label-->
+                        <!--                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Ward</label>-->
+                        <!--                            <select th:field="*{ward}" name="ward" id="ward" required disabled-->
+                        <!--                                    class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-3 text-gray-900 dark:text-white placeholder-gray-400">-->
+                        <!--                                <option value="" selected hidden></option>-->
+                        <!--                            </select>-->
+                        <!--                        </div>-->
+                        <!--                        <div class="sm:col-span-2">-->
+                        <!--                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"-->
+                        <!--                                   for="address">Address</label>-->
+                        <!--                            <input th:field="*{fullAddress}" name="address"-->
+                        <!--                                   class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-3 text-gray-900 dark:text-white placeholder-gray-400"-->
+                        <!--                                   id="address" placeholder="Street address" type="text"/>-->
+                        <!--                        </div>-->
+                    </div>
+                </section>
+                <button type="submit" hidden="" id="submitForm"></button>
+            </form>
+        </div>
+        <!-- Right Column: Sticky Summary -->
+        <div class="lg:col-span-5 mt-8 lg:mt-0">
+            <div class="lg:sticky lg:top-24 space-y-6">
+                <!-- Order Summary Card -->
+                <div
+                        class="bg-white dark:bg-[#1a202c] rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden">
+                    <!-- Header Image -->
+                    <div class="bg-primary h-20 w-full bg-cover bg-center relative"
+                         data-alt="Abstract blue tech conference banner gradient">
+                        <div class="absolute inset-0 bg-black/30 flex items-end p-6">
+                            <h3 class="text-white font-bold text-xl drop-shadow-md">Your Tickets</h3>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <!-- Items List -->
+                        <div class="space-y-4 mb-6">
+                            <div th:each="cartItems : ${cartItems}"
+                                 class="flex gap-4 items-start pb-4 border-gray-100 dark:border-gray-800">
+                                <div th:style="|background-image: url(@{/upload/event/thumbnail/{file}(file=${cartItems.ticketType.event.thumbnailUrl})});|"
+                                     class="h-16 w-16 shrink-0 rounded-lg bg-gray-100 dark:bg-gray-800 bg-cover bg-center"
+                                     data-alt="VIP ticket icon placeholder">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex justify-between items-start">
+                                        <p th:text="${cartItems.ticketType.name}"
+                                           class="text-sm font-semibold text-gray-900 dark:text-white truncate">VIP
+                                            Conference Pass</p>
+                                        <p th:text="|${#numbers.formatDecimal(cartItems.unitPrice, 0, 'POINT', 0, 'DEFAULT')} VND x ${cartItems.quantity}|"
+                                           class="text-sm font-semibold text-gray-900 dark:text-white">$598.00</p>
+
+                                    </div>
+                                    <p th:text="|Qty: ${cartItems.quantity}|" class="text-xs text-gray-500 mt-1">
+                                        Qty: 2</p>
+                                    <p th:text="${cartItems.ticketType.description}"
+                                       class="text-xs text-gray-500 truncate">Includes workshop access</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Discount Codes -->
+                        <div class="space-y-3 mb-6">
+                            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Discount Codes</p>
+                            <div th:if="${error}"
+                                 class="mb-4 flex items-start gap-3 p-4 rounded-lg border border-blue-200 bg-amber-50 text-yellow-700 shadow-sm animate-pulse
+                                    dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400">
+
+                                <!-- Icon -->
+                                <span class="material-symbols-outlined text-green-500">
+                                check_circle
+                                </span>
+
+                                <!-- Content -->
+                                <div class="flex-1 text-sm font-medium">
+                                    <p th:text="${error}"></p>
+                                </div>
+
+                                <!-- Close button -->
+                                <button type="button"
+                                        onclick="this.parentElement.remove()"
+                                        class="text-red-400 hover:text-red-600 transition">
+                                    <span class="material-symbols-outlined text-base">close</span>
+                                </button>
+                            </div>
+                            <form th:action="@{/apply-discount-code}" method="post">
+                                <div class="flex gap-2">
+                                    <div class="relative flex-1">
+                                        <select required name="discountId"
+                                                class="required: block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 shadow-sm focus:border-primary focus:ring-primary text-xs py-2.5 pl-9 text-gray-900 dark:text-white placeholder-gray-400"
+                                                placeholder="Discount code of event" type="text">
+                                            <option th:selected value="">Select available discount code</option>
+                                            <option th:each="listDiscountCodes : ${listDiscountCodes}"
+                                                    th:value="${listDiscountCodes.id}"
+                                                    th:text="${listDiscountCodes.getCode() + ' - ' + listDiscountCodes.event.title}">
+                                                Select available discount
+                                                code
+                                            </option>
+                                        </select>
+                                        <span
+                                                class="material-symbols-outlined absolute left-2.5 top-2.5 text-gray-400 text-sm">local_offer</span>
+                                    </div>
+                                    <button type="submit"
+                                            class="px-3 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium transition-colors">
+                                        Apply
+                                    </button>
+                                </div>
+                            </form>
+                            <div th:if="${discountCode.code != null}" class="flex gap-2 flex-wrap">
+                                <div
+                                     class="inline-flex flex-col items-start gap-1 px-2 py-1 rounded-md text-xs font-medium
+            bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+
+                                    <!-- Hàng trên: code + value + nút close -->
+                                    <div class="flex items-center gap-1">
+                                        <span th:text="|${discountCode.code}|">EARLYBIRD20</span>
+
+                                        <span th:text="'(-' + ${discountCode.discountType.equalsIgnoreCase('Percentage') ?
+                #numbers.formatDecimal(discountCode.discountValue, 0, 'POINT', 0, 'DEFAULT') + '%'
+                : discountCode.discountValue + 'VND'} + ')'"></span>
+
+                                        <form th:action="@{/delete/discount}" method="post">
+                                            <button class="hover:text-green-900">
+                                                <span class="material-symbols-outlined text-[14px] align-middle">close</span>
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Hàng dưới: chữ siêu nhỏ -->
+                                </div>
+                                <span class="italic text-blue-500 text-[10px] leading-tight"
+                                      th:text="|This discount is applied for tickets of the event: ${discountCode.event.title}|"></span>
+                            </div>
+                        </div>
+                        <!-- Calculations -->
+                        <div class="space-y-3 pt-4 border-t border-gray-100 dark:border-gray-800">
+                            <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                                <span>Subtotal</span>
+                                <span
+                                        th:text="|${#numbers.formatDecimal(total, 0, 'POINT', 0, 'DEFAULT')} VND|">$748.00</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-green-600 dark:text-green-400">
+                                <span>Discount </span>
+                                <span th:text="|- ${#numbers.formatDecimal(discountAmount, 0, 'POINT', 0, 'DEFAULT')} VND|">- 0.00 VND</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                                <span>Service Fee</span>
+                                <span>0 VND</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                                <span>Tax</span>
+                                <span>0 VND</span>
+                            </div>
+                            <div
+                                    class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                                <span class="text-base font-bold text-gray-900 dark:text-white">Total</span>
+                                <span
+                                        th:text="${#numbers.formatDecimal(finalTotal, '0', 'POINT', 0, 'DEFAULT') + ' VND'}"
+                                        class="text-2xl font-black text-primary">$655.40</span>
+                            </div>
+                        </div>
+                        <!-- Pay Button -->
+                        <button onclick="document.getElementById('submitForm').click()" type="submit"
+                                th:text="|Pay ${#numbers.formatDecimal(finalTotal, 0, 'POINT', 0, 'POINT')} VND|"
+                                class="mt-6 w-full flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 text-base font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-all active:scale-[0.98]">
+                            Pay $655.40
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                        <!-- TEST VNPAY Button -->
+                        <!--                        <a th:href="@{/create-payment?amount=200000&orderInfo=Order:ORDER-20260311-1001}"-->
+                        <!--                                type="submit" th:text="|Pay ${#numbers.formatDecimal(total, 0, 'POINT', 0, 'POINT')} VND|"-->
+                        <!--                                class="mt-6 w-full flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 text-base font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-all active:scale-[0.98]">-->
+                        <!--                            Pay $655.40-->
+                        <!--                            <span class="material-symbols-outlined text-sm">arrow_forward</span>-->
+                        <!--                        </a>-->
+                        <p class="mt-4 text-center text-xs text-gray-500">
+                            By proceeding, you accept our <a class="text-primary hover:underline" href="#">Terms of
+                            Service</a>.
+                        </p>
+                    </div>
+                </div>
+                <!-- Help Card -->
+                <div class="bg-primary/5 rounded-lg p-4 border border-primary/10 flex gap-3 items-start">
+                    <span class="material-symbols-outlined text-primary shrink-0">support_agent</span>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-900 dark:text-white">Need Help?</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Contact our support team at <a
+                                class="text-primary font-medium" href="#">support@eventmanager.com</a> if you have
+                            any issues.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{fragment/customer/frag::headerScripts}"></div>
+<!--Popup message-->
+<div id="popupMessage" th:if="${hasMessage}"
+     class="transition-opacity duration-300 fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white dark:bg-slate-900 w-50 max-w-sm rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+        <div class="p-6 flex flex-col items-center text-center">
+            <div class="size-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-red-600 dark:text-red-500 text-[32px]">warning</span>
+            </div>
+            <h3 th:text="${errorTitle}" class="text-xl font-bold text-slate-900 dark:text-white mb-2">File Too
+                Large</h3>
+            <p th:text="${message}" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                The selected image exceeds the maximum size limit of 5MB. Please choose a smaller file.
+            </p>
+        </div>
+        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 flex justify-center">
+            <button id="closePopup"
+                    class="w-50 py-2.5 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-bold rounded-lg transition-colors shadow-lg shadow-blue-500/20">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const popup = document.getElementById("popupMessage");
+        const btnClose = document.getElementById("closePopup");
+
+        if (popup && btnClose) {
+            btnClose.addEventListener("click", function () {
+                popup.classList.add("opacity-0"); // làm mờ dần
+                setTimeout(() => popup.remove(), 300); // xóa sau 300ms
+            });
+        }
+    });
+
+    async function loadProvinces() {
+        try {
+            const respone = await fetch('/api/address/p');
+            const provinces = await respone.json();
+
+            let provinceSelect = document.getElementById("province");
+
+            provinces.forEach(province => {
+                let option = document.createElement("option");
+                option.value = province.code;
+                option.text = province.name;
+                provinceSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error("loading province fail", error);
+        }
+    }
+
+
+    async function loadWards(code) {
+        try {
+            const respone = await fetch('/api/address/p/' + code);
+            const wards = await respone.json();
+
+            let wardSelect = document.getElementById("ward");
+            wardSelect.innerHTML = '<option value="" selected hidden></option>';
+            wardSelect.disabled = false;
+
+            wards.forEach(ward => {
+                let option = document.createElement("option");
+                option.value = ward.code;
+                option.text = ward.name;
+                wardSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error("loading ward fail", error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+
+        loadProvinces();
+
+
+        const provinceSelect = document.getElementById("province");
+
+        provinceSelect.addEventListener('change', function () {
+            if (this.value) {
+                loadWards(this.value);
+            } else {
+                document.getElementById("ward").disabled = true;
+            }
+        });
+
+    });
+
+    const options = document.querySelectorAll(".payment-option");
+
+    options.forEach(option => {
+        const radio = option.querySelector("input");
+        const icon = option.querySelector(".payment-icon");
+
+        radio.addEventListener("change", () => {
+
+            // reset tất cả
+            options.forEach(o => {
+                o.classList.remove("border-primary", "bg-primary/5");
+                o.classList.add("border-gray-200", "bg-white");
+
+                const i = o.querySelector(".payment-icon");
+                i.textContent = "radio_button_unchecked";
+                i.classList.remove("text-primary");
+                i.classList.add("text-gray-400");
+            });
+
+            // set cho option được chọn
+            option.classList.add("border-primary", "bg-primary/5");
+            option.classList.remove("border-gray-200", "bg-white");
+
+            icon.textContent = "check_circle";
+            icon.classList.remove("text-gray-400");
+            icon.classList.add("text-primary");
+
+        });
+    });
+</script>

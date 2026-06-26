@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/frag::head('Events Discovery')}"></head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+
+
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+    <!-- Header / Navigation -->
+    <header th:replace="~{fragment/customer/frag::header}"></header>
+    <div class="flex flex-1 w-full">
+        <!-- Sidebar -->
+        <aside th:replace="~{fragment/customer/frag::sidebar('history')}" ></aside>
+        <!-- Main Content -->
+        <main class="layout-container flex h-full grow flex-col px-4 md:px-10 py-8 mx-auto w-full max-w-[1280px]">
+            <!-- Page Title Section -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                <div class="flex flex-col gap-2">
+                    <h1
+                            class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">
+                        My Payment History</h1>
+                    <p class="text-slate-500 dark:text-slate-400 text-base font-normal">Review how you spend your money.</p>
+                </div>
+                <!--            <div class="flex gap-2">-->
+                <!--                <button-->
+                <!--                        class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">-->
+                <!--                        <span-->
+                <!--                                class="material-symbols-outlined text-slate-500 dark:text-slate-400 text-sm">filter_list</span>-->
+                <!--                    <span class="text-sm font-medium text-slate-700 dark:text-slate-200">Filter</span>-->
+                <!--                </button>-->
+                <!--            </div>-->
+            </div>
+            <!-- Tabs / Filters -->
+            <div class="flex gap-2 pb-6 flex-wrap border-b border-slate-200 dark:border-slate-800 mb-6">
+
+                <a th:href="@{/history}"
+                   class="flex h-9 items-center justify-center gap-x-2 rounded-full px-5 shadow-sm transition-colors transition-all duration-300 ease-in-out"
+                   th:classappend="${status == null} ?
+               ' bg-slate-900 dark:bg-white text-white dark:text-slate-900' :
+               ' bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'">
+                    <p class="text-sm font-bold leading-normal">All Registrations</p>
+                </a>
+
+                <a th:href="@{/history(status='Completed')}"
+                   class="flex h-9 items-center justify-center gap-x-2 rounded-full px-5 transition-colors transition-all duration-300 ease-in-out"
+                   th:classappend="${status == 'Completed'} ?
+               ' bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm' :
+               ' bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'">
+                    <p class="text-sm font-medium leading-normal">Completed</p>
+                </a>
+
+                <a th:href="@{/history(status='Pending')}"
+                   class="flex h-9 items-center justify-center gap-x-2 rounded-full px-5 transition-colors"
+                   th:classappend="${status == 'Pending'} ?
+               ' bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm' :
+               ' bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'">
+                    <p class="text-sm font-medium leading-normal">Pending</p>
+                </a>
+
+                <a th:href="@{/history(status='Failed')}"
+                   class="flex h-9 items-center justify-center gap-x-2 rounded-full px-5 transition-colors"
+                   th:classappend="${status == 'Failed'} ?
+               ' bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm' :
+               ' bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'">
+                    <p class="text-sm font-medium leading-normal">Failed</p>
+                </a>
+            </div>
+            <!-- Table Container -->
+            <div
+                    class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse table-fixed">
+                        <thead>
+                        <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+
+                            <th class="p-4 pl-6 w-[10%] text-xs font-bold uppercase text-slate-500">
+                                # ID
+                            </th>
+
+                            <th class="p-4 w-[25%] text-xs font-bold uppercase text-slate-500">
+                                Transaction ID
+                            </th>
+
+                            <th class="p-4 w-[15%] text-xs font-bold uppercase text-slate-500 text-start">
+                                Amount
+                            </th>
+
+                            <th class="p-4 w-[20%] text-xs font-bold uppercase text-slate-500">
+                                Update At
+                            </th>
+
+                            <th class="p-4 w-[15%] text-xs font-bold uppercase text-slate-500 text-start">
+                                Status
+                            </th>
+
+                            <th class="p-4 pr-6 w-[10%] text-right text-xs font-bold uppercase text-slate-500">
+                                Actions
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        <tr th:if="${paymentPage.isEmpty()}">
+                            <td colspan="7"
+                                class="text-center py-10 text-slate-500 dark:text-slate-400 font-semibold">
+                                Sorry, no booking history found.
+                            </td>
+                        </tr>
+                        <tr th:each="payment : ${paymentPage.content}"
+                            class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                            <!-- EVENT -->
+                            <td class="p-4 pl-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="flex flex-col min-w-0">
+                                        <span th:text="${payment.id}"
+                                          class="block truncate text-sm font-bold text-slate-900 dark:text-white">
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- TICKET TYPE -->
+                            <td th:text="${payment.transactionId}"
+                                class="p-4 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            </td>
+
+                            <!-- QTY -->
+                            <td th:text="|${#numbers.formatDecimal(payment.amount, 0, 'POINT', 0, 'DEFAULT')} VND|"
+                                class="p-4 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            </td>
+
+                            <!-- TOTAL -->
+                            <td th:if="${payment.updatedAt != null}" th:text="${#temporals.format(payment.updatedAt, 'MMM dd yyyy HH:mm:ss')}"
+                                class="p-4 text-sm font-bold text-slate-900 dark:text-white">
+                            </td>
+
+                            <td th:if="${payment.updatedAt == null}"
+                                class="p-4 text-sm font-bold text-slate-900 dark:text-white">
+
+                                <div class="flex items-center justify-content-start align-content-center gap-2">
+                                    <span class="material-symbols-outlined text-red-600">error</span>
+                                    <span class="text-red-600">Have no data!</span>
+                                </div>
+
+                            </td>
+
+
+                            <!-- STATUS -->
+                            <td class="p-4">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
+                                          th:classappend="
+                                    ${payment.paymentStatus == 'Completed'} ? ' bg-green-100 text-green-700 border border-green-200' :
+                                    (${payment.paymentStatus == 'Pending'} ? ' bg-yellow-100 text-yellow-700 border border-yellow-200' :
+                                    (${payment.paymentStatus == 'Failed'} ? ' bg-red-100 text-red-700 border border-red-200' :
+                                    ' bg-gray-100 text-gray-700 border border-gray-200'))">
+
+                                    <span class="h-1.5 w-1.5 rounded-full"
+                                          th:classappend="
+                                            ${payment.paymentStatus == 'Completed'} ? ' bg-green-500' :
+                                            (${payment.paymentStatus == 'Pending'} ? ' bg-yellow-500' :
+                                            (${payment.paymentStatus == 'Failed'} ? ' bg-red-500' :
+                                            ' bg-gray-500'))">
+                                    </span>
+
+                                    <span th:text="${payment.paymentStatus}"></span>
+                                    
+                                </span>
+                            </td>
+
+                            <!-- ACTIONS -->
+                            <td class="p-4 pr-6 text-right">
+                                <div class="flex items-center justify-end gap-2">
+
+                                    <a th:if="${payment.paymentStatus == 'Completed'}"
+                                       th:href="@{/invoice/{txnRef}/download(txnRef=${payment.transactionId})}"
+                                       class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-md text-primary transition-colors"
+                                       title="Download Invoice">
+                                        <span class="material-symbols-outlined text-[20px]">download</span>
+                                    </a>
+                                    <a th:if="${payment.paymentStatus == 'Pending' || payment.paymentStatus == 'Failed'}"
+                                       class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-md text-primary transition-colors cursor-not-allowed"
+                                       title="Invoices are not available for download until the payment is completed!">
+                                        <span class="material-symbols-outlined text-[20px]">download</span>
+                                    </a>
+
+                                    <a th:href="@{/payment-detail/{id}(id=${payment.transactionId})}" target="_blank"
+                                       class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-md text-primary transition-colors"
+                                       title="View Details">
+                                        <span class="material-symbols-outlined text-[20px]">info</span>
+                                    </a>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                        </tbody>
+
+                        <!--<button-->
+                        <!--class="p-1.5 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md text-red-500 transition-colors"-->
+                        <!--title="Cancel Booking">-->
+                        <!--<span class="material-symbols-outlined text-[20px]">cancel</span>-->
+                        <!--</button>-->
+
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-between p-4 mt-2">
+                <p class="text-sm text-text-secondary dark:text-gray-400 mt-0.5">Showing <span th:text="${size}"></span>
+                    of
+                    <span th:text="${totalItems}"></span> matches</p>
+                <div class="flex items-center gap-1 mx-auto sm:mx-0">
+                    <nav th:if="${!paymentPage.content.empty}" aria-label="Pagination"
+                         class="flex items-center gap-2 mt-8">
+
+                        <!-- Prev -->
+                        <a th:if="${currentPage > 0}"
+                           th:href="@{/history(status=${status}, page=${currentPage - 1})}"
+                           class="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all duration-200">
+                            <span class="material-symbols-outlined !text-[20px]">chevron_left</span>
+                        </a>
+                        <span th:if="${currentPage == 0}"
+                              class="size-10 flex items-center justify-center rounded-lg border border-gray-200 opacity-50 cursor-not-allowed">
+                    <span class="material-symbols-outlined !text-[20px]">chevron_left</span>
+                    </span>
+
+                        <!-- Page Numbers -->
+                        <div class="flex items-center gap-2"
+                             th:with="
+                                start=${T(java.lang.Math).max(currentPage - 2, 0)},
+                                end=${T(java.lang.Math).min(currentPage + 2, totalPages - 1)}">
+
+                            <!-- First page (if needed) -->
+                            <a th:if="${currentPage > 2}"
+                               th:href="@{/history(status=${status}, page=0)}"
+                               class="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 text-text-main dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all">1</a>
+
+                            <span th:if="${start > 1}"
+                                  class="flex items-center justify-center size-10 text-gray-400 font-medium">...</span>
+
+                            <!-- Middle pages -->
+                            <a th:each="i : ${#numbers.sequence(start, end)}"
+                               th:href="@{/history(status=${status}, page=${i})}"
+                               th:class="${i == currentPage} ? 'size-10 flex items-center justify-center rounded-lg bg-primary text-white font-bold shadow-md shadow-primary/20' : 'size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 text-text-main dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all'">
+                                <span th:text="${i + 1}"></span>
+                            </a>
+
+                            <span th:if="${end < totalPages - 2}"
+                                  class="flex items-center justify-center size-10 text-gray-400 font-medium">...</span>
+
+                            <!-- Last page (if needed) -->
+                            <a th:if="${currentPage + 2 < totalPages - 1}"
+                               th:href="@{/history(status=${status}, page=${totalPages - 1})}"
+                               class="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 text-text-main dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all">
+                                <span th:text="${totalPages}"></span>
+                            </a>
+
+                        </div>
+
+                        <!-- Next -->
+                        <a th:if="${currentPage + 1 < totalPages}"
+                           th:href="@{/history(status=${status}, page=${currentPage + 1})}"
+                           class="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all duration-200">
+                            <span class="material-symbols-outlined !text-[20px]">chevron_right</span>
+                        </a>
+                        <span th:if="${currentPage + 1 >= totalPages}"
+                              class="size-10 flex items-center justify-center rounded-lg border border-gray-200 opacity-50 cursor-not-allowed">
+                    <span class="material-symbols-outlined !text-[20px]">chevron_right</span>
+                    </span>
+                    </nav>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<th:block th:replace="~{fragment/customer/frag::headerScripts}"></th:block>
+<footer th:replace="~{fragment/frag::footer}"></footer>
+
+</body>
+
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Staff Assignment Management - EventPro</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2464f9",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#0f1523",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+<div class="flex h-screen overflow-hidden">
+        <!-- Navigation -->
+        <aside th:replace="~{fragment/staff/frag::staffSidebar('assignEventStaff')}"></aside>
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <!-- Header -->
+        <header th:replace="~{fragment/staff/frag::header('Assign Event Staff')}" class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between px-8">
+            <div class="flex items-center gap-4 flex-1">
+
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 relative">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+                </button>
+                <div class="h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-2"></div>
+                <div class="flex items-center gap-3">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-semibold leading-none">Alex Rivers</p>
+                        <p class="text-xs text-slate-500 mt-1">Administrator</p>
+                    </div>
+                    <img class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-100" data-alt="User avatar for Alex Rivers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKVj8qecSADEILSsw8Efw9pj5G8_-0CkC59bQBJI7ZFbPPBlMidP_BFo6hy5bcV10mt6oBTx_QZDZSRYSLpkGDXe7Hh4DIkIuctQQ1GUwvf9AwL-KEhq8yRRMHc6h1OLpDPmyC-7UOkLX9S9mWDyAZfAM2-C0s4LDsEtLsqITJoKJzQm74fFFe1dlayzBgaKqOACdGzpXwxJVilrtxrEemQu8OhB5rCs9v68onBnbGx_sqjPnSsuZ8BL6CjIZsNL_MMaHwg2NtezQ"/>
+                </div>
+            </div>
+        </header>
+        <!-- Scrollable Content -->
+        <main class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-6xl mx-auto space-y-8">
+                <!-- Page Title -->
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Staff Assignment</h2>
+                    <p class="text-slate-500 dark:text-slate-400">Allocate staff members to specific event roles and manage active statuses.</p>
+                </div>
+                <!-- Table Section -->
+                <section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+                    <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                        <!-- Search -->
+                        <div class="relative flex-1 max-w-lg">
+                            <form th:action="@{/staff/assignEventStaff}">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="material-symbols-outlined text-gray-400">search</span>
+                                </div>
+                                <input name="keyword" class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg leading-5 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+                                       th:value="${keyword}"
+                                       placeholder="Search by code..." type="text"/>
+                                <input name="filter" th:value="${filter}" hidden>
+                                <button type="submit" class="hidden"></button>
+                            </form>
+                        </div>
+                        <!-- Filters -->
+                        <div class="flex items-center gap-3">
+                            <div class="relative">
+                                <form th:action="@{/staff/assignEventStaff}" method="get" class="relative">
+                                    <select name="filter"
+                                            onchange="this.form.submit()"
+                                            class="appearance-none bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 py-2.5 pl-4 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+                                        <option value="all" th:selected="${filter == 'all'}">All Status</option>
+                                        <option value="isActive" th:selected="${filter == 'isActive'}">Active</option>
+                                        <option value="inActive" th:selected="${filter == 'inActive'}">Inactive</option>
+                                    </select>
+                                    <input th:if="${!keyword.isEmpty()}" name="keyword" th:value="${keyword}" hidden>
+
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                        <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                            <tr class="bg-slate-50 dark:bg-slate-800/50">
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Event Name</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Staff Name</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Assigned Role</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Assigned At</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Assigned By</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                            </tr>
+                            </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                    <tr th:if="${eventStaffAssignments == null or eventStaffAssignments.isEmpty()}">
+                                        <td colspan="7" class="text-center">No Data Found</td>
+                                    </tr>
+                                    <!-- Row 3 -->
+                                    <tr th:each="as : ${eventStaffAssignments}" class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                                        <td class="px-6 py-4">
+                                            <p th:text="${as.event.title}" class="text-sm font-semibold">Corporate Retreat</p>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <img class="w-8 h-8 rounded-full bg-slate-100" data-alt="Staff profile Sarah Jenkins" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzXBsi34FXnevmSEuhpiv3Tt4v5AE-ciWcK005MU4guH_epk3-3ZqQokFab6z3sH0hXqYtZZhHf7Od41T34CQ65wH_ydqV1SUU9AGh6RGig3aVNyQ2L1K8yrHXGujrpvV8ii4QFbZDdPpTIALrjn9MEJNlYljl2koR3IIaLJQheyu0V1okHl5OE81cOvoUJ3kGECt0I6oDoxwkuh_ijsfasQk8mdllv_9I6BorBIMk4S1FX0nBMbxYaa0WTQ2-w96movrn3S95mSY"/>
+                                                <span th:text="${as.staff.fullName}" class="text-sm font-medium">Sarah Jenkins</span>
+                                            </div>
+                                        </td>
+                                        <td th:text="${as.role.roleName}" class="px-6 py-4 text-sm">Admin Alex</td>
+                                        <td class="px-6 py-4">
+                                            <p th:text="${#temporals.format(as.assignedAt, 'MM dd, YYYY')}" class="text-sm text-slate-500">Oct 15, 2023 · 02:45 PM</p>
+                                        </td>
+                                        <td th:text="${as.assignedBy.fullName}" class="px-6 py-4 text-sm">Admin Alex</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span th:if="${as.isActive}"
+                                                  class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
+                                                    Active
+                                                </span>
+                                            <span th:if="${!as.isActive}"
+                                                                      class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300">
+                                                    Inactive
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <div class="flex justify-end gap-2 text-slate-400">
+                                                <button class="hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+                                                <button th:onclick="|location.href = 'assignEventStaff/delete?id=${as.event.id}_${as.staff.id}_${as.role.id}'|" class="hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                      </tbody>
+                        </table>
+                    </div>
+                    <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700 dark:text-gray-400">
+                                Showing <span th:text="${currentPage}" class="font-medium text-gray-900 dark:text-white">1</span> to <span
+                                    th:text="${totalElementsOfPage}" class="font-medium text-gray-900 dark:text-white">5</span> of <span
+                                    th:text="${totalElements}" class="font-medium text-gray-900 dark:text-white">24</span> results
+                            </p>
+                        </div>
+                        <div th:if="${eventStaffAssignments == null or !eventStaffAssignments.isEmpty()}">
+                            <nav aria-label="Pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                                <a th:if="${hasPrevious}" th:href="@{${url}(page=${currentPage} - 1)}"
+                                   class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                   href="#">
+                                    <span class="sr-only">Previous</span>
+                                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                                </a>
+                                <a aria-current="page"
+                                   th:classappend="${currentPage == 1} ? 'z-10 bg-primary/10 border-primary text-primary' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
+                                   class="z-10  relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                                   th:href="@{${url}(page=1)}">
+                                    1
+                                </a>
+                                <a th:if="${before}" aria-current="page"
+                                   class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                                >
+                                    ...
+                                </a>
+                                <a th:each="vp : ${viewPages}" th:text="${vp}" aria-current="page"
+                                   th:classappend="${currentPage == vp} ? 'z-10 bg-primary/10 border-primary text-primary' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
+                                   class="z-10 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                                   th:href="@{${url}(page=${vp})}">
+                                    1
+                                </a>
+                                <a th:if="${after}" aria-current="page"
+                                   class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                                >
+                                    ...
+                                </a>
+                                <a th:if="${lastPage}"
+                                   th:text="${lastPage}" aria-current="page"
+                                   th:classappend="${currentPage == lastPage} ? 'z-10 bg-primary/10 border-primary text-primary' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
+                                   class="z-10 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                                   th:href="@{${url}(page=${lastPage})}">
+                                    8
+                                </a>
+                                <a th:if="${hasNext}" th:href="@{${url}(page=${currentPage} + 1)}"
+                                   class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                   href="#">
+                                    <span class="sr-only">Next</span>
+                                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+</div>
+<th:block th:replace="~{fragment/staff/frag::staffBellScript}"></th:block>
+</body></html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/frag::head('Manage Roles')}" ></head>
+<body class="flex min-h-screen text-neutral-800">
+<!-- SideNavBar (rail_drawer) -->
+<aside th:replace="~{fragment/admin/frag::sidebar('roles')}" class="h-screen w-64 fixed left-0 top-0 bg-slate-50 dark:bg-slate-900 flex flex-col p-4 z-50">
+</aside>
+<!-- TopNavBar -->
+<div class="flex-1 flex flex-col min-h-screen">
+    <header th:replace="~{fragment/admin/frag::header}"></header>
+    <!-- Main Content Area -->
+    <main class="flex-1 space-y-8">
+        <div class="p-6 flex-1 overflow-y-auto">
+            <!-- Page Header -->
+            <div class="flex items-center justify-between mb-10">
+                <div>
+                    <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">System Roles</h2>
+                    <p class="text-on-surface-variant mt-1 text-sm">Define and manage access levels for your
+                        organization.</p>
+                </div>
+                <button class="inline-flex items-center justify-center px-4 py-2.5 bg-primary text-white font-semibold text-sm rounded-lg hover:bg-primary-700 transition-all shadow-sm gap-2"
+                        onclick="document.getElementById('roleModal').classList.remove('hidden')">
+                    <span class="material-symbols-outlined text-[20px]">add</span>
+                    Create New Role
+                </button>
+            </div>
+            <!-- Enhanced Table Container -->
+            <div class="bg-surface-container-lowest rounded-xl custom-shadow border border-outline-variant/10 overflow-hidden">
+                <div class="bg-surface-container-low/50 px-8 py-4 flex items-center justify-between border-b border-outline-variant/10">
+                    <span class="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant/80">Role Directory</span>
+                    <span class="text-xs text-on-surface-variant font-semibold bg-white px-2.5 py-1 rounded-full border border-outline-variant/20 shadow-sm">4 Active Roles</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                        <tr class="bg-white">
+                            <th class="px-8 py-4 text-[11px] uppercase tracking-wider font-bold text-on-surface-variant/70 border-r border-outline-variant/5">
+                                ID
+                            </th>
+                            <th class="px-8 py-4 text-[11px] uppercase tracking-wider font-bold text-on-surface-variant/70 border-r border-outline-variant/5">
+                                Role Name
+                            </th>
+                            <th class="px-8 py-4 text-[11px] uppercase tracking-wider font-bold text-on-surface-variant/70">
+                                Users Assigned
+                            </th>
+                            <th class="px-8 py-4 text-[11px] uppercase tracking-wider font-bold text-on-surface-variant/70 text-right">
+                                Actions
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant/5">
+                        <!-- Role Row 1 -->
+                        <tr class="group hover:bg-primary/[0.02] transition-colors duration-150">
+                            <td class="px-8 py-5 text-sm font-mono text-on-surface-variant/80 border-r border-outline-variant/5">
+                                ROLE-001
+                            </td>
+                            <td class="px-8 py-5 border-r border-outline-variant/5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                    <span class="material-symbols-outlined text-[20px]"
+                                          style="font-variation-settings: 'FILL' 1;">security</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="font-bold text-on-surface text-[15px]">Administrator</span>
+                                        <span class="text-[11px] text-on-surface-variant/60 font-medium">Full system access</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-fixed text-on-primary-fixed-variant rounded-full text-xs font-bold ring-1 ring-primary/10">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                                        2 Users
+                                    </span>
+                            </td>
+                            <td class="px-8 py-5 text-right">
+                                <div class="flex justify-end gap-1">
+                                    <button class="p-2 text-on-surface-variant/40 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+                                            title="Edit Role">
+                                        <span class="material-symbols-outlined text-[20px]">edit_note</span>
+                                    </button>
+                                    <button class="p-2 text-on-surface-variant/40 hover:text-error hover:bg-error/5 rounded-lg transition-all"
+                                            title="Delete Role">
+                                        <span class="material-symbols-outlined text-[20px]">delete_outline</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Role Row 2 -->
+                        <tr class="group hover:bg-primary/[0.02] transition-colors duration-150">
+                            <td class="px-8 py-5 text-sm font-mono text-on-surface-variant/80 border-r border-outline-variant/5">
+                                ROLE-002
+                            </td>
+                            <td class="px-8 py-5 border-r border-outline-variant/5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-secondary-container/30 flex items-center justify-center text-secondary">
+                                        <span class="material-symbols-outlined text-[20px]">badge</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="font-bold text-on-surface text-[15px]">Staff Member</span>
+                                        <span class="text-[11px] text-on-surface-variant/60 font-medium">Limited operational access</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-5">
+                                <span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-xs font-bold border border-outline-variant/20">14 Users</span>
+                            </td>
+                            <td class="px-8 py-5 text-right">
+                                <div class="flex justify-end gap-1">
+                                    <button class="p-2 text-on-surface-variant/40 hover:text-primary hover:bg-primary/5 rounded-lg transition-all">
+                                        <span class="material-symbols-outlined text-[20px]">edit_note</span>
+                                    </button>
+                                    <button class="p-2 text-on-surface-variant/40 hover:text-error hover:bg-error/5 rounded-lg transition-all">
+                                        <span class="material-symbols-outlined text-[20px]">delete_outline</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Role Row 3 -->
+                        <tr class="group hover:bg-primary/[0.02] transition-colors duration-150">
+                            <td class="px-8 py-5 text-sm font-mono text-on-surface-variant/80 border-r border-outline-variant/5">
+                                ROLE-003
+                            </td>
+                            <td class="px-8 py-5 border-r border-outline-variant/5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-tertiary-fixed/30 flex items-center justify-center text-tertiary">
+                                        <span class="material-symbols-outlined text-[20px]">manage_accounts</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="font-bold text-on-surface text-[15px]">Department Manager</span>
+                                        <span class="text-[11px] text-on-surface-variant/60 font-medium">Team management access</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-5">
+                                <span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-xs font-bold border border-outline-variant/20">5 Users</span>
+                            </td>
+                            <td class="px-8 py-5 text-right">
+                                <div class="flex justify-end gap-1">
+                                    <button class="p-2 text-on-surface-variant/40 hover:text-primary hover:bg-primary/5 rounded-lg transition-all">
+                                        <span class="material-symbols-outlined text-[20px]">edit_note</span>
+                                    </button>
+                                    <button class="p-2 text-on-surface-variant/40 hover:text-error hover:bg-error/5 rounded-lg transition-all">
+                                        <span class="material-symbols-outlined text-[20px]">delete_outline</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Role Row 4 -->
+                        <tr class="group hover:bg-primary/[0.02] transition-colors duration-150">
+                            <td class="px-8 py-5 text-sm font-mono text-on-surface-variant/80 border-r border-outline-variant/5">
+                                ROLE-004
+                            </td>
+                            <td class="px-8 py-5 border-r border-outline-variant/5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+                                        <span class="material-symbols-outlined text-[20px]">visibility</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="font-bold text-on-surface text-[15px]">ReadOnly Viewer</span>
+                                        <span class="text-[11px] text-on-surface-variant/60 font-medium">Reporting only access</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-5">
+                                <span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-xs font-bold border border-outline-variant/20">28 Users</span>
+                            </td>
+                            <td class="px-8 py-5 text-right">
+                                <div class="flex justify-end gap-1">
+                                    <button class="p-2 text-on-surface-variant/40 hover:text-primary hover:bg-primary/5 rounded-lg transition-all">
+                                        <span class="material-symbols-outlined text-[20px]">edit_note</span>
+                                    </button>
+                                    <button class="p-2 text-on-surface-variant/40 hover:text-error hover:bg-error/5 rounded-lg transition-all">
+                                        <span class="material-symbols-outlined text-[20px]">delete_outline</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Contextual Information -->
+            <div class="mt-12 grid grid-cols-3 gap-8">
+                <div class="col-span-2 p-8 bg-primary/[0.03] rounded-xl border border-primary/10">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-primary/10 p-2.5 rounded-lg">
+                            <span class="material-symbols-outlined text-primary text-[24px]">shield_person</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-on-surface">Security &amp; Compliance</h4>
+                            <p class="text-sm text-on-surface-variant mt-2 leading-relaxed">System roles are audited
+                                monthly. Administrator changes require Multi-Factor Authentication (MFA) and supervisor
+                                approval. Please ensure all roles follow the <span class="font-semibold text-primary">Principle of Least Privilege</span>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white border border-outline-variant/10 rounded-xl p-8 flex flex-col justify-center items-center text-center shadow-sm">
+                    <div class="w-12 h-12 bg-surface-container-low rounded-full flex items-center justify-center mb-4 border border-outline-variant/10">
+                        <span class="material-symbols-outlined text-primary">history</span>
+                    </div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant/60">Last Audit
+                        Log</p>
+                    <p class="text-on-surface font-bold text-lg mt-1">Today, 09:42 AM</p>
+                    <button class="mt-4 text-[11px] font-bold text-primary uppercase tracking-widest hover:underline">
+                        View
+                        History
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<!-- Modal Backdrop -->
+<div class="fixed inset-0 z-50 flex items-center justify-center hidden" id="roleModal">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm"
+         onclick="document.getElementById('roleModal').classList.add('hidden')"></div>
+    <!-- Modal Content -->
+    <div class="relative bg-surface-container-lowest w-full max-w-md rounded-xl custom-shadow overflow-hidden transform transition-all p-8 border border-outline-variant/20">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-extrabold tracking-tight text-on-surface">Create New Role</h3>
+            <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors"
+                    onclick="document.getElementById('roleModal').classList.add('hidden')">
+                <span class="material-symbols-outlined text-on-surface-variant">close</span>
+            </button>
+        </div>
+        <div class="space-y-6">
+            <div>
+                <label class="block text-[11px] uppercase tracking-wider font-bold text-on-surface-variant mb-2"
+                       for="roleName">Role Name</label>
+                <input class="w-full bg-surface-container-low border-outline-variant/20 border rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+                       id="roleName" placeholder="e.g. Content Editor" type="text"/>
+            </div>
+            <div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant/10">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary/70 text-[20px]">info</span>
+                    <p class="text-xs text-on-surface-variant leading-tight">New roles are initialized with <span
+                            class="font-bold">Zero Permissions</span>. Access configuration follows in the next step.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-3 mt-10">
+            <button class="px-5 py-2.5 text-sm font-bold text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors"
+                    onclick="document.getElementById('roleModal').classList.add('hidden')">
+                Cancel
+            </button>
+            <button class="inline-flex items-center justify-center px-4 py-2.5 bg-primary text-white font-semibold text-sm rounded-lg hover:bg-primary-700 transition-all shadow-sm gap-2"
+                    onclick="document.getElementById('roleModal').classList.add('hidden')">
+                Create Role
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Script for Modal Keyboard Listeners -->
+<script>
+    document.addEventListener('keydown', function (event) {
+        if (event.key === "Escape") {
+            document.getElementById('roleModal').classList.add('hidden');
+        }
+    });
+</script>
+</body>
+</html>

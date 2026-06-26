@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<header th:fragment="header(title)"
+        class="sticky top-0 z-40 flex items-center justify-between border-b border-solid border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-8 py-4">
+
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-4">
+        <div class="flex flex-wrap gap-2">
+            <a class="text-slate-500 hover:text-primary text-sm font-medium leading-normal transition-colors"
+               th:href="@{/admin/system-revenue}">Home</a>
+            <span class="text-slate-400 text-sm font-medium leading-normal">/</span>
+            <span th:text="${title}"
+                  class="text-slate-900 dark:text-white text-sm font-medium leading-normal">Page</span>
+        </div>
+    </div>
+
+    <!-- Right actions -->
+    <div class="flex items-center gap-3">
+
+
+        <!-- Avatar + Name -->
+        <div class="flex items-center gap-2 cursor-pointer">
+<!--            <div class="size-10 rounded-full bg-slate-300"></div>-->
+            <span class="text-sm font-semibold text-slate-700 dark:text-white"
+                  th:text="${#authentication.name}">Admin</span>
+        </div>
+
+        <!-- Dropdown -->
+        <div class="flex items-center gap-2 cursor-pointer">
+
+            <form th:action="@{/auth/logout}" method="post">
+                <button type="submit"
+                        class="w-full text-left px-4 py-2 text-sm font-medium
+           text-white bg-blue-500
+           hover:bg-red-600
+           rounded-md transition duration-200 ease-in-out
+           shadow-sm">
+                    Logout
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+</header>
+
+<aside th:fragment="sidebar(activePage)"
+       class="w-64 flex-none flex-col justify-between border-r border-border-light bg-surface-light hidden lg:flex">
+
+    <div class="flex flex-col gap-2 p-4">
+
+        <!-- Brand -->
+        <div class="flex items-center gap-3 px-2">
+            <div class="bg-primary aspect-square rounded-full size-10 flex items-center justify-center text-white">
+                <span class="material-symbols-outlined text-[24px]">grid_view</span>
+            </div>
+            <div class="flex flex-col">
+                <h1 class="text-text-main dark:text-white text-base font-bold leading-normal">Admin</h1>
+                <p class="text-text-secondary dark:text-gray-400 text-xs font-normal leading-normal">Management
+                    Console</p>
+            </div>
+        </div>
+        <!-- MAIN -->
+        <div class="flex flex-col gap-1">
+
+
+            <!-- Dashboard -->
+            <a th:classappend="${activePage == 'dashboard' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"
+               class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"
+               th:href="@{/admin/system-revenue}">
+                <span class="material-symbols-outlined text-[24px]">dashboard</span>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+
+            <!-- Cate -->
+            <a th:classappend="${activePage == 'category' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"
+               class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"
+               th:href="@{/admin/category-management}">
+                <span class="material-symbols-outlined text-[24px]">Category</span>
+                <span class="text-sm font-medium">Category</span>
+            </a>
+
+            <!-- Customer -->
+            <a th:classappend="${activePage == 'users' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"
+               class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"
+               th:href="@{/admin/customer}">
+                <span class="material-symbols-outlined text-[24px]">group</span>
+                <span class="text-sm font-medium">Customers</span>
+            </a>
+
+            <!-- Assign Staff -->
+            <a th:classappend="${activePage == 'assignEventStaff' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"
+               class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"
+               th:href="@{/admin/assignEventStaff}">
+                <span class="material-symbols-outlined text-[24px]">groups</span>
+                <span class="text-sm font-medium">Assign Event Staff</span>
+            </a>
+
+            <!-- Staff -->
+            <a th:classappend="${activePage == 'staff' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"
+               class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"
+               th:href="@{/admin/staff-management}">
+                <span class="material-symbols-outlined text-[24px]">badge</span>
+                <span class="text-sm font-medium">Staff</span>
+            </a>
+
+            <!-- Roles -->
+<!--            <a th:classappend="${activePage == 'roles' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"-->
+<!--               class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"-->
+<!--               th:href="@{/admin/role-management}">-->
+<!--                <span class="material-symbols-outlined text-[24px]">admin_panel_settings</span>-->
+<!--                <span class="text-sm font-medium">Roles</span>-->
+<!--            </a>-->
+
+            <!-- Assign Staff -->
+            <a th:classappend="${activePage == 'assign' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"
+               class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"
+               th:href="@{/admin/assignEventStaff}">
+                <span class="material-symbols-outlined text-[24px]">assignment_ind</span>
+                <span class="text-sm font-medium">Assign Staff</span>
+            </a>
+
+        </div>
+
+        <!-- DIVIDER -->
+        <div class="my-2 h-[1px] bg-border-light w-full"></div>
+
+        <!-- REPORT / SYSTEM -->
+        <div class="flex flex-col gap-1">
+
+            <!--      &lt;!&ndash; Reports &ndash;&gt;-->
+            <!--      <a th:classappend="${activePage == 'reports' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"-->
+            <!--         class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"-->
+            <!--         th:href="@{/admin/reports}">-->
+            <!--        <span class="material-symbols-outlined text-[24px]">bar_chart</span>-->
+            <!--        <span class="text-sm font-medium">Reports</span>-->
+            <!--      </a>-->
+
+            <!--      &lt;!&ndash; Discount / Promotion &ndash;&gt;-->
+            <!--      <a th:classappend="${activePage == 'discounts' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"-->
+            <!--         class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"-->
+            <!--         th:href="@{/admin/discounts}">-->
+            <!--        <span class="material-symbols-outlined text-[24px]">local_offer</span>-->
+            <!--        <span class="text-sm font-medium">Discounts</span>-->
+            <!--      </a>-->
+
+            <!-- Settings -->
+    <!--            <a th:classappend="${activePage == 'settings' ? 'bg-primary/10 text-primary' : 'hover:bg-primary/5 hover:text-primary'}"-->
+    <!--               class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted transition-all"-->
+    <!--               th:href="@{/admin/settings}">-->
+    <!--                <span class="material-symbols-outlined text-[24px]">settings</span>-->
+    <!--                <span class="text-sm font-medium">Settings</span>-->
+    <!--            </a>-->
+
+        </div>
+    </div>
+
+</aside>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>OTP Verification - EventHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1f62ff",
+                        "primary-hover": "#1a4fcc",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#0f1523",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a202c",
+                        "border-light": "#e2e8f0",
+                        "border-dark": "#2d3748",
+                        "text-main": "#0c111d",
+                        "text-sub": "#4560a1",
+                        "success": "#10b981",
+                        "danger": "#ef4444",
+                        "warning": "#f59e0b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Hide number input spinners */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* OTP input styling */
+        .otp-input {
+            transition: all 0.2s ease;
+        }
+        .otp-input:focus {
+            transform: scale(1.05);
+            border-color: #1f62ff;
+            box-shadow: 0 0 0 3px rgba(31, 98, 255, 0.1);
+        }
+
+        /* Timer warning */
+        .timer-warning {
+            color: #ef4444;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Countdown timer styling */
+        .countdown {
+            font-feature-settings: "tnum";
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex items-center justify-center p-4">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+<div class="w-full max-w-[480px] bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg overflow-hidden border border-border-light dark:border-border-dark">
+    <!-- Header -->
+    <div class="h-32 w-full relative overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bg-white/90 dark:bg-surface-dark/90 p-4 rounded-full shadow-lg backdrop-blur-sm">
+                <span class="material-symbols-outlined text-4xl text-primary">lock_reset</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-8 pb-10">
+        <!-- Title -->
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-text-main dark:text-white tracking-tight mb-2">Verify OTP</h1>
+
+            <!-- Error message (from server) -->
+            <div th:if="${error}"
+                 class="mb-4 p-3 rounded-lg bg-danger/10 border border-danger/20 text-danger text-sm">
+                    <span th:text="${error == 'invalid' ? 'Invalid OTP code. Please try again.' :
+                                         (error == 'expired' ? 'OTP has expired. Please request a new one.' : error)}">
+                        Error message
+                    </span>
+            </div>
+
+            <!-- Client-side error message -->
+            <div id="clientError"
+                 class="mb-4 p-3 rounded-lg bg-danger/10 border border-danger/20 text-danger text-sm hidden">
+                <span id="clientErrorMessage"></span>
+            </div>
+
+            <!-- Success message (resend) -->
+            <div th:if="${success}"
+                 class="mb-4 p-3 rounded-lg bg-success/10 border border-success/20 text-success text-sm">
+                <span th:text="${success}">Success message</span>
+            </div>
+
+            <p class="text-text-sub dark:text-slate-400 text-sm leading-relaxed">
+                Enter the 6-digit code sent to
+            </p>
+            <p class="font-medium text-primary mt-1 break-all" id="emailDisplay" th:text="${email}">email@example.com</p>
+        </div>
+
+        <!-- Countdown Timer - THÊM MỚI -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-background-light dark:bg-background-dark px-4 py-2 rounded-full border border-border-light dark:border-border-dark">
+                <div class="flex items-center gap-2 text-sm">
+                    <span class="font-medium text-text-main dark:text-white">Code expires in:</span>
+                    <span id="countdown" class="countdown font-mono font-bold text-primary">05:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form POST đến /auth/forgot-verify-otp -->
+        <form th:action="@{/auth/forgot-verify-otp}" method="POST" class="space-y-6" id="otpForm">
+            <input type="hidden" name="email" th:value="${email}" id="emailInput"/>
+
+            <!-- OTP Inputs - SỬA: type="text" thay vì number để tránh lỗi -->
+            <div class="flex justify-center gap-2 sm:gap-3">
+                <input type="text"
+                       id="otp1"
+                       name="otp1"
+                       maxlength="1"
+                       inputmode="numeric"
+                       pattern="[0-9]*"
+                       autocomplete="off"
+                       class="otp-input w-12 h-14 text-center text-xl font-semibold bg-background-light dark:bg-background-dark border-2 border-border-light dark:border-border-dark rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text-main dark:text-white"
+                       placeholder="0"
+                       required/>
+                <input type="text"
+                       id="otp2"
+                       name="otp2"
+                       maxlength="1"
+                       inputmode="numeric"
+                       pattern="[0-9]*"
+                       autocomplete="off"
+                       class="otp-input w-12 h-14 text-center text-xl font-semibold bg-background-light dark:bg-background-dark border-2 border-border-light dark:border-border-dark rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text-main dark:text-white"
+                       placeholder="0"
+                       required/>
+                <input type="text"
+                       id="otp3"
+                       name="otp3"
+                       maxlength="1"
+                       inputmode="numeric"
+                       pattern="[0-9]*"
+                       autocomplete="off"
+                       class="otp-input w-12 h-14 text-center text-xl font-semibold bg-background-light dark:bg-background-dark border-2 border-border-light dark:border-border-dark rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text-main dark:text-white"
+                       placeholder="0"
+                       required/>
+                <input type="text"
+                       id="otp4"
+                       name="otp4"
+                       maxlength="1"
+                       inputmode="numeric"
+                       pattern="[0-9]*"
+                       autocomplete="off"
+                       class="otp-input w-12 h-14 text-center text-xl font-semibold bg-background-light dark:bg-background-dark border-2 border-border-light dark:border-border-dark rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text-main dark:text-white"
+                       placeholder="0"
+                       required/>
+                <input type="text"
+                       id="otp5"
+                       name="otp5"
+                       maxlength="1"
+                       inputmode="numeric"
+                       pattern="[0-9]*"
+                       autocomplete="off"
+                       class="otp-input w-12 h-14 text-center text-xl font-semibold bg-background-light dark:bg-background-dark border-2 border-border-light dark:border-border-dark rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text-main dark:text-white"
+                       placeholder="0"
+                       required/>
+                <input type="text"
+                       id="otp6"
+                       name="otp6"
+                       maxlength="1"
+                       inputmode="numeric"
+                       pattern="[0-9]*"
+                       autocomplete="off"
+                       class="otp-input w-12 h-14 text-center text-xl font-semibold bg-background-light dark:bg-background-dark border-2 border-border-light dark:border-border-dark rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text-main dark:text-white"
+                       placeholder="0"
+                       required/>
+            </div>
+
+            <!-- Hidden input for full OTP (optional) -->
+            <input type="hidden" name="fullOtp" id="fullOtp"/>
+
+            <!-- Verify Button -->
+            <button type="submit"
+                    id="verifyBtn"
+                    class="w-full bg-primary hover:bg-primary-hover text-white font-semibold py-3.5 px-4 rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="material-symbols-outlined text-xl">check_circle</span>
+                Verify OTP
+            </button>
+        </form>
+
+        <!-- Footer Actions -->
+        <div class="flex flex-col items-center gap-4 mt-6">
+            <!-- Resend with Timer - THÊM MỚI -->
+            <div class="text-center">
+                <span class="text-sm text-text-sub dark:text-slate-400">Didn't receive code? </span>
+                <button id="resendBtn"
+                        onclick="resendOtp()"
+                        disabled
+                        class="text-primary font-medium hover:text-primary-hover disabled:text-text-sub/50 disabled:cursor-not-allowed transition-colors text-sm">
+                    Resend OTP
+                </button>
+                <span id="resendTimer" class="text-xs text-text-sub dark:text-slate-500 ml-2"></span>
+            </div>
+
+            <a class="inline-flex items-center gap-2 text-primary hover:text-primary-hover text-sm font-medium transition-colors"
+               th:href="@{/auth/forgot-password}">
+                <span class="material-symbols-outlined text-lg">arrow_back</span>
+                Change Email
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // OTP Input Handling
+    const otpInputs = document.querySelectorAll('.otp-input');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const clientError = document.getElementById('clientError');
+    const clientErrorMessage = document.getElementById('clientErrorMessage');
+
+    // Auto-focus and move to next input
+    otpInputs.forEach((input, index) => {
+        // Only allow numbers
+        input.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+
+            if (this.value.length === 1) {
+                if (index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+            }
+            updateFullOtp();
+            validateOtpForm();
+            hideClientError();
+        });
+
+        // Handle backspace
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+        });
+
+        // Handle paste
+        input.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+            if (pastedData.length > 0) {
+                for (let i = 0; i < Math.min(pastedData.length, otpInputs.length); i++) {
+                    otpInputs[i].value = pastedData[i] || '';
+                }
+                // Focus on last filled input or next empty
+                const nextIndex = Math.min(pastedData.length, otpInputs.length - 1);
+                otpInputs[nextIndex].focus();
+                updateFullOtp();
+                validateOtpForm();
+            }
+        });
+    });
+
+    // Update hidden full OTP field
+    function updateFullOtp() {
+        let fullOtp = '';
+        otpInputs.forEach(input => fullOtp += input.value);
+        document.getElementById('fullOtp').value = fullOtp;
+    }
+
+    // Validate OTP form (all 6 digits filled)
+    function validateOtpForm() {
+        let allFilled = true;
+        otpInputs.forEach(input => {
+            if (input.value.length !== 1) allFilled = false;
+        });
+        verifyBtn.disabled = !allFilled;
+        return allFilled;
+    }
+
+    // Hide client error
+    function hideClientError() {
+        clientError.classList.add('hidden');
+    }
+
+    // Show client error
+    function showClientError(message) {
+        clientErrorMessage.textContent = message;
+        clientError.classList.remove('hidden');
+
+        // Auto hide after 3 seconds
+        setTimeout(() => {
+            clientError.classList.add('hidden');
+        }, 3000);
+    }
+
+    //  Countdown Timer (5 minutes = 300 seconds)
+    let timeLeft = 300; // 5 minutes in seconds
+    let timerInterval;
+    let countdownElement = document.getElementById('countdown');
+    let resendBtn = document.getElementById('resendBtn');
+    let resendTimer = document.getElementById('resendTimer');
+
+    function startCountdown() {
+        if (timerInterval) clearInterval(timerInterval);
+
+        timeLeft = 300; // Reset to 5 minutes
+        updateCountdownDisplay();
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateCountdownDisplay();
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                handleExpiredOtp();
+            }
+        }, 1000);
+    }
+
+    function updateCountdownDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        // Warning style when less than 1 minute
+        if (timeLeft <= 60) {
+            countdownElement.classList.add('timer-warning');
+        } else {
+            countdownElement.classList.remove('timer-warning');
+        }
+
+        // Update resend button state
+        if (timeLeft <= 0) {
+            resendBtn.disabled = false;
+            resendTimer.textContent = '';
+        } else {
+            resendBtn.disabled = true;
+            resendTimer.textContent = `(wait ${minutes}:${seconds.toString().padStart(2, '0')})`;
+        }
+    }
+
+    function handleExpiredOtp() {
+        showClientError('OTP has expired. Please request a new one.');
+        resendBtn.disabled = false;
+        resendTimer.textContent = '';
+
+        // Disable verify button
+        verifyBtn.disabled = true;
+    }
+
+    // Resend OTP
+    function resendOtp() {
+        const email = document.getElementById('emailDisplay').textContent;
+
+        // Show loading state
+        resendBtn.disabled = true;
+        resendBtn.innerHTML = 'Sending...';
+
+        // Call resend API
+        fetch(`/auth/forgot-resend-otp?email=${encodeURIComponent(email)}`)
+            .then(response => {
+                if (response.ok) {
+                    // Clear OTP inputs
+                    otpInputs.forEach(input => input.value = '');
+                    otpInputs[0].focus();
+
+                    // Restart countdown
+                    startCountdown();
+
+                    // Show success message (using server-side success param)
+                    // Reload page with success message
+                    window.location.href = `/auth/forgot-verify-otp?email=${encodeURIComponent(email)}&success=resend`;
+                } else {
+                    throw new Error('Failed to resend OTP');
+                }
+            })
+            .catch(error => {
+                showClientError('Failed to resend OTP. Please try again.');
+                resendBtn.innerHTML = 'Resend OTP';
+                resendBtn.disabled = false;
+            });
+    }
+
+    // Form Submission Validation
+    document.getElementById('otpForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Check if all OTP fields are filled
+        if (!validateOtpForm()) {
+            showClientError('Please enter all 6 digits of the OTP code.');
+            return;
+        }
+
+        // Check if timer expired
+        if (timeLeft <= 0) {
+            showClientError('OTP has expired. Please request a new one.');
+            return;
+        }
+
+        // Submit the form
+        this.submit();
+    });
+
+    // Initialize on Page Load
+    window.addEventListener('load', function() {
+        // Focus first OTP input
+        otpInputs[0]?.focus();
+
+        // Start countdown
+        startCountdown();
+
+        // Check for success message from resend
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'resend') {
+            // Show success message (will be handled by server-side th:if="${success}")
+        }
+    });
+
+    // Dark Mode
+    (function() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('theme')) {
+                if (e.matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+        });
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/frag::head('Payment Success')}">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Payment Successful - EventSystem</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+          rel="stylesheet" />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1f62ff",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#0f1523",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body
+        class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<div class="relative flex h-auto min-screen w-full flex-col group/design-root overflow-x-hidden">
+    <div class="layout-container flex h-full grow flex-col">
+        <header th:replace="~{fragment/customer/frag::header}" ></header>
+        <main class="flex-1 flex items-center justify-center p-4 md:p-8">
+            <div
+                    class="max-w-[520px] w-full bg-white dark:bg-slate-900 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 overflow-hidden">
+                <div class="pt-12 pb-8 px-6 text-center">
+                    <div
+                            class="mb-6 inline-flex items-center justify-center w-24 h-24 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">
+                        <span class="material-symbols-outlined text-6xl font-bold">check_circle</span>
+                    </div>
+                    <h1 class="text-slate-900 dark:text-white text-3xl font-bold leading-tight mb-2">Payment
+                        Successful!</h1>
+                    <p class="text-slate-500 dark:text-slate-400 text-base">Your transaction has been completed
+                        successfully.</p>
+                </div>
+                <div class="px-8 pb-4">
+                    <div
+                            class="bg-slate-50 dark:bg-slate-800/40 rounded-xl p-6 border border-slate-100 dark:border-slate-800/60">
+                        <h3
+                                class="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-widest mb-4">
+                            Transaction Details</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-500 dark:text-slate-400 text-sm">Order Code</span>
+                                <span th:text="|#${txnRef}|"
+                                        class="text-slate-900 dark:text-white text-sm font-semibold">#TXN-789234</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-500 dark:text-slate-400 text-sm">Amount</span>
+                                <span th:text="|${#numbers.formatDecimal(vnp_Amount / 100, 0, 'POINT', 0, 'DEFAULT')} VND|" class="text-slate-900 dark:text-white text-sm font-bold">1,500,000 VND</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-500 dark:text-slate-400 text-sm">Payment Time</span>
+                                <span th:text="${vnp_PayDate}" class="text-slate-900 dark:text-white text-sm font-medium text-right">Oct 24,
+                                        2026, 14:30</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-500 dark:text-slate-400 text-sm">Payment Method</span>
+                                <div class="flex items-center gap-2">
+                                        <span
+                                                class="text-slate-900 dark:text-white text-sm font-semibold uppercase">VNPAY</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 space-y-3">
+<!--                    <a target="_blank" th:href="@{/payment-detail/{txnRef}(txnRef=(${txnRef}))}"-->
+<!--                            class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-4 px-6 rounded-lg transition-all shadow-lg shadow-primary/20 active:scale-[0.98]">-->
+<!--                        Order Details-->
+<!--                    </a>-->
+                    <a id="orderDetailBtn"
+                       target="_blank"
+                       th:href="@{/payment-detail/{txnRef}(txnRef=(${txnRef}))}"
+                       class="w-full flex items-center justify-center gap-2 bg-gray-400 text-white font-bold py-4 px-6 rounded-lg cursor-not-allowed opacity-70 pointer-events-none">
+                        Waiting for order detail...
+                    </a>
+
+                    <a th:href="@{/home}"
+                            class="w-full flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold py-4 px-6 rounded-lg transition-all active:scale-[0.98]">
+                        Back to Home
+                    </a>
+                </div>
+                <div
+                        class="bg-slate-50 dark:bg-slate-900/80 px-8 py-5 border-t border-slate-100 dark:border-slate-800 flex items-start gap-3">
+                    <span class="material-symbols-outlined text-slate-400 text-xl mt-0.5">mail</span>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                        A receipt and ticket confirmation have been sent to your email. You can also download your
+                        invoice from the order details page.
+                    </p>
+                </div>
+            </div>
+        </main>
+        <footer class="py-8 text-center text-slate-400 dark:text-slate-600 text-sm">
+            <p>© 2024 EventSystem Inc. All rights reserved.</p>
+            <div class="mt-2 flex justify-center gap-4">
+                <a class="hover:text-primary transition-colors" href="#">Support</a>
+                <a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+                <a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+            </div>
+        </footer>
+    </div>
+</div>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const txnRef = urlParams.get("vnp_TxnRef");
+
+    const btn = document.getElementById("orderDetailBtn");
+
+    let retryCount = 0;
+    const maxRetry = 15; // 30s
+
+    // ❌ chặn click khi đang waiting
+    btn.addEventListener("click", function (e) {
+        if (btn.classList.contains("cursor-not-allowed")) {
+            e.preventDefault();
+        }
+    });
+
+    const interval = setInterval(() => {
+
+        fetch(`/api/payment-status?txnRef=${txnRef}`)
+            .then(res => res.json())
+            .then(data => {
+
+                console.log("Payment status:", data.status);
+
+                if (data.status === "Completed") {
+                    clearInterval(interval);
+
+                    // ✅ ENABLE BUTTON
+                    btn.classList.remove(
+                        "bg-gray-400",
+                        "cursor-not-allowed",
+                        "opacity-70",
+                        "pointer-events-none"
+                    );
+
+                    btn.classList.add(
+                        "bg-primary",
+                        "hover:bg-primary/90",
+                        "cursor-pointer"
+                    );
+
+                    btn.innerText = "Order Details";
+                }
+
+                if (data.status === "Failed") {
+                    clearInterval(interval);
+                    btn.innerText = "Payment Failed";
+                }
+
+                retryCount++;
+
+                if (retryCount >= maxRetry) {
+                    clearInterval(interval);
+
+                    // ⚠️ fallback cho click manual
+                    btn.classList.remove(
+                        "bg-gray-400",
+                        "cursor-not-allowed",
+                        "pointer-events-none"
+                    );
+
+                    btn.classList.add("bg-yellow-500");
+
+                    btn.innerText = "Check Order Manually";
+                }
+
+            })
+            .catch(err => {
+                console.error("Fetch error:", err);
+            });
+
+    }, 2000);
+</script>
+</body>
+
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="ai-chat" class="ai-chat-container"
+     th:attr="data-customer-logged-in=${#authorization.expression('isAuthenticated()')} ? 'true' : 'false'">
+
+    <!-- Trigger Button -->
+    <button id="ai-chat-button" onclick="toggleAIChat()" aria-label="Open AI Assistant">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="2" x2="12" y2="5"/>
+            <circle cx="12" cy="2" r="1"/>
+            <rect x="4" y="5" width="16" height="14" rx="3" ry="3"/>
+            <circle cx="9" cy="11" r="1.5"/>
+            <circle cx="15" cy="11" r="1.5"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+        </svg>
+        <span class="ai-btn-ping"></span>
+    </button>
+
+    <!-- Chat Popup -->
+    <div id="ai-chat-popup" class="ai-popup" aria-hidden="true">
+
+        <!-- Header -->
+        <div class="ai-header">
+            <div class="ai-header-left">
+                <div class="ai-avatar-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                    <span class="ai-status-dot"></span>
+                </div>
+                <div class="ai-header-info">
+                    <span class="ai-name">Event AI</span>
+                    <span class="ai-subtitle">Llama 3.3 · Online</span>
+                </div>
+            </div>
+            <div class="ai-header-actions">
+                <button class="ai-icon-btn" onclick="clearChat()" title="Xoá lịch sử">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                    </svg>
+                </button>
+                <button class="ai-icon-btn" onclick="toggleAIChat()" title="Đóng">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div id="chat-messages" class="ai-messages">
+            <div class="ai-msg ai-msg--bot">
+                <div class="ai-msg-icon">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                </div>
+                <div class="ai-msg-bubble">
+                    <p>Xin chào! 👋 Em là trợ lý AI của <strong>EventGo</strong>.<br>Bạn đang tìm kiếm sự kiện nào hôm nay?</p>
+                    <span class="ai-msg-time">Vừa xong</span>
+                </div>
+            </div>
+            <div class="ai-quick-replies" id="quick-replies">
+                <button class="ai-quick-btn" onclick="quickSend(this)">🎵 Âm nhạc & Concert</button>
+                <button class="ai-quick-btn" onclick="quickSend(this)">🎭 Workshop & Hội thảo</button>
+                <button class="ai-quick-btn" onclick="quickSend(this)">🏃 Thể thao & Ngoài trời</button>
+                <button class="ai-quick-btn" onclick="quickSend(this)">🎉 Sự kiện cuối tuần</button>
+            </div>
+        </div>
+
+        <!-- Suggested Events — collapsible -->
+        <div id="suggested-events" class="ai-suggestions hidden">
+            <div class="ai-suggestions-header" onclick="toggleSuggestions()" style="cursor:pointer; user-select:none;">
+                <div style="display:flex; align-items:center; gap:5px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                    <span>Gợi ý cho bạn</span>
+                </div>
+                <!-- Mũi tên ẩn/hiện -->
+                <svg id="suggestions-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                     style="transition: transform 0.25s; margin-left:auto;">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </div>
+            <div id="suggested-events-list" class="ai-suggestions-list"></div>
+        </div>
+
+        <!-- Input -->
+        <div class="ai-input-area">
+            <div class="ai-input-wrap">
+                <input type="text" id="chat-input"
+                       class="ai-input"
+                       placeholder="Hỏi về sự kiện bạn muốn..."
+                       onkeypress="if(event.key==='Enter') sendMessage()" />
+                <button onclick="sendMessage()" class="ai-send-btn" title="Gửi">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                </button>
+            </div>
+            <p class="ai-footer-note">
+                Powered by <strong>Groq</strong> ·
+                <span th:if="${#authorization.expression('isAuthenticated()')}">Gợi ý cá nhân hóa ✦</span>
+                <span th:unless="${#authorization.expression('isAuthenticated()')}">
+                    <a href="/auth/login">Đăng nhập</a> để nhận gợi ý tốt hơn
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <style>
+        :root {
+            --ai-accent: #6c47ff;
+            --ai-accent2: #a78bfa;
+            --ai-bg: #ffffff;
+            --ai-surface: #f5f4ff;
+            --ai-border: rgba(108,71,255,0.13);
+            --ai-text: #1a1523;
+            --ai-muted: #7c6f9f;
+            --ai-btn-size: 56px;
+            --ai-radius: 20px;
+            --ai-shadow: 0 8px 40px rgba(108,71,255,0.22), 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        #ai-chat-button {
+            position: fixed;
+            bottom: 28px; right: 28px;
+            width: var(--ai-btn-size); height: var(--ai-btn-size);
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--ai-accent), #9b6dff);
+            color: #fff; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 20px rgba(108,71,255,0.45);
+            z-index: 9999;
+            transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s;
+        }
+        #ai-chat-button:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(108,71,255,0.6); }
+        #ai-chat-button.is-open { transform: rotate(45deg) scale(1.05); }
+
+        .ai-btn-ping {
+            position: absolute; top: 4px; right: 4px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #22c55e; border: 2px solid white;
+        }
+        .ai-btn-ping::after {
+            content: ''; position: absolute; inset: -3px;
+            border-radius: 50%; background: #22c55e;
+            opacity: 0.4; animation: pingPulse 1.8s ease-in-out infinite;
+        }
+        @keyframes pingPulse {
+            0%,100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.7); opacity: 0; }
+        }
+
+        .ai-popup {
+            position: fixed; bottom: 96px; right: 28px;
+            width: 360px; height: 540px;
+            background: var(--ai-bg);
+            border-radius: var(--ai-radius);
+            box-shadow: var(--ai-shadow);
+            border: 1px solid var(--ai-border);
+            display: flex; flex-direction: column;
+            overflow: hidden; z-index: 9998;
+            transform-origin: bottom right;
+            transform: scale(0.85) translateY(12px); opacity: 0; pointer-events: none;
+            transition: transform 0.32s cubic-bezier(.34,1.46,.64,1), opacity 0.22s ease;
+            font-family: 'Outfit', 'Segoe UI', sans-serif;
+        }
+        .ai-popup.is-open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+        .ai-header {
+            background: linear-gradient(135deg, var(--ai-accent) 0%, #8b5cf6 100%);
+            padding: 14px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .ai-header-left { display: flex; align-items: center; gap: 11px; }
+        .ai-avatar-wrap {
+            width: 38px; height: 38px;
+            background: rgba(255,255,255,0.18); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; border: 1px solid rgba(255,255,255,0.25);
+        }
+        .ai-status-dot {
+            position: absolute; bottom: -2px; right: -2px;
+            width: 9px; height: 9px; background: #22c55e;
+            border-radius: 50%; border: 2px solid white;
+        }
+        .ai-name { display: block; font-size: 14px; font-weight: 700; color: white; }
+        .ai-subtitle { display: block; font-size: 11px; color: rgba(255,255,255,0.72); margin-top: 1px; }
+        .ai-header-actions { display: flex; gap: 4px; }
+        .ai-icon-btn {
+            width: 30px; height: 30px; border-radius: 8px; border: none;
+            background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .ai-icon-btn:hover { background: rgba(255,255,255,0.25); color: white; }
+
+        .ai-messages {
+            flex: 1; padding: 16px; overflow-y: auto;
+            background: #faf9ff; display: flex; flex-direction: column;
+            gap: 12px; scroll-behavior: smooth;
+        }
+        .ai-messages::-webkit-scrollbar { width: 4px; }
+        .ai-messages::-webkit-scrollbar-track { background: transparent; }
+        .ai-messages::-webkit-scrollbar-thumb { background: #d4ccff; border-radius: 4px; }
+
+        .ai-msg { display: flex; align-items: flex-start; gap: 8px; animation: msgSlideIn 0.25s cubic-bezier(.34,1.4,.64,1) both; }
+        .ai-msg--user { flex-direction: row-reverse; }
+        .ai-msg-icon {
+            width: 28px; height: 28px;
+            background: linear-gradient(135deg, var(--ai-accent), #8b5cf6);
+            border-radius: 9px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: white;
+        }
+        .ai-msg-bubble {
+            background: white; border: 1px solid var(--ai-border);
+            border-radius: 4px 14px 14px 14px;
+            padding: 10px 13px; max-width: 80%;
+            box-shadow: 0 1px 4px rgba(108,71,255,0.07);
+        }
+        .ai-msg--user .ai-msg-bubble {
+            background: linear-gradient(135deg, var(--ai-accent), #8b5cf6);
+            border: none; border-radius: 14px 4px 14px 14px;
+            color: white; box-shadow: 0 2px 10px rgba(108,71,255,0.3);
+        }
+        .ai-msg-bubble p { font-size: 13px; line-height: 1.55; color: var(--ai-text); margin: 0; }
+        .ai-msg--user .ai-msg-bubble p { color: white; }
+        .ai-msg-time { font-size: 10px; color: var(--ai-muted); display: block; margin-top: 4px; }
+        .ai-msg--user .ai-msg-time { color: rgba(255,255,255,0.65); }
+
+        .ai-quick-replies { display: flex; flex-wrap: wrap; gap: 6px; padding-left: 36px; }
+        .ai-quick-btn {
+            font-size: 11.5px; padding: 5px 11px; border-radius: 20px;
+            border: 1px solid var(--ai-accent2); background: white;
+            color: var(--ai-accent); cursor: pointer; font-family: inherit;
+            font-weight: 500; transition: all 0.18s;
+        }
+        .ai-quick-btn:hover { background: var(--ai-accent); color: white; border-color: var(--ai-accent); transform: translateY(-1px); }
+
+        .ai-typing .ai-msg-bubble { padding: 12px 14px; }
+        .ai-typing-dots { display: flex; gap: 4px; align-items: center; }
+        .ai-typing-dots span {
+            width: 6px; height: 6px; background: var(--ai-accent2);
+            border-radius: 50%; animation: typingBounce 1.2s infinite both;
+        }
+        .ai-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .ai-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce {
+            0%,80%,100% { transform: translateY(0); opacity: 0.4; }
+            40% { transform: translateY(-6px); opacity: 1; }
+        }
+
+        /* Suggestions collapsible */
+        .ai-suggestions {
+            border-top: 1px solid var(--ai-border);
+            background: white; flex-shrink: 0;
+            transition: all 0.25s ease;
+        }
+        .ai-suggestions.hidden { display: none; }
+        .ai-suggestions-header {
+            font-size: 10.5px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.06em;
+            display: flex; align-items: center; gap: 5px;
+            color: var(--ai-accent);
+            padding: 9px 14px 0 14px;
+        }
+        /* List visible by default, collapses on toggle */
+        .ai-suggestions-list {
+            display: flex; flex-direction: column; gap: 6px;
+            max-height: 150px; overflow-y: auto;
+            padding: 8px 14px 10px 14px;
+            transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.25s ease;
+        }
+        .ai-suggestions-list.collapsed {
+            max-height: 0; opacity: 0; overflow: hidden;
+            padding-top: 0; padding-bottom: 0;
+        }
+
+        .ai-suggestion-item {
+            display: flex; align-items: flex-start; gap: 9px;
+            padding: 7px 9px; border-radius: 10px; cursor: pointer;
+            border: 1px solid transparent; transition: all 0.18s;
+        }
+        .ai-suggestion-item:hover { background: var(--ai-surface); border-color: var(--ai-border); }
+        .ai-suggestion-icon {
+            width: 32px; height: 32px; background: var(--ai-surface);
+            border-radius: 9px; display: flex; align-items: center; justify-content: center;
+            font-size: 15px; flex-shrink: 0; margin-top: 2px;
+        }
+        .ai-suggestion-title { font-size: 12.5px; font-weight: 600; color: var(--ai-text); display: block; }
+        .ai-suggestion-meta { font-size: 10.5px; color: var(--ai-muted); display: block; margin-top: 1px; }
+        .ai-suggestion-price { font-size: 11px; color: #16a34a; font-weight: 600; display: block; margin-top: 2px; }
+        .ai-suggestion-reason { font-size: 10.5px; color: var(--ai-accent); font-weight: 500; display: block; margin-top: 2px; }
+
+        .ai-input-area {
+            padding: 10px 14px 12px; border-top: 1px solid var(--ai-border);
+            background: white; flex-shrink: 0;
+        }
+        .ai-input-wrap {
+            display: flex; align-items: center; gap: 8px;
+            background: #f5f4ff; border: 1.5px solid var(--ai-border);
+            border-radius: 14px; padding: 0 6px 0 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .ai-input-wrap:focus-within { border-color: var(--ai-accent); box-shadow: 0 0 0 3px rgba(108,71,255,0.1); }
+        .ai-input {
+            flex: 1; background: transparent; border: none; outline: none;
+            font-size: 13px; font-family: inherit; color: var(--ai-text); padding: 10px 0;
+        }
+        .ai-input::placeholder { color: #b0a8cc; }
+        .ai-send-btn {
+            width: 34px; height: 34px;
+            background: linear-gradient(135deg, var(--ai-accent), #8b5cf6);
+            color: white; border: none; border-radius: 10px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.18s, box-shadow 0.18s; flex-shrink: 0;
+        }
+        .ai-send-btn:hover { transform: scale(1.08); box-shadow: 0 3px 12px rgba(108,71,255,0.45); }
+        .ai-send-btn:active { transform: scale(0.95); }
+        .ai-footer-note { font-size: 10.5px; color: var(--ai-muted); text-align: center; margin-top: 7px; }
+        .ai-footer-note strong { color: var(--ai-accent); }
+        .ai-footer-note a { color: var(--ai-accent); text-decoration: none; }
+        .ai-footer-note a:hover { text-decoration: underline; }
+
+        @keyframes msgSlideIn {
+            from { opacity: 0; transform: translateY(8px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let isChatOpen = false;
+        let suggestionsCollapsed = false;
+        const CHAT_STORAGE_KEY = 'aiChatHistory_v1';
+        const SUGGESTIONS_STORAGE_KEY = 'aiSuggestions_v1';
+        let chatHistory = [];
+
+        function toggleAIChat() {
+            const popup = document.getElementById('ai-chat-popup');
+            const btn   = document.getElementById('ai-chat-button');
+            isChatOpen = !isChatOpen;
+            popup.classList.toggle('is-open', isChatOpen);
+            popup.setAttribute('aria-hidden', String(!isChatOpen));
+            btn.classList.toggle('is-open', isChatOpen);
+            if (isChatOpen) {
+                loadChatFromStorage();
+                setTimeout(() => document.getElementById('chat-input').focus(), 320);
+            }
+        }
+
+        // Toggle ẩn/hiện panel gợi ý
+        function toggleSuggestions() {
+            const list  = document.getElementById('suggested-events-list');
+            const arrow = document.getElementById('suggestions-arrow');
+            suggestionsCollapsed = !suggestionsCollapsed;
+            list.classList.toggle('collapsed', suggestionsCollapsed);
+            arrow.style.transform = suggestionsCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
+        }
+
+        function loadChatFromStorage() {
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = '';
+            try {
+                const raw = localStorage.getItem(CHAT_STORAGE_KEY);
+                if (raw) chatHistory = JSON.parse(raw) || [];
+            } catch (e) { chatHistory = []; }
+
+            if (chatHistory.length === 0) {
+                appendMessage('assistant', 'Xin chào! 👋 Em là trợ lý AI của <strong>EventGo</strong>.<br>Bạn đang tìm kiếm sự kiện nào hôm nay?');
+                renderQuickReplies();
+                saveChatHistory();
+                return;
+            }
+            chatHistory.forEach(m => appendMessage(m.role, m.content, m.time, true));
+            container.scrollTop = container.scrollHeight;
+            try {
+                const savedSuggestions = localStorage.getItem(SUGGESTIONS_STORAGE_KEY);
+                if (savedSuggestions) {
+                    const events = JSON.parse(savedSuggestions);
+                    if (events && events.length > 0) showSuggestedEvents(events);
+                }
+            } catch(e) {}
+        }
+
+        function quickSend(btn) {
+            const text = btn.textContent.trim().replace(/^\p{Emoji}\s*/u, '');
+            document.getElementById('chat-input').value = text;
+            const qr = document.getElementById('quick-replies');
+            if (qr) qr.remove();
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            appendMessage('user', message);
+            input.value = '';
+            showTyping();
+
+            fetch('/ai-chat/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            })
+                .then(r => r.json())
+                .then(data => {
+                    removeTyping();
+                    appendMessage('assistant', data.reply);
+                    if (data.suggestedEvents && data.suggestedEvents.length) {
+                        showSuggestedEvents(data.suggestedEvents);
+                    }
+                })
+                .catch(() => {
+                    removeTyping();
+                    appendMessage('assistant', 'Xin lỗi, có lỗi xảy ra. Vui lòng thử lại sau 🙏');
+                });
+        }
+
+        function saveChatHistory() {
+            try { localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory)); } catch (e) {}
+        }
+
+        function appendMessage(role, content, timeOverride, skipSave) {
+            const container = document.getElementById('chat-messages');
+            const now = timeOverride || new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            const div = document.createElement('div');
+
+            if (role === 'assistant') {
+                div.className = 'ai-msg ai-msg--bot';
+                div.innerHTML = `
+                    <div class="ai-msg-icon">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                    </div>
+                    <div class="ai-msg-bubble">
+                        <p>${content.replace(/\n/g, '<br>')}</p>
+                        <span class="ai-msg-time">${now}</span>
+                    </div>`;
+            } else {
+                div.className = 'ai-msg ai-msg--user';
+                div.innerHTML = `
+                    <div class="ai-msg-bubble">
+                        <p>${content.replace(/\n/g, '<br>')}</p>
+                        <span class="ai-msg-time">${now}</span>
+                    </div>`;
+            }
+
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+
+            if (!skipSave) {
+                chatHistory.push({ role, content, time: now });
+                saveChatHistory();
+            }
+        }
+
+        function renderQuickReplies() {
+            const container = document.getElementById('chat-messages');
+            const qr = document.createElement('div');
+            qr.className = 'ai-quick-replies';
+            qr.id = 'quick-replies';
+            qr.innerHTML = `
+                <button class="ai-quick-btn" onclick="quickSend(this)">🎵 Âm nhạc & Concert</button>
+                <button class="ai-quick-btn" onclick="quickSend(this)">🎭 Workshop & Hội thảo</button>
+                <button class="ai-quick-btn" onclick="quickSend(this)">🏃 Thể thao & Ngoài trời</button>
+                <button class="ai-quick-btn" onclick="quickSend(this)">🎉 Sự kiện cuối tuần</button>`;
+            container.appendChild(qr);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTyping() {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.id = 'ai-typing';
+            div.className = 'ai-msg ai-msg--bot ai-typing';
+            div.innerHTML = `
+                <div class="ai-msg-icon">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                </div>
+                <div class="ai-msg-bubble">
+                    <div class="ai-typing-dots"><span></span><span></span><span></span></div>
+                </div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeTyping() {
+            const t = document.getElementById('ai-typing');
+            if (t) t.remove();
+        }
+
+        function showSuggestedEvents(events) {
+            try { localStorage.setItem(SUGGESTIONS_STORAGE_KEY, JSON.stringify(events)); } catch(e) {}
+
+            const container = document.getElementById('suggested-events');
+            const list      = document.getElementById('suggested-events-list');
+            list.innerHTML  = '';
+
+            // Mặc định đóng khi có data mới
+            suggestionsCollapsed = true;
+            list.classList.add('collapsed');
+            const arrow = document.getElementById('suggestions-arrow');
+            if (arrow) arrow.style.transform = 'rotate(-90deg)';
+            const icons = ['🎵','🎭','🏃','🎨','🎉','📸','💡'];
+
+            events.forEach((ev, i) => {
+                const item = document.createElement('div');
+                item.className = 'ai-suggestion-item';
+                item.onclick = () => {
+                    const popup = document.getElementById('ai-chat-popup');
+                    const btn   = document.getElementById('ai-chat-button');
+                    isChatOpen = false;
+                    popup.classList.remove('is-open');
+                    popup.setAttribute('aria-hidden', 'true');
+                    btn.classList.remove('is-open');
+                    window.location.href = '/event/' + ev.eventId;
+                };
+
+                // Hiện giá nếu có
+                const priceHtml = ev.price
+                    ? `<span class="ai-suggestion-price">🎟 ${ev.price}</span>`
+                    : '';
+
+                item.innerHTML = `
+                    <div class="ai-suggestion-icon">${icons[i % icons.length]}</div>
+                    <div style="min-width:0; flex:1;">
+                        <span class="ai-suggestion-title">${ev.title}</span>
+                        <span class="ai-suggestion-meta">${ev.category} · ${ev.venue}</span>
+                        <span class="ai-suggestion-meta">📅 ${ev.date || 'Sắp diễn ra'}</span>
+                        ${priceHtml}
+                        <span class="ai-suggestion-reason">✦ ${ev.matchReason}</span>
+                    </div>`;
+                list.appendChild(item);
+            });
+
+            container.classList.remove('hidden');
+        }
+
+        function clearChat() {
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = '';
+            appendMessage('assistant', 'Cuộc trò chuyện đã được xoá. Em có thể giúp gì cho bạn? 😊');
+            renderQuickReplies();
+            document.getElementById('suggested-events').classList.add('hidden');
+            try { localStorage.removeItem(SUGGESTIONS_STORAGE_KEY); } catch(e) {}
+            chatHistory = [];
+            saveChatHistory();
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!isChatOpen) return;
+            const popup = document.getElementById('ai-chat-popup');
+            const btn   = document.getElementById('ai-chat-button');
+            // Chỉ đóng khi click hoàn toàn ngoài popup VÀ ngoài button
+            if (!popup.contains(e.target) && !btn.contains(e.target)) {
+                toggleAIChat();
+            }
+        });
+        /*]]>*/
+    </script>
+</div>
+</html>

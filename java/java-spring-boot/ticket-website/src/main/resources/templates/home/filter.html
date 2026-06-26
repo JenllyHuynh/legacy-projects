@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/frag::head('Events Discovery')}"></head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-white antialiased transition-colors duration-200">
+<div th:replace="~{fragment/frag::loading}"></div>
+<script th:replace="~{fragment/frag::scriptLoading}"></script>
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+    <header th:replace="~{fragment/customer/frag::header}"></header>
+
+    <main class="flex-1 w-full max-w-[1700px] mx-auto flex flex-col lg:flex-row gap-0 lg:gap-8 p-4 sm:p-6 lg:p-8">
+
+        <!-- ── SIDEBAR ── -->
+        <aside class="w-full lg:w-72 flex-shrink-0 mb-8 lg:mb-0">
+            <form th:action="@{/search}" method="get">
+                <input type="hidden" name="tab" th:value="${tab}">
+
+                <!-- Heading -->
+                <div class="mb-4">
+                    <h1 class="text-2xl font-black tracking-tight text-text-main dark:text-white mb-1">Find Events</h1>
+                    <p class="text-sm text-text-secondary dark:text-gray-400">Discover experiences tailored for you.</p>
+                </div>
+
+                <!-- Filter card -->
+                <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+
+                    <!-- Keywords -->
+                    <div class="px-5 py-4">
+                        <label class="block text-[10px] font-bold text-text-secondary dark:text-gray-500 uppercase tracking-widest mb-2.5">Keywords</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[18px] pointer-events-none">search</span>
+                            <input class="w-full pl-9 pr-3 py-2 text-sm bg-gray-50 dark:bg-gray-800
+                                          border border-gray-200 dark:border-gray-700 rounded-xl
+                                          placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary
+                                          focus:border-transparent transition-all text-text-main dark:text-gray-200"
+                                   placeholder="Event name…" type="text" name="keyword" th:value="${keyword}"/>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-gray-100 dark:bg-gray-800 mx-5"></div>
+
+                    <!-- Categories -->
+                    <div class="px-5 py-4">
+                        <label class="block text-[10px] font-bold text-text-secondary dark:text-gray-500 uppercase tracking-widest mb-2.5">Categories</label>
+                        <div class="flex flex-col gap-0.5 max-h-48 overflow-y-auto pr-0.5
+                                    [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full
+                                    [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-thumb]:bg-gray-700">
+                            <label th:each="category : ${categories}"
+                                   class="cat-label flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-pointer transition-colors">
+                                <input class="w-4 h-4 rounded flex-shrink-0 accent-primary
+                                              border-gray-300 dark:border-gray-600"
+                                       type="checkbox" name="category"
+                                       th:value="${category.id}"
+                                       th:checked="${selectedCategories != null and selectedCategories.contains(category.id)}"/>
+                                <span class="text-sm" th:text="${category.name}"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-gray-100 dark:bg-gray-800 mx-5"></div>
+
+                    <!-- Location -->
+                    <div class="px-5 py-4">
+                        <label class="block text-[10px] font-bold text-text-secondary dark:text-gray-500 uppercase tracking-widest mb-2.5">Location</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-[18px] pointer-events-none">location_on</span>
+                            <select class="w-full pl-9 pr-9 py-2 text-sm bg-gray-50 dark:bg-gray-800
+                                           border border-gray-200 dark:border-gray-700 rounded-xl
+                                           appearance-none font-medium cursor-pointer
+                                           focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
+                                           transition-all text-text-main dark:text-gray-300"
+                                    name="city">
+                                <option value="">All locations</option>
+                                <option th:each="venue : ${venues}"
+                                        th:value="${venue}"
+                                        th:text="${venue}"
+                                        th:selected="${venue == selectedVenue}"/>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-gray-100 dark:bg-gray-800 mx-5"></div>
+
+                    <!-- Date Range -->
+                    <div class="px-5 py-4">
+                        <label class="block text-[10px] font-bold text-text-secondary dark:text-gray-500 uppercase tracking-widest mb-2.5">Date
+                            Range</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="block text-[11px] text-text-secondary dark:text-gray-500 mb-1.5">From</span>
+                                <input type="date" name="startDate" th:value="${startDate}"
+                                       class="w-full px-2.5 py-2 text-xs bg-gray-50 dark:bg-gray-800
+                                              border border-gray-200 dark:border-gray-700 rounded-xl
+                                              focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
+                                              transition-all text-text-main dark:text-gray-300"/>
+                            </div>
+                            <div>
+                                <span class="block text-[11px] text-text-secondary dark:text-gray-500 mb-1.5">To</span>
+                                <input type="date" name="endDate" th:value="${endDate}"
+                                       class="w-full px-2.5 py-2 text-xs bg-gray-50 dark:bg-gray-800
+                                              border border-gray-200 dark:border-gray-700 rounded-xl
+                                              focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
+                                              transition-all text-text-main dark:text-gray-300"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-gray-100 dark:bg-gray-800 mx-5"></div>
+
+                    <!-- Price -->
+                    <div class="px-5 py-4">
+                        <label class="block text-[10px] font-bold text-text-secondary dark:text-gray-500 uppercase tracking-widest mb-2.5">Price</label>
+
+
+                        <div class="grid grid-cols-3 gap-1.5 mb-3">
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="priceMode" value="all"
+                                       th:checked="${priceMode == 'all' or priceMode == null}"
+                                       class="sr-only peer"/>
+                                <span class="flex items-center justify-center py-2 rounded-lg text-xs font-semibold
+                                             border border-gray-200 dark:border-gray-700
+                                             bg-gray-50 dark:bg-gray-800 text-text-secondary dark:text-gray-400
+                                             peer-checked:border-primary peer-checked:bg-blue-50 dark:peer-checked:bg-blue-950
+                                             peer-checked:text-primary transition-all select-none">All</span>
+                            </label>
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="priceMode" value="free"
+                                       th:checked="${priceMode == 'free'}"
+                                       class="sr-only peer"/>
+                                <span class="flex items-center justify-center py-2 rounded-lg text-xs font-semibold
+                                             border border-gray-200 dark:border-gray-700
+                                             bg-gray-50 dark:bg-gray-800 text-text-secondary dark:text-gray-400
+                                             peer-checked:border-primary peer-checked:bg-blue-50 dark:peer-checked:bg-blue-950
+                                             peer-checked:text-primary transition-all select-none">Free</span>
+                            </label>
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="priceMode" value="range"
+                                       th:checked="${priceMode == 'range'}"
+                                       class="sr-only peer"/>
+                                <span class="flex items-center justify-center py-2 rounded-lg text-xs font-semibold
+                                             border border-gray-200 dark:border-gray-700
+                                             bg-gray-50 dark:bg-gray-800 text-text-secondary dark:text-gray-400
+                                             peer-checked:border-primary peer-checked:bg-blue-50 dark:peer-checked:bg-blue-950
+                                             peer-checked:text-primary transition-all select-none">Range</span>
+                            </label>
+                        </div>
+
+                        <!-- Slider -->
+                        <div id="priceSliderWrapper" class="hidden bg-gray-50 dark:bg-gray-800 rounded-xl px-3 py-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[11px] text-text-secondary dark:text-gray-500">0đ</span>
+                                <span id="priceRangeDisplay"
+                                      class="text-xs font-bold text-primary whitespace-nowrap">0 – 500,000đ</span>
+                                <span class="text-[11px] text-text-secondary dark:text-gray-500">5trđ+</span>
+                            </div>
+                            <input id="priceRangeSlider"
+                                   class="w-full h-1.5 rounded-full cursor-pointer accent-primary"
+                                   type="range" min="0" max="5000000" step="500000"
+                                   th:value="${minPrice != null ? minPrice : 0}"/>
+                        </div>
+
+                        <!-- Hidden inputs — giữ nguyên hoàn toàn -->
+                        <input type="hidden" name="minPrice" id="minPrice" th:value="${minPrice}">
+                        <input type="hidden" name="maxPrice" id="maxPrice" th:value="${maxPrice}">
+                    </div>
+
+                    <!-- Apply button -->
+                    <div class="px-5 pb-5">
+                        <button type="submit"
+                                class="w-full py-2.5 bg-primary hover:bg-blue-600 active:scale-[0.99]
+                                       text-white text-sm font-bold rounded-xl
+                                       shadow-sm shadow-blue-500/20 transition-all">
+                            Apply Filters
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </aside>
+
+        <!-- ── MAIN CONTENT — giữ nguyên 100% ── -->
+        <section class="flex-1">
+            <div class="flex items-center gap-2 mb-4">
+                <a th:href="@{/search(tab=${null},keyword=${keyword},category=${selectedCategories},city=${selectedVenue},startDate=${startDate},endDate=${endDate},priceMode=${priceMode},minPrice=${minPrice},maxPrice=${maxPrice},page=0)}"
+                   th:class="${tab == null  or tab == ''} ?
+                       'w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white text-sm font-semibold'
+                       : 'w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-semibold hover:bg-gray-200'">All</a>
+                <a th:href="@{/search(tab='featured',keyword=${keyword},category=${selectedCategories},city=${selectedVenue},startDate=${startDate},endDate=${endDate},priceMode=${priceMode},minPrice=${minPrice},maxPrice=${maxPrice},page=0)}"
+                   th:class="${tab == 'featured'} ?
+                       'px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold'
+                       : 'px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-semibold hover:bg-gray-200'">Featured</a>
+                <a th:href="@{/search(tab='trending',keyword=${keyword},category=${selectedCategories},city=${selectedVenue},startDate=${startDate},endDate=${endDate},priceMode=${priceMode},minPrice=${minPrice},maxPrice=${maxPrice},page=0)}"
+                   th:class="${tab == 'trending'} ?
+                       'px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold'
+                       : 'px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-semibold hover:bg-gray-200'">Trending</a>
+                <a th:href="@{/search(tab='upcoming',keyword=${keyword},category=${selectedCategories},city=${selectedVenue},startDate=${startDate},endDate=${endDate},priceMode=${priceMode},minPrice=${minPrice},maxPrice=${maxPrice},page=0)}"
+                   th:class="${tab == 'upcoming'} ?
+                       'px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold'
+                       : 'px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-semibold hover:bg-gray-200'">Upcoming</a>
+                <a th:href="@{/search(tab='completed',keyword=${keyword},category=${selectedCategories},city=${selectedVenue},startDate=${startDate},endDate=${endDate},priceMode=${priceMode},minPrice=${minPrice},maxPrice=${maxPrice},page=0)}"
+                   th:class="${tab == 'completed'} ?
+                       'px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold'
+                       : 'px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-semibold hover:bg-gray-200'">Completed</a>
+                <a th:href="@{/search(tab='live',keyword=${keyword},category=${selectedCategories},city=${selectedVenue},startDate=${startDate},endDate=${endDate},priceMode=${priceMode},minPrice=${minPrice},maxPrice=${maxPrice},page=0)}"
+                   th:class="${tab == 'live'} ?
+                       'px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold'
+                       : 'px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-semibold hover:bg-gray-200'">Live</a>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-text-main dark:text-white tracking-tight">Browse All Events</h2>
+                    <p class="text-sm text-text-secondary dark:text-gray-400 mt-0.5">Showing
+                        <span th:text="${size}"></span> of <span th:text="${totalItems}"></span> matches</p>
+                </div>
+            </div>
+
+            <div th:if="${totalItems == null or totalItems == 0}" class="w-full py-20 text-center">
+                <p class="text-3xl font-bold text-text-secondary dark:text-gray-400">😔No matching event found!</p>
+            </div>
+
+            <div th:if="${totalItems != 0}"
+                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+                <div th:each="event : ${listEvents}" class="group flex flex-col gap-3 cursor-pointer">
+                    <!--Create a link to event detail-->
+                    <a th:href="@{/event/{id}(id=${event.getId()})}" class="group flex flex-col gap-3 cursor-pointer">
+                        <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-sm transition-all duration-300 group-hover:shadow-lg">
+                            <div class="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white hover:text-red-500 transition-colors">
+                                <span class="material-symbols-outlined block text-[20px]">favorite</span>
+                            </div>
+                            <!-- Badge Live-->
+                            <div th:if="${event.eventStatus == 'Live'}"
+                                 class="absolute top-3 left-3 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-bold shadow-md">
+                                <span class="w-2 h-2 bg-white rounded-full animate-ping"></span>
+                                LIVE
+                            </div>
+
+                            <!-- Badge Completed-->
+                            <div th:if="${event.eventStatus == 'Completed'}"
+                                 class="absolute top-3 left-3 z-10 px-3 py-1 rounded-full bg-black/60 backdrop-blur text-white text-xs font-medium transition-all duration-200 group-hover:bg-black/80">
+                                <p class="font-semibold tracking-wide">Completed</p>
+                            </div>
+                            <div th:style="|background-image: url('@{/upload/event/thumbnail/{file}(file=${event.eventThumbnailURL})}');|"
+                                 class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                 data-alt="Colorful festival lights at night">
+
+                            </div>
+                            <div class="absolute bottom-3 left-3 bg-white/90 dark:bg-black/80 backdrop-blur px-3 py-1 rounded-md">
+                            <span th:text="${event.getCategory().name}"
+                                  class="text-xs font-bold text-text-main dark:text-white uppercase tracking-wider">Music</span>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 th:text="${event.getTitle()}"
+                                class="text-lg font-bold text-text-main dark:text-white leading-tight group-hover:text-primary transition-colors">
+                                Neon Nights Music Festival</h3>
+                            <p th:text="${event.getStartDateTimeString()}" class="text-primary text-sm font-semibold">
+                                Sat, Nov 12
+                                • 7:00 PM</p>
+                            <p th:text="${event.getVenue().name}"
+                               class="text-text-secondary dark:text-gray-400 text-sm truncate">Grand Arena, NY</p>
+                            <p th:text="|From ${#numbers.formatDecimal(event.minPrice, 1, 'POINT', 0, 'DEFAULT')} ${event.currency}|"
+                               class="text-text-main dark:text-gray-200 text-sm font-bold text-blue-600">From $45</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div th:if="${totalPages > 0}" class="mt-12 mb-8 flex items-center justify-center w-full">
+                <nav aria-label="Pagination" class="flex items-center gap-2 mt-8">
+                    <a th:if="${currentPage > 0}"
+                       th:href="@{/search(tab=${tab},keyword=${keyword},category=${selectedCategories},city=${selectedVenue},startDate=${startDate},endDate=${endDate},priceMode=${priceMode},minPrice=${minPrice},maxPrice=${maxPrice},page=${currentPage - 1})}"
+                       class="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all duration-200">
+                        <span class="material-symbols-outlined !text-[20px]">chevron_left</span>
+                    </a>
+                    <span th:if="${currentPage == 0}"
+                          class="size-10 flex items-center justify-center rounded-lg border border-gray-200 opacity-50 cursor-not-allowed">
+                        <span class="material-symbols-outlined !text-[20px]">chevron_left</span>
+                    </span>
+                    <div class="flex items-center gap-2"
+                         th:with="start=${T(java.lang.Math).max(currentPage - 2, 0)},
+                                  end=${T(java.lang.Math).min(currentPage + 2, totalPages - 1)}">
+                        <a th:if="${currentPage > 2}"
+                           th:href="@{/search(tab=${tab},keyword=${keyword},category=${selectedCategories},city=${selectedVenue},startDate=${startDate},endDate=${endDate},priceMode=${priceMode},minPrice=${minPrice},maxPrice=${maxPrice},page=0)}"
+                           class="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 text-text-main dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all">1</a>
+                        <span th:if="${start > 1}"
+                              class="flex items-center justify-center size-10 text-gray-400 font-medium">...</span>
+                        <a th:each="i : ${#numbers.sequence(start, end)}"
+                           th:href="@{/search(tab=${tab},keyword=${keyword},category=${selectedCategories},city=${selectedVenue},startDate=${startDate},endDate=${endDate},priceMode=${priceMode},minPrice=${minPrice},maxPrice=${maxPrice},page=${i})}"
+                           th:class="${i == currentPage} ? 'size-10 flex items-center justify-center rounded-lg bg-primary text-white font-bold shadow-md shadow-primary/20' : 'size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 text-text-main dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all'">
+                            <span th:text="${i + 1}"></span>
+                        </a>
+                        <span th:if="${end < totalPages - 2}"
+                              class="flex items-center justify-center size-10 text-gray-400 font-medium">...</span>
+                        <a th:if="${end < totalPages - 1}"
+                           th:href="@{/search(tab=${tab},keyword=${keyword},category=${selectedCategories},city=${selectedVenue},startDate=${startDate},endDate=${endDate},priceMode=${priceMode},minPrice=${minPrice},maxPrice=${maxPrice},page=${totalPages - 1})}"
+                           class="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 text-text-main dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all">
+                            <span th:text="${totalPages}"></span>
+                        </a>
+                    </div>
+                    <a th:if="${currentPage + 1 < totalPages}"
+                       th:href="@{/search(tab=${tab},keyword=${keyword},category=${selectedCategories},city=${selectedVenue},startDate=${startDate},endDate=${endDate},priceMode=${priceMode},minPrice=${minPrice},maxPrice=${maxPrice},page=${currentPage + 1})}"
+                       class="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all duration-200">
+                        <span class="material-symbols-outlined !text-[20px]">chevron_right</span>
+                    </a>
+                    <span th:if="${currentPage + 1 >= totalPages}"
+                          class="size-10 flex items-center justify-center rounded-lg border border-gray-200 opacity-50 cursor-not-allowed">
+                        <span class="material-symbols-outlined !text-[20px]">chevron_right</span>
+                    </span>
+                </nav>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- JS giữ nguyên logic gốc 100% -->
+<script>
+    const slider        = document.getElementById("priceRangeSlider");
+    const display       = document.getElementById("priceRangeDisplay");
+    const minInput      = document.getElementById("minPrice");
+    const maxInput      = document.getElementById("maxPrice");
+    const modeRadios    = document.querySelectorAll("input[name='priceMode']");
+    const sliderWrapper = document.getElementById("priceSliderWrapper");
+
+    // Init slider value từ minPrice server trả về
+    const serverMin = parseInt(minInput.value) || 0;
+    if (!isNaN(serverMin) && serverMin > 0) {
+        slider.value = serverMin;
+    }
+
+    function updatePrice() {
+        const mode     = document.querySelector("input[name='priceMode']:checked").value;
+        const value    = parseInt(slider.value);
+        const step     = parseInt(slider.step);
+        const maxValue = parseInt(slider.max);
+        const moneyFmt = new Intl.NumberFormat("vi-VN");
+
+        if (mode === "all") {
+            sliderWrapper.classList.add("hidden");
+            minInput.value = "";
+            maxInput.value = "";
+            return;
+        }
+        if (mode === "free") {
+            sliderWrapper.classList.add("hidden");
+            minInput.value = 0;
+            maxInput.value = 0;
+            return;
+        }
+        // range
+        sliderWrapper.classList.remove("hidden");
+        if (value === maxValue) {
+            display.textContent = moneyFmt.format(value) + "đ+";
+            minInput.value = value;
+            maxInput.value = "";
+        } else {
+            display.textContent = moneyFmt.format(value) + "đ – " + moneyFmt.format(value + step) + "đ";
+            minInput.value = value;
+            maxInput.value = value + step;
+        }
+    }
+
+    slider.addEventListener("input", updatePrice);
+    modeRadios.forEach(r => r.addEventListener("change", updatePrice));
+    updatePrice();
+
+    // Category highlight khi checked
+    document.querySelectorAll(".cat-label").forEach(function(lbl) {
+        var cb  = lbl.querySelector("input[type=checkbox]");
+        var txt = lbl.querySelector("span");
+        function sync() {
+            if (cb.checked) {
+                lbl.classList.add("bg-blue-50", "dark:bg-blue-950");
+                txt.classList.add("text-primary", "font-medium");
+                txt.classList.remove("text-text-main", "dark:text-gray-300");
+            } else {
+                lbl.classList.remove("bg-blue-50", "dark:bg-blue-950");
+                txt.classList.remove("text-primary", "font-medium");
+                txt.classList.add("text-text-main", "dark:text-gray-300");
+            }
+        }
+        cb.addEventListener("change", sync);
+        sync();
+    });
+</script>
+<th:block th:replace="~{fragment/customer/frag::headerScripts}"></th:block>
+<footer th:replace="~{fragment/frag::footer}"></footer>
+</body>
+</html>

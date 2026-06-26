@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment/frag::head('Error')"></head>
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>404 - Page Not Found</title>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap"
+          rel="stylesheet" />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2a66f4",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101522",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body
+        class="bg-background-light dark:bg-background-dark text-[#0d111c] dark:text-white font-display min-h-screen flex flex-col">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+<!-- Navbar -->
+<!-- <header class="w-full border-b border-[#e7ebf4] dark:border-[#2a2f3d] bg-white dark:bg-[#151a2d]">
+    <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3 text-primary">
+            <div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary"
+                    style="font-size: 24px;">confirmation_number</span>
+            </div>
+            <h2 class="text-[#0d111c] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">
+                EventTicketPlatform</h2>
+        </div>
+        <nav class="hidden md:flex flex-1 justify-end gap-8 items-center">
+            <div class="flex items-center gap-8">
+                <a class="text-[#0d111c] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors"
+                    href="#">Events</a>
+                <a class="text-[#0d111c] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors"
+                    href="#">Venues</a>
+                <a class="text-[#0d111c] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors"
+                    href="#">About</a>
+            </div>
+            <button
+                class="flex items-center justify-center rounded-lg h-9 px-4 bg-primary text-white text-sm font-bold shadow-sm hover:bg-blue-600 transition-colors">
+                Sign In
+            </button>
+        </nav>
+    </div>
+</header> -->
+<!-- Main Content -->
+<main class="flex-1 flex items-center justify-center p-6">
+    <div class="w-full max-w-2xl flex flex-col items-center text-center">
+        <!-- Icon/Illustration -->
+        <div
+                class="relative mb-8 p-8 rounded-full bg-white dark:bg-[#1a2030] shadow-sm ring-1 ring-black/5 dark:ring-white/5">
+                <span
+                        class="material-symbols-outlined text-primary text-[64px] md:text-[80px]">headphones_battery</span>
+            <!-- Decorative element for "tangled cord" effect -->
+            <svg class="absolute -bottom-2 -right-4 w-12 h-12 text-primary/40 animate-pulse" fill="none"
+                 stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+                <path d="M4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12M12 4C7.58172 4 4 7.58172 4 12"
+                      stroke-dasharray="4 4" stroke-linecap="round"></path>
+            </svg>
+        </div>
+        <!-- Typography -->
+        <h1
+                class="text-8xl md:text-9xl font-extrabold text-[#0d111c] dark:text-white tracking-tighter mb-4 opacity-10">
+            404</h1>
+        <div class="relative -mt-12 md:-mt-16 z-10 space-y-3">
+            <h2 class="text-2xl md:text-3xl font-bold text-[#0d111c] dark:text-white">Page Not Found</h2>
+            <p class="text-base text-gray-500 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
+                It seems like this stage is empty. The event you are looking for might have ended or the link is
+                broken.
+            </p>
+        </div>
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center gap-4 mt-10 w-full justify-center">
+            <a th:href="@{/}"
+               class="flex min-w-[200px] h-12 items-center justify-center rounded-lg bg-primary text-white text-sm font-bold hover:bg-blue-600 transition-colors shadow-md hover:shadow-lg">
+                Go Back to Homepage
+            </a>
+            <button
+                    onclick="history.back()"
+                    class="flex min-w-[200px] h-12 items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-[#0d111c] dark:text-white text-sm font-bold hover:bg-gray-50 dark:hover:bg-[#1a2030] transition-colors">
+                Back to previous page
+            </button>
+        </div>
+    </div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-8 border-t border-[#e7ebf4] dark:border-[#2a2f3d] mt-auto">
+    <div
+            class="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+        <p class="text-gray-400 dark:text-gray-500 text-sm">© 2023 EventTicketPlatform. All rights reserved.</p>
+        <div class="flex items-center gap-6">
+            <a class="text-gray-500 dark:text-gray-400 hover:text-primary text-sm font-medium transition-colors"
+               href="#">Contact Support</a>
+            <a class="text-gray-500 dark:text-gray-400 hover:text-primary text-sm font-medium transition-colors"
+               href="#">Privacy</a>
+        </div>
+    </div>
+</footer>
+</body>
+
+</html>

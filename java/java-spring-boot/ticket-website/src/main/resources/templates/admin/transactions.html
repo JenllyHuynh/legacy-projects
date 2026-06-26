@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<head >-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<head th:replace="~{fragment/frag::head('transactions')}"></head>
+<body>
+<div class="p-6">
+    <div class="flex flex-col">
+        <h1 class="text-2xl font-bold text-gray-800">All Transactions</h1>
+        <p class="text-sm text-gray-500">Manage and export all transaction records</p>
+    </div>
+    <a th:href="@{/admin/system-revenue}"
+       class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200
+          text-gray-700 font-medium transition shadow-sm">
+
+        Back to Dashboard
+    </a>
+</div>
+
+<div class="p-6">
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm lg:col-span-2">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-md font-bold text-gray-800">Recent Transactions</h3>
+            <div class="gap-x-6">
+                <a th:href="@{/admin/export-excel}"
+                   class="text-xs font-semibold text-gray-500 hover:text-primary">Download Excel</a>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead>
+                <tr class="text-gray-400 border-b border-gray-100">
+                    <th class="pb-3 font-medium">#</th>
+                    <th class="pb-3 font-medium">Customer</th>
+                    <!--                                <th class="pb-3 font-medium">Event</th>-->
+                    <th class="pb-3 font-medium">Order Status</th>
+                    <th class="pb-3 font-medium">Payment Status</th>
+                    <th class="pb-3 font-medium">Amount</th>
+                    <th class="pb-3 font-medium">Date</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                <tr th:each="t, index : ${transactions}">
+                    <td class="py-4"><span th:text="${index.count}"
+                                           class="px-2 py-0.5 bg-green-50 text-green-600 rounded-md text-xs">Paid</span>
+                    </td>
+                    <td class="py-4">
+                        <div class="flex items-center gap-2">
+                            <!--                                        th:text="${#strings.substring(t.customer.fullName,0,1)}"-->
+                            <div th:text="${#strings.substring(t.customerName,0,1)}"
+                                 class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-[10px] font-bold">
+                                JD
+                            </div>
+                            <p th:text="${t.customerName}">Jane Doe </p>
+                        </div>
+                    </td>
+                    <td class="py-4"><span th:text="${t.status}"
+                                           class="px-2 py-0.5 bg-green-50 text-green-600 rounded-md text-xs">Paid</span>
+                    </td>
+                    <td class="py-4"><span th:text="${t.paymentStatus}"
+                                           class="px-2 py-0.5 bg-green-50 text-green-600 rounded-md text-xs">Paid</span>
+                    </td>
+                    <!--                                <td class="py-4 text-gray-600">Global Tech Summit</td>-->
+                    <td th:text="${#numbers.formatDecimal(t.amount, 1, 'POINT', 0, 'COMMA') + ' VND'}">
+                        class="py-4 font-semibold">$299.00
+                    </td>
+
+                    <td th:text="${#temporals.format(t.paidAt, 'HH:mm dd/MM/yyyy')}"> class="py-4
+                        text-gray-500">2 mins ago
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!--<head>-->
+<!--    <meta charset="utf-8"/>-->
+<!--    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>-->
+<!--    <title>EMS Admin Dashboard</title>-->
+<!--    &lt;!&ndash; Google Fonts: Inter &ndash;&gt;-->
+<!--    <link href="https://fonts.googleapis.com" rel="preconnect"/>-->
+<!--    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>-->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>-->
+<!--    &lt;!&ndash; Tailwind CSS v3 &ndash;&gt;-->
+<!--    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>-->
+<!--    &lt;!&ndash; Font Awesome for Icons &ndash;&gt;-->
+<!--    <script crossorigin="anonymous" src="https://kit.fontawesome.com/a076d05399.js"></script>-->
+<!--    &lt;!&ndash; Chart.js for data visualization &ndash;&gt;-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+<!--    <script>-->
+<!--        tailwind.config = {-->
+<!--            theme: {-->
+<!--                extend: {-->
+<!--                    fontFamily: {-->
+<!--                        sans: ['Inter', 'sans-serif'],-->
+<!--                    },-->
+<!--                    colors: {-->
+<!--                        primary: '#4F46E5', // Indigo 600-->
+<!--                        background: '#F9FAFB',-->
+<!--                    },-->
+<!--                    borderRadius: {-->
+<!--                        'xl': '16px',-->
+<!--                    }-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+<!--    </script>-->
+<!--    <style data-purpose="custom-layout">-->
+<!--        body {-->
+<!--            background-color: #F9FAFB;-->
+<!--            color: #111827;-->
+<!--        }-->
+
+<!--        .custom-shadow {-->
+<!--            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);-->
+<!--        }-->
+
+<!--        .sidebar-active {-->
+<!--            background-color: rgba(79, 70, 229, 0.1);-->
+<!--            color: #4F46E5;-->
+<!--            border-right: 3px solid #4F46E5;-->
+<!--        }-->
+
+<!--        canvas {-->
+<!--            width: 100% !important;-->
+<!--            height: 100% !important;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+
+<head th:replace="~{fragment/frag::head('dashboard')}"></head>
+
+<body class="antialiased">
+<div class="flex h-screen overflow-hidden">
+    <!-- BEGIN: Sidebar -->
+    <aside th:replace="~{fragment/admin/frag::sidebar('dashboard')}"
+           class="w-64 bg-white border-r border-gray-200 flex flex-col hidden md:flex" data-purpose="navigation-sidebar"
+           -->
+        <!--           id="sidebar">-->
+    </aside>
+
+
+    <!-- END: Sidebar -->
+    <!-- Main Content Container -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <!-- BEGIN: Top Bar -->
+        <header th:replace="~{fragment/admin/frag::header('Revenue')}"
+                class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8"
+                data-purpose="top-navigation">
+        </header>
+        <!-- Scrollable Area -->
+        <div class="flex-1 overflow-y-auto p-8 space-y-8">
+            <!-- Welcome Header -->
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+                    <p class="text-gray-500 text-sm">Welcome back, here's what's happening today.</p>
+                </div>
+                <div class="flex space-x-3">
+                    <!--                    <button-->
+                    <!--                            class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50">-->
+                    <!--                        Download-->
+                    <!--                        Report-->
+                    <!--                    </button>-->
+                    <!--                    <button-->
+                    <!--                            class="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg shadow-sm hover:bg-indigo-700">-->
+                    <!--                        + New-->
+                    <!--                        Event-->
+                    <!--                    </button>-->
+
+                    <div class="flex gap-2">
+                        <input type="date" id="fromDate"
+                               th:value="${fromDate}"
+                               class="border p-2 rounded-lg text-sm">
+
+                        <input type="date" id="toDate"
+                               th:value="${toDate}"
+                               class="border p-2 rounded-lg text-sm">
+
+                        <!--                        <button onclick="loadRevenueChart()"-->
+                        <!--                                class="bg-indigo-600 text-white px-3 rounded-lg text-sm">-->
+                        <!--                            Apply-->
+                        <!--                        </button>-->
+                        <button onclick="loadDashboard()"
+                                class="group relative inline-flex items-center gap-2 px-4 py-2.5 rounded-lg
+               bg-gradient-to-r from-indigo-600 to-indigo-500
+               text-white text-sm font-semibold
+               shadow-md shadow-indigo-500/20
+               hover:shadow-lg hover:shadow-indigo-500/40
+               hover:from-indigo-500 hover:to-indigo-600
+               active:scale-95
+               transition-all duration-200">
+
+                            Apply
+
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- BEGIN: KPI Cards (Row 1) -->
+<!--            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" data-purpose="kpi-summary">-->
+<!--                &lt;!&ndash; Card 1 &ndash;&gt;-->
+<!--                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">-->
+<!--                    <div class="flex items-center justify-between mb-4">-->
+<!--                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Revenue</span>-->
+<!--                        <span th:text="|${#numbers.formatDecimal(data.revenueGrowth,1, 'POINT', 2, 'COMMA')} %|"-->
+<!--                              th:classappend="${data.revenueGrowth >= 0} ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'"-->
+<!--                              class="px-2 py-1 text-xs font-medium rounded-full" id="growth">+12.5%</span>-->
+<!--                    </div>-->
+<!--                    <div class="flex items-center gap-2 mt-1">-->
+<!--    <span class="flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-[11px] font-medium">-->
+<!--        &lt;!&ndash; icon calendar &ndash;&gt;-->
+<!--        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+<!--            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+<!--                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>-->
+<!--        </svg>-->
+
+<!--        <span th:text="|${#temporals.format(fromDate, 'dd/MM/yyyy')} - ${#temporals.format(toDate, 'dd/MM/yyyy')}|">-->
+<!--            01/03 - 07/03-->
+<!--        </span>-->
+<!--    </span>-->
+<!--                    </div>-->
+<!--                    <div class="flex items-baseline space-x-1">-->
+<!--                        <h2 th:text="|${#numbers.formatDecimal(data.totalRevenue,1, 'POINT', 0, 'COMMA')} VND|"-->
+<!--                            id="revenue" class="text-2xl font-bold">$124,592.00</h2>-->
+<!--                    </div>-->
+<!--                    <div class="flex items-center gap-2 mt-1">-->
+<!--                        <span class="flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-[11px] font-medium">-->
+<!--                            &lt;!&ndash; icon calendar &ndash;&gt;-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24"-->
+<!--                                 stroke="currentColor">-->
+<!--                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+<!--                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>-->
+<!--                            </svg>-->
+
+<!--                            <span th:text="|${#temporals.format(preFrom, 'dd/MM/yyyy')} - ${#temporals.format(prevTo, 'dd/MM/yyyy')}|">-->
+<!--                                01/03 - 07/03-->
+<!--                            </span>-->
+<!--                        </span>-->
+<!--                    </div>-->
+<!--                    <p class="text-xs text-gray-400 mt-1 text-orange-500"-->
+<!--                       th:text="|${#numbers.formatDecimal(data.lastYearRevenue,1, 'POINT', 0, 'COMMA')} VND|"> <span-->
+<!--                            id="lastMonth">0</span></p>-->
+<!--                </div>-->
+<!--                &lt;!&ndash; Card 2 &ndash;&gt;-->
+<!--                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">-->
+<!--                    <div class="flex items-center justify-between mb-4">-->
+<!--                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Events</span>-->
+<!--                        <span th:text="${#numbers.formatDecimal(data.eventGrowth,1,2)} + '%'"-->
+<!--                              class="px-2 py-1 text-xs font-medium bg-green-50 text-green-700 rounded-full">+4.2%</span>-->
+<!--                    </div>-->
+<!--                    <div class="flex items-center gap-2 mt-1">-->
+<!--                        <span class="flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-[11px] font-medium">-->
+<!--                            &lt;!&ndash; icon calendar &ndash;&gt;-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24"-->
+<!--                                 stroke="currentColor">-->
+<!--                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+<!--                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>-->
+<!--                            </svg>-->
+
+<!--                            <span th:text="|${#temporals.format(fromDate, 'dd/MM/yyyy')} - ${#temporals.format(toDate, 'dd/MM/yyyy')}|">-->
+<!--                                01/03 - 07/03-->
+<!--                            </span>-->
+<!--                        </span>-->
+<!--                    </div>-->
+<!--                    <div class="flex items-baseline space-x-1">-->
+<!--                        <h2 th:text="${data.totalEvents}" id="events" class="text-2xl font-bold">842</h2>-->
+<!--                    </div>-->
+<!--                    <div class="flex items-center gap-2 mt-1">-->
+<!--                        <span class="flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-[11px] font-medium">-->
+<!--                            &lt;!&ndash; icon calendar &ndash;&gt;-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24"-->
+<!--                                 stroke="currentColor">-->
+<!--                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+<!--                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>-->
+<!--                            </svg>-->
+
+<!--                            <span th:text="|${#temporals.format(preFrom, 'dd/MM/yyyy')} - ${#temporals.format(prevTo, 'dd/MM/yyyy')}|">-->
+<!--                                01/03 - 07/03-->
+<!--                            </span>-->
+<!--                        </span>-->
+<!--                    </div>-->
+<!--                    <p th:text="|${data.lastMonthEvents} events|"-->
+<!--                       class="text-xs text-gray-400 mt-1 text-orange-500"></p>-->
+<!--                </div>-->
+<!--                &lt;!&ndash; Card 3 &ndash;&gt;-->
+<!--                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">-->
+<!--                    <div class="flex items-center justify-between mb-4">-->
+<!--                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Customers</span>-->
+<!--                        <span th:text="${#numbers.formatDecimal(data.userGrowth,1,2)} + '%'"-->
+<!--                              class="px-2 py-1 text-xs font-medium bg-green-50 text-green-700 rounded-full">+18.3%</span>-->
+<!--                    </div>-->
+<!--                    <div class="flex items-baseline space-x-1">-->
+<!--                        <h2 th:text="${data.totalUsers}"-->
+<!--                            id="customers" class="text-2xl font-bold">12,845</h2>-->
+<!--                    </div>-->
+<!--                    <p class="text-xs text-gray-400 mt-1">-->
+<!--                        <span class="text-green-700" th:text="${data.newUsers}"></span> new this month-->
+<!--                    </p>-->
+
+<!--                </div>-->
+<!--                &lt;!&ndash; Card 4 &ndash;&gt;-->
+<!--                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">-->
+<!--                    <div class="flex items-center justify-between mb-4">-->
+<!--                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Tickets Sold</span>-->
+<!--                        <span th:text="${#numbers.formatDecimal(data.ticketGrowth,1,2)} + '%'"-->
+<!--                              th:classappend="${data.ticketGrowth >= 0} ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'"-->
+<!--                              class="px-2 py-1 text-xs font-medium rounded-full">-2.4%</span>-->
+<!--                    </div>-->
+<!--                    <div class="flex items-center gap-2 mt-1">-->
+<!--                        <span class="flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-[11px] font-medium">-->
+<!--                            &lt;!&ndash; icon calendar &ndash;&gt;-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24"-->
+<!--                                 stroke="currentColor">-->
+<!--                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+<!--                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>-->
+<!--                            </svg>-->
+
+<!--                            <span th:text="|${#temporals.format(fromDate, 'dd/MM/yyyy')} - ${#temporals.format(toDate, 'dd/MM/yyyy')}|">-->
+<!--                                01/03 - 07/03-->
+<!--                            </span>-->
+<!--                        </span>-->
+<!--                    </div>-->
+<!--                    <div class="flex items-baseline space-x-1">-->
+<!--                        <h2 th:text="${data.ticketsThisMonth}" id="tickets" class="text-2xl font-bold">45,200</h2>-->
+<!--                    </div>-->
+<!--                    <div class="flex items-center gap-2 mt-1">-->
+<!--                        <span class="flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-[11px] font-medium">-->
+<!--                            &lt;!&ndash; icon calendar &ndash;&gt;-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24"-->
+<!--                                 stroke="currentColor">-->
+<!--                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+<!--                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>-->
+<!--                            </svg>-->
+
+<!--                            <span th:text="|${#temporals.format(preFrom, 'dd/MM/yyyy')} - ${#temporals.format(prevTo, 'dd/MM/yyyy')}|">-->
+<!--                                01/03 - 07/03-->
+<!--                            </span>-->
+<!--                        </span>-->
+<!--                    </div>-->
+<!--                    <p th:text="|${data.lastMonthTickets} Tickets|"-->
+<!--                       class="text-xs text-gray-400 mt-1 text-orange-500"></p>-->
+<!--                </div>-->
+<!--            </section>-->
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <!-- Card 1: Revenue -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase">Total Revenue</span>
+<!--                        <span id="revenueGrowth"-->
+<!--                              class="px-2 py-1 text-xs font-medium rounded-full bg-green-50 text-green-700">-->
+<!--                0%-->
+<!--            </span>-->
+                    </div>
+
+<!--                    <div class="flex items-center gap-2 mt-1">-->
+<!--            <span class="px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-[11px]">-->
+<!--                <span id="dateRange">&#45;&#45;</span>-->
+<!--            </span>-->
+<!--                    </div>-->
+
+                    <h2 id="revenue" class="text-2xl font-bold mt-2 text-green-700">0 VND</h2>
+
+<!--                    <div class="flex items-center gap-2 mt-2">-->
+<!--            <span class="px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-[11px]">-->
+<!--                <span id="prevDateRange">&#45;&#45;</span>-->
+<!--            </span>-->
+<!--                    </div>-->
+
+<!--                    <p id="lastRevenue" class="text-xs mt-1 text-orange-500">0 VND</p>-->
+                </div>
+
+                <!-- Card 2: Events -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase">Total Events</span>
+<!--                        <span id="eventGrowth"-->
+<!--                              class="px-2 py-1 text-xs font-medium bg-green-50 text-green-700 rounded-full">-->
+<!--                0%-->
+<!--            </span>-->
+                    </div>
+
+<!--                    <span class="text-[11px] text-gray-600" id="dateRange2">&#45;&#45;</span>-->
+
+                    <h2 id="events" class="text-2xl font-bold mt-2 text-blue-400">0</h2>
+
+<!--                    <span class="text-[11px] text-gray-600" id="prevDateRange2">&#45;&#45;</span>-->
+
+<!--                    <p id="lastEvents" class="text-xs text-orange-500 mt-1">0</p>-->
+                </div>
+
+                <!-- Card 3: Customers -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase">Total Customers</span>
+                        <span id="userGrowth"
+                              class="px-2 py-1 text-xs font-medium bg-green-50 text-green-700 rounded-full">
+                0%
+            </span>
+                    </div>
+
+                    <h2 id="customers" class="text-2xl font-bold">0</h2>
+
+                    <p class="text-xs text-gray-400 mt-1">
+                        <span id="newUsers" class="text-green-700">0</span> new this month
+                    </p>
+                </div>
+
+                <!-- Card 4: Tickets -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase">Tickets Sold</span>
+<!--                        <span id="ticketGrowth"-->
+<!--                              class="px-2 py-1 text-xs font-medium rounded-full bg-green-50 text-green-700">-->
+<!--                0%-->
+<!--            </span>-->
+                    </div>
+
+<!--                    <span class="text-[11px] text-gray-600" id="dateRange3">&#45;&#45;</span>-->
+
+                    <h2 id="tickets" class="text-2xl font-bold mt-2 text-emerald-500">0</h2>
+
+<!--                    <span class="text-[11px] text-gray-600" id="prevDateRange3">&#45;&#45;</span>-->
+
+<!--                    <p id="lastTickets" class="text-xs text-orange-500 mt-1">0</p>-->
+                </div>
+
+            </section>
+            <!-- END: KPI Cards -->
+            <!-- BEGIN: Revenue Trend Line Chart (Row 2) -->
+            <section class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm" data-purpose="revenue-analytics">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h3 class="text-lg font-bold">Revenue Trend</h3>
+                        <p class="text-sm text-gray-500">View daily revenue performance across all platforms.</p>
+                    </div>
+
+                </div>
+                <div class="h-[400px] w-full">
+                    <canvas id="revenueTrendChart"></canvas>
+                </div>
+            </section>
+            <!-- END: Revenue Trend Line Chart -->
+            <!-- BEGIN: Mid Section Grid (Row 3) -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6" data-purpose="performance-metrics">
+                <!-- Top Events Horizontal Bar Chart -->
+<!--                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">-->
+<!--                    <div class="flex items-center justify-between mb-6">-->
+<!--                        <h3 class="text-md font-bold text-gray-800">Top Events by Revenue</h3>-->
+<!--                        &lt;!&ndash;                        <a class="text-xs font-medium text-primary hover:underline" href="#">View All</a>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                    <div class="h-64">-->
+<!--                        <canvas id="topEventsChart"></canvas>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <!-- Customer Growth Line Chart -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-md font-bold text-gray-800">Customer Growth</h3>
+                        <div class="flex gap-2">
+                <span class="flex items-center text-[10px] text-gray-500"><span
+                        class="w-2 h-2 rounded-full bg-primary mr-1"></span> New</span>
+                            <span class="flex items-center text-[10px] text-gray-500"><span
+                                    class="w-2 h-2 rounded-full bg-indigo-200 mr-1"></span> Returning</span>
+                        </div>
+                    </div>
+                    <div class="h-64">
+                        <canvas id="customerGrowthChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm lg:col-span-1">
+                    <h3 class="text-md font-bold text-gray-800 mb-6">Event Categories</h3>
+                    <div class="h-64 flex items-center justify-center">
+                        <canvas id="categoryDonutChart"></canvas>
+                    </div>
+                    <!-- Legend -->
+                    <div id="categoryLegend" class="mt-4 grid grid-cols-2 gap-2"></div>
+
+                    <!-- Report -->
+                    <div id="categoryReport" class="mt-3"></div>
+                    <!--                    <div class="mt-4 grid grid-cols-2 gap-2">-->
+                    <!--                        <div class="text-xs text-gray-500 flex items-center"><span-->
+                    <!--                                class="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> Music-->
+                    <!--                        </div>-->
+                    <!--                        <div class="text-xs text-gray-500 flex items-center"><span-->
+                    <!--                                class="w-2 h-2 rounded-full bg-indigo-400 mr-2"></span> Tech-->
+                    <!--                        </div>-->
+                    <!--                        <div class="text-xs text-gray-500 flex items-center"><span-->
+                    <!--                                class="w-2 h-2 rounded-full bg-indigo-300 mr-2"></span> Workshop-->
+                    <!--                        </div>-->
+                    <!--                        <div class="text-xs text-gray-500 flex items-center"><span-->
+                    <!--                                class="w-2 h-2 rounded-full bg-indigo-200 mr-2"></span> Conference-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                </div>
+
+            </section>
+            <!-- END: Mid Section Grid -->
+            <!-- BEGIN: Bottom Section (Row 4) -->
+            <section class="grid grid-cols-1 gap-6" data-purpose="distribution-and-recent">
+                <!-- Category Distribution Donut Chart -->
+
+                <!-- Recent Orders/Transactions List (Additional Detail) -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm lg:col-span-2">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-md font-bold text-gray-800">Recent Transactions</h3>
+                        <div class="gap-x-6">
+                        <a th:href="@{/admin/transactions}"
+                           class="text-xs font-semibold text-gray-500 hover:text-primary text-green-700">
+                            View All Transactions
+                        </a>
+                        <a th:href="@{/admin/export-excel}"
+                           class="text-xs font-semibold text-gray-500 hover:text-primary">Download Excel</a>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                            <tr class="text-gray-400 border-b border-gray-100">
+                                <th class="pb-3 font-medium">#</th>
+                                <th class="pb-3 font-medium">Customer</th>
+                                <!--                                <th class="pb-3 font-medium">Event</th>-->
+                                <th class="pb-3 font-medium">Order Status</th>
+                                <th class="pb-3 font-medium">Payment Status</th>
+                                <th class="pb-3 font-medium">Amount</th>
+                                <th class="pb-3 font-medium">Date</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                            <tr th:each="t, index : ${transactions}" th:if="${index.count < 8}">
+<!--                                <td class="py-4"><span th:text="${index.count}"-->
+<!--                                                       class="px-2 py-0.5 bg-green-50 text-green-600 rounded-md text-xs">Paid</span>-->
+<!--                                </td>-->
+                                <td class="py-4"><span th:text="${index.count}"
+                                                       class="px-2 py-0.5 bg-green-50 text-green-600 rounded-md text-xs">Paid</span>
+                                </td>
+                                <td class="py-4">
+                                    <div class="flex items-center gap-2">
+                                        <!--                                        th:text="${#strings.substring(t.customer.fullName,0,1)}"-->
+                                        <div th:text="${#strings.substring(t.customerName,0,1)}"
+                                             class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-[10px] font-bold">
+                                            JD
+                                        </div>
+                                        <p th:text="${t.customerName}">Jane Doe </p>
+                                    </div>
+                                </td>
+                                <td class="py-4"><span th:text="${t.status}"
+                                                       class="px-2 py-0.5 bg-green-50 text-green-600 rounded-md text-xs">Paid</span>
+                                </td>
+                                <td class="py-4"><span th:text="${t.paymentStatus}"
+                                                       class="px-2 py-0.5 bg-green-50 text-green-600 rounded-md text-xs">Paid</span>
+                                </td>
+                                <!--                                <td class="py-4 text-gray-600">Global Tech Summit</td>-->
+                                <td th:text="${#numbers.formatDecimal(t.amount, 1, 'POINT', 0, 'COMMA') + ' VND'}">
+                                    class="py-4 font-semibold">$299.00
+                                </td>
+
+                                <td th:text="${#temporals.format(t.paidAt, 'HH:mm dd/MM/yyyy')}"> class="py-4
+                                    text-gray-500">2 mins ago
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <!-- END: Bottom Section -->
+        </div>
+    </main>
+</div>
+
+<!-- Modal -->
+<div id="transactionModal"
+     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+
+    <div class="bg-white w-[90%] max-w-5xl rounded-xl shadow-lg p-6 relative">
+
+        <!-- Close button -->
+        <button onclick="closeModal()"
+                class="absolute top-3 right-3 text-gray-500 hover:text-black text-xl">
+            ✕
+        </button>
+
+        <h2 class="text-xl font-semibold mb-4">All Transactions</h2>
+
+        <!-- Table inside modal -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead>
+                <tr class="text-gray-400 border-b border-gray-100">
+                    <th class="pb-3 font-medium">Customer</th>
+                    <!--                                <th class="pb-3 font-medium">Event</th>-->
+                    <th class="pb-3 font-medium">Order Status</th>
+                    <th class="pb-3 font-medium">Payment Status</th>
+                    <th class="pb-3 font-medium">Amount</th>
+                    <th class="pb-3 font-medium">Date</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                <tr th:each="t, index : ${transactions}" th:if="${index.count <= 10}">
+                    <td class="py-4">
+                        <div class="flex items-center gap-2">
+                            <!--                                        th:text="${#strings.substring(t.customer.fullName,0,1)}"-->
+                            <div th:text="${#strings.substring(t.customerName,0,1)}"
+                                 class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-[10px] font-bold">
+                                JD
+                            </div>
+                            <p th:text="${t.customerName}">Jane Doe </p>
+                        </div>
+                    </td>
+                    <!--                                <td class="py-4 text-gray-600">Global Tech Summit</td>-->
+                    <td th:text="${#numbers.formatDecimal(t.amount, 1, 'POINT', 0, 'COMMA') + ' VND'}">
+                        class="py-4 font-semibold">$299.00
+                    </td>
+                    <td class="py-4"><span th:text="${t.status}"
+                                           class="px-2 py-0.5 bg-green-50 text-green-600 rounded-md text-xs">Paid</span>
+                    </td>
+                    <td class="py-4"><span th:text="${t.paymentStatus}"
+                                           class="px-2 py-0.5 bg-green-50 text-green-600 rounded-md text-xs">Paid</span>
+                    </td>
+
+                    <td th:text="${#temporals.format(t.paidAt, 'HH:mm dd/MM/yyyy')}"> class="py-4
+                        text-gray-500">2 mins ago
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- BEGIN: Chart Scripts -->
+<script data-purpose="revenue-chart-logic">
+
+</script>
+
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+
+</html>

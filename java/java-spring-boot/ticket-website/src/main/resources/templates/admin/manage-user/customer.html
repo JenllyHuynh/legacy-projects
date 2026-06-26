@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/frag::head('Manage Customer')}">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Customer Management - AdminSuite</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap"
+          rel="stylesheet"/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {},
+                    fontFamily: {
+                        "headline": ["Public Sans"],
+                        "body": ["Public Sans"],
+                        "label": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="flex min-h-screen text-neutral-800">
+<!-- Sidebar Navigation (SideNavBar JSON) -->
+<aside th:replace="~{fragment/admin/frag::sidebar('users')}"
+       class="fixed left-0 top-0 h-screen w-64 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 z-50">
+</aside>
+<div class="flex-1 flex flex-col min-h-screen">
+    <!-- Main Content Wrapper -->
+    <header th:replace="~{fragment/admin/frag::header('Customer')}"
+            class="flex justify-between items-center px-6 h-16 w-full sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm">
+    </header>
+    <main class="flex-1 space-y-8">
+        <!-- Page Content -->
+        <div class="p-6 flex-1 overflow-y-auto">
+            <!-- Header Section -->
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Customer
+                        Management</h2>
+                    <p class="text-slate-500 dark:text-slate-400 mt-1">Manage and monitor your enterprise customer
+                        directory.</p>
+                </div>
+            </div>
+            <!-- Dashboard Card Container -->
+            <div
+                    class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <form th:action="@{/admin/customer}" method="get"
+                      class="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
+
+                    <div class="flex items-center gap-4 flex-1 max-w-2xl">
+
+                        <!-- Search (UI only) -->
+                        <div class="relative flex-1">
+                            <span
+                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+                                search
+                            </span>
+
+                            <input name="keyword"
+                                   class="w-full border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-lg py-2 pl-9 text-sm"
+                                   placeholder="Search by name, email or ID..."/>
+                        </div>
+
+                        <!-- STATUS FILTER -->
+                        <!-- STATUS FILTER -->
+                        <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl shadow-inner">
+
+                            <!-- ALL -->
+                            <a th:href="@{/admin/customer}" th:classappend="${isActive == null}
+            ? ' bg-blue-600 text-white shadow-md'
+            : ' text-slate-600 dark:text-slate-300 hover:bg-white/70 dark:hover:bg-slate-700'" class="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200
+              flex items-center gap-1.5">
+
+                                <span class="material-symbols-outlined text-[18px]">apps</span>
+                                All
+                            </a>
+
+                            <!-- ACTIVE -->
+                            <a th:href="@{/admin/customer(isActive=true)}" th:classappend="${isActive == true}
+            ? ' bg-emerald-500 text-white shadow-md'
+            : ' text-slate-600 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'" class="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200
+              flex items-center gap-1.5">
+
+                                <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                                Active
+                            </a>
+
+                            <!-- INACTIVE -->
+                            <a th:href="@{/admin/customer(isActive=false)}" th:classappend="${isActive == false}
+            ? ' bg-rose-500 text-white shadow-md'
+            : ' text-slate-600 dark:text-slate-300 hover:bg-rose-50 dark:hover:bg-rose-900/20'" class="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200
+              flex items-center gap-1.5">
+
+                                <span class="material-symbols-outlined text-[18px]">block</span>
+                                Inactive
+                            </a>
+
+                        </div>
+                    </div>
+
+                </form>
+                <!-- Data Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                        <tr
+                                class="bg-slate-50/50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
+                            <th class="px-6 py-4">Customer</th>
+                            <th class="px-6 py-4">Customer ID</th>
+                            <th class="px-6 py-4">Contact Info</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4">Created At</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+
+                        <tr th:each="c : ${customers}"
+                            class="group hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-all duration-150">
+
+                            <!-- CUSTOMER -->
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+
+                                    <img th:src="${c.avatarUrl != null ? c.avatarUrl : '/img/default-avatar.png'}"
+                                         class="w-10 h-10 rounded-full object-cover border shadow-sm"/>
+
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-900 dark:text-white"
+                                           th:text="${c.fullName}">
+                                        </p>
+
+                                        <p class="text-xs text-slate-500">Customer</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- ID -->
+                            <td class="px-6 py-4 font-mono text-xs text-slate-500" th:text="'#CUST-' + ${c.id}">
+                            </td>
+
+                            <!-- CONTACT -->
+                            <td class="px-6 py-4">
+                                <div class="text-sm" th:text="${c.email}"></div>
+                                <div class="text-xs text-slate-400" th:text="${c.phone != null ? c.phone : 'N/A'}">
+                                </div>
+                            </td>
+
+                            <!-- STATUS -->
+                            <td class="px-6 py-4">
+
+                                <!-- ACTIVE -->
+                                <span th:if="${c.isActive}"
+                                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+
+                                        <span class="w-1 h-1 rounded-full bg-emerald-500 mr-1.5"></span>
+                                        Active
+                                    </span>
+
+                                <!-- INACTIVE -->
+                                <span th:unless="${c.isActive}"
+                                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+
+                                        <span class="w-1 h-1 rounded-full bg-red-500 mr-1.5"></span>
+                                        Inactive
+                                    </span>
+
+                            </td>
+
+                            <!-- CREATED DATE -->
+                            <td class="px-6 py-4 text-sm text-slate-500"
+                                th:text="${#temporals.format(c.createdAt,'MMM dd, yyyy')}">
+                            </td>
+
+                            <!-- ACTION -->
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2">
+
+                                    <!-- ACTIVATE -->
+                                    <form th:action="@{/admin/customer/{id}/status(id=${c.id})}" method="post"
+                                          class="inline">
+
+                                        <input type="hidden" name="active" value="true"/>
+
+                                        <button type="submit" th:disabled="${c.isActive}" class="px-3 py-1.5 text-xs font-bold rounded-lg
+                                       border border-emerald-500 text-emerald-600
+                                       hover:bg-emerald-50 transition
+                                       disabled:opacity-40 disabled:cursor-not-allowed">
+                                            Active
+                                        </button>
+                                    </form>
+
+                                    <!-- INACTIVE -->
+                                    <form th:action="@{/admin/customer/{id}/status(id=${c.id})}" method="post"
+                                          class="inline">
+
+                                        <input type="hidden" name="active" value="false"/>
+
+                                        <button type="submit" th:disabled="${!c.isActive}" class="px-3 py-1.5 text-xs font-bold rounded-lg
+                           border border-rose-500 text-rose-600
+                           hover:bg-rose-50 transition
+                           disabled:opacity-40 disabled:cursor-not-allowed">
+                                            Inactive
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t flex items-center justify-between">
+
+                    <!-- LEFT INFO -->
+                    <p class="text-sm text-slate-500">
+                        Page
+                        <span class="font-semibold" th:text="${currentPage + 1}"></span>
+                        /
+                        <span class="font-semibold" th:text="${totalPages}"></span>
+                    </p>
+
+                    <!-- PAGINATION -->
+                    <nav th:if="${totalPages > 0}" class="flex items-center gap-2">
+
+                        <!-- ================= PREVIOUS ================= -->
+                        <a th:if="${currentPage > 0}"
+                           th:href="@{/admin/customer(page=${currentPage - 1}, isActive=${isActive})}" class="size-9 flex items-center justify-center rounded-lg border
+                  border-slate-200 dark:border-slate-700
+                  hover:bg-slate-50 dark:hover:bg-slate-800
+                  transition">
+                            <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                        </a>
+
+                        <span th:if="${currentPage == 0}" class="size-9 flex items-center justify-center rounded-lg border
+                     border-slate-200 opacity-40 cursor-not-allowed">
+                            <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                        </span>
+
+
+                        <!-- ================= PAGE RANGE ================= -->
+                        <div class="flex items-center gap-1" th:with="
+                start=${T(java.lang.Math).max(currentPage - 2, 0)},
+                end=${T(java.lang.Math).min(currentPage + 2, totalPages - 1)}">
+
+                            <!-- FIRST PAGE -->
+                            <a th:if="${currentPage > 2}"
+                               th:href="@{/admin/customer(page=0, isActive=${isActive})}" class="size-9 flex items-center justify-center rounded-lg border
+                      border-slate-200 dark:border-slate-700
+                      hover:bg-slate-50 dark:hover:bg-slate-800 transition font-medium">
+                                1
+                            </a>
+
+                            <!-- DOTS -->
+                            <span th:if="${start > 1}" class="px-2 text-slate-400 font-semibold">...</span>
+
+
+                            <!-- MIDDLE PAGES -->
+                            <a th:each="i : ${#numbers.sequence(start, end)}"
+                               th:href="@{/admin/customer(page=${i}, isActive=${isActive})}"
+                               th:class="${i == currentPage}
+                    ? 'size-9 flex items-center justify-center rounded-lg bg-blue-600 text-white font-bold shadow-md shadow-blue-500/20'
+                    : 'size-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition font-medium'">
+
+                                <span th:text="${i + 1}"></span>
+                            </a>
+
+
+                            <!-- DOTS -->
+                            <span th:if="${end < totalPages - 2}" class="px-2 text-slate-400 font-semibold">...</span>
+
+
+                            <!-- LAST PAGE -->
+                            <a th:if="${currentPage + 2 < totalPages - 1}"
+                               th:href="@{/admin/customer(page=${totalPages-1}, isActive=${isActive})}" class="size-9 flex items-center justify-center rounded-lg border
+                      border-slate-200 dark:border-slate-700
+                      hover:bg-slate-50 dark:hover:bg-slate-800 transition font-medium">
+                                <span th:text="${totalPages}"></span>
+                            </a>
+
+                        </div>
+
+
+                        <!-- ================= NEXT ================= -->
+                        <a th:if="${currentPage + 1 < totalPages}"
+                           th:href="@{/admin/customer(page=${currentPage+1}, isActive=${isActive})}" class="size-9 flex items-center justify-center rounded-lg border
+                  border-slate-200 dark:border-slate-700
+                  hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                            <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                        </a>
+
+                        <span th:if="${currentPage + 1 >= totalPages}" class="size-9 flex items-center justify-center rounded-lg border
+                     border-slate-200 opacity-40 cursor-not-allowed">
+                            <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                        </span>
+
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<!--Popup message-->
+<div id="popupMessage" th:if="${hasMessage}"
+     class="transition-opacity duration-300 fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div
+            class="bg-white dark:bg-slate-900 w-50 max-w-sm rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+        <div class="p-6 flex flex-col items-center text-center">
+            <div class="size-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-red-600 dark:text-red-500 text-[32px]">check_circle</span>
+            </div>
+            <h3 th:text="${errorTitle}" class="text-xl font-bold text-slate-900 dark:text-white mb-2">File Too
+                Large</h3>
+            <p th:text="${message}" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                The selected image exceeds the maximum size limit of 5MB. Please choose a smaller file.
+            </p>
+        </div>
+        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 flex justify-center">
+            <button id="closePopup"
+                    class="w-50 py-2.5 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-bold rounded-lg transition-colors shadow-lg shadow-blue-500/20">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // =============================
+        // Popup Message (Error)
+        // =============================
+        const popupMessage = document.getElementById("popupMessage");
+        const btnClosePopup = document.getElementById("closePopup");
+
+        if (popupMessage && btnClosePopup) {
+            btnClosePopup.addEventListener("click", function () {
+                popupMessage.classList.add("opacity-0");
+                setTimeout(() => popupMessage.remove(), 300);
+            });
+        }
+    })
+</script>
+</html>

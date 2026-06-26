@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/frag::head('Revenue Detail')}"></head>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Staff Operations Dashboard</title>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap"
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2464f9",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#0f1523",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a202c",
+                        "text-main": "#0d111c",
+                        "text-secondary": "#47619e",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom scrollbar for better look in dashboard lists */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-white font-display overflow-hidden">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+<div class="flex h-screen w-full">
+    <aside th:replace="~{fragment/staff/frag::staffSidebar('discount')}"></aside>
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark">
+        <!-- Top Navbar -->
+        <header th:replace="~{fragment/staff/frag::header('Revenue Detail')}"></header>
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
+            <div class="max-w-[1200px] mx-auto flex flex-col gap-6">
+                <!-- Page Header -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <h2 class="text-3xl font-black text-text-main dark:text-white tracking-tight">Revenue
+                            Analytics</h2>
+                        <p class="text-text-secondary dark:text-gray-400 mt-1">Overview of financial performance and
+                            event status for Q3.</p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white dark:bg-surface-dark p-1 rounded-lg border border-[#e6eaf4] dark:border-gray-700 shadow-sm">
+                        <button class="px-3 py-1.5 text-xs font-medium rounded text-primary bg-primary/10">1 Week
+                        </button>
+                        <button class="px-3 py-1.5 text-xs font-medium rounded text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            1 Month
+                        </button>
+                        <button class="px-3 py-1.5 text-xs font-medium rounded text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            3 Months
+                        </button>
+                        <button class="px-3 py-1.5 text-xs font-medium rounded text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            1 Year
+                        </button>
+                    </div>
+                </div>
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Revenue -->
+                    <div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-[#e6eaf4] dark:border-gray-700 shadow-sm flex flex-col gap-1">
+                        <div class="flex items-center gap-2 text-text-secondary dark:text-gray-400 mb-2">
+                            <span class="material-symbols-outlined text-[20px]">attach_money</span>
+                            <span class="text-sm font-medium">Total Revenue</span>
+                        </div>
+                        <p class="text-3xl font-bold text-text-main dark:text-white tracking-tight">$124,500</p>
+                        <div class="flex items-center gap-1 text-green-600 text-sm font-medium mt-1">
+                            <span class="material-symbols-outlined text-[16px]">trending_up</span>
+                            <span>+12.5%</span>
+                            <span class="text-text-secondary dark:text-gray-500 font-normal ml-1">vs last month</span>
+                        </div>
+                    </div>
+                    <!-- Active Events -->
+                    <div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-[#e6eaf4] dark:border-gray-700 shadow-sm flex flex-col gap-1">
+                        <div class="flex items-center gap-2 text-text-secondary dark:text-gray-400 mb-2">
+                            <span class="material-symbols-outlined text-[20px]">event_available</span>
+                            <span class="text-sm font-medium">Active Events</span>
+                        </div>
+                        <p class="text-3xl font-bold text-text-main dark:text-white tracking-tight">12</p>
+                        <div class="flex items-center gap-1 text-text-secondary dark:text-gray-500 text-sm font-medium mt-1">
+                            <span class="text-primary">3 Sold Out</span>
+                            <span class="w-1 h-1 rounded-full bg-gray-300 mx-1"></span>
+                            <span>9 Selling</span>
+                        </div>
+                    </div>
+                    <!-- Attendees -->
+                    <div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-[#e6eaf4] dark:border-gray-700 shadow-sm flex flex-col gap-1">
+                        <div class="flex items-center gap-2 text-text-secondary dark:text-gray-400 mb-2">
+                            <span class="material-symbols-outlined text-[20px]">groups</span>
+                            <span class="text-sm font-medium">Total Attendees</span>
+                        </div>
+                        <p class="text-3xl font-bold text-text-main dark:text-white tracking-tight">4,500</p>
+                        <div class="flex items-center gap-1 text-green-600 text-sm font-medium mt-1">
+                            <span class="material-symbols-outlined text-[16px]">trending_up</span>
+                            <span>+15%</span>
+                            <span class="text-text-secondary dark:text-gray-500 font-normal ml-1">increase</span>
+                        </div>
+                    </div>
+                    <!-- Tickets Sold -->
+                    <div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-[#e6eaf4] dark:border-gray-700 shadow-sm flex flex-col gap-1">
+                        <div class="flex items-center gap-2 text-text-secondary dark:text-gray-400 mb-2">
+                            <span class="material-symbols-outlined text-[20px]">local_activity</span>
+                            <span class="text-sm font-medium">Tickets Sold</span>
+                        </div>
+                        <p class="text-3xl font-bold text-text-main dark:text-white tracking-tight">1,200</p>
+                        <div class="flex items-center gap-1 text-green-600 text-sm font-medium mt-1">
+                            <span class="material-symbols-outlined text-[16px]">trending_up</span>
+                            <span>+8%</span>
+                            <span class="text-text-secondary dark:text-gray-500 font-normal ml-1">this week</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Main Dashboard Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Chart Section (Spans 2 columns) -->
+                    <div class="lg:col-span-2 bg-surface-light dark:bg-surface-dark rounded-xl border border-[#e6eaf4] dark:border-gray-700 shadow-sm p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-text-main dark:text-white">Revenue Trend</h3>
+                            <button class="text-primary text-sm font-semibold hover:underline">Download Report</button>
+                        </div>
+                        <!-- Simulated Chart Area -->
+                        <div class="relative h-72 w-full flex items-end justify-between gap-2 px-2 pb-8 border-b border-gray-100 dark:border-gray-800">
+                            <!-- Background Grid Lines -->
+                            <div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-8">
+                                <div class="w-full h-px bg-gray-100 dark:bg-gray-800"></div>
+                                <div class="w-full h-px bg-gray-100 dark:bg-gray-800"></div>
+                                <div class="w-full h-px bg-gray-100 dark:bg-gray-800"></div>
+                                <div class="w-full h-px bg-gray-100 dark:bg-gray-800"></div>
+                                <div class="w-full h-px bg-gray-100 dark:bg-gray-800"></div>
+                            </div>
+                            <!-- Bars / Chart Points -->
+                            <!-- We will create a fake line chart using CSS gradients and absolute positioning or simple bars for simplicity but distinct look -->
+                            <div class="flex items-end justify-between w-full h-full z-10 gap-2 sm:gap-4">
+                                <div class="w-full bg-blue-100 dark:bg-blue-900/20 rounded-t-sm h-[30%] relative group">
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                        $12k
+                                    </div>
+                                </div>
+                                <div class="w-full bg-blue-100 dark:bg-blue-900/20 rounded-t-sm h-[45%] relative group">
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                        $18k
+                                    </div>
+                                </div>
+                                <div class="w-full bg-blue-200 dark:bg-blue-800/30 rounded-t-sm h-[35%] relative group">
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                        $14k
+                                    </div>
+                                </div>
+                                <div class="w-full bg-blue-300 dark:bg-blue-700/40 rounded-t-sm h-[60%] relative group">
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                        $24k
+                                    </div>
+                                </div>
+                                <div class="w-full bg-blue-400 dark:bg-blue-600/50 rounded-t-sm h-[50%] relative group">
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                        $20k
+                                    </div>
+                                </div>
+                                <div class="w-full bg-blue-500 dark:bg-blue-500/60 rounded-t-sm h-[75%] relative group">
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                        $30k
+                                    </div>
+                                </div>
+                                <div class="w-full bg-primary rounded-t-sm h-[85%] relative group">
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                        $35k
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-xs text-text-secondary dark:text-gray-400 mt-2 px-2">
+                            <span>Mon</span>
+                            <span>Tue</span>
+                            <span>Wed</span>
+                            <span>Thu</span>
+                            <span>Fri</span>
+                            <span>Sat</span>
+                            <span>Sun</span>
+                        </div>
+                    </div>
+                    <!-- Moderation Queue -->
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-[#e6eaf4] dark:border-gray-700 shadow-sm p-6 flex flex-col">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-text-main dark:text-white">Recent Comments</h3>
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded-full">3 Pending</span>
+                        </div>
+                        <div class="flex flex-col gap-4 overflow-y-auto max-h-[300px] custom-scrollbar pr-2">
+                            <!-- Comment Item 1 -->
+                            <div class="flex gap-3 items-start border-b border-gray-100 dark:border-gray-800 pb-4 last:border-0 last:pb-0">
+                                <div class="shrink-0 bg-center bg-no-repeat bg-cover rounded-full size-8 bg-gray-200"
+                                     data-alt="User avatar male"
+                                     style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDLqEPY-q7-ds5JOgejbXijZlEwAcQX16Hn6EzyBBcfnNxUY3KpVE-n12hoJWT8xHHNDI3Ubcdb5YamtFKpQ5ia01y_v4Id39lyLZpCWMb0q8FvzEn7qf66JGCEcLWVzwrMF6o8AR6oS5sQO9t9I58ofsVY2KgOKrBKCrLIXmbj-lEOZ3ZOg777Bee5NRKMuRFMuUiLvqekS8c0YmKFUQ_kykIJxRruhiitiAPMFckcVsCo7oH0DqJs9lm2Inpgasl5Iu1ey7N-xt4M");'></div>
+                                <div class="flex flex-col flex-1 gap-1">
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-xs font-bold text-text-main dark:text-white">Mark T.</p>
+                                        <span class="text-[10px] text-text-secondary">2m ago</span>
+                                    </div>
+                                    <p class="text-sm text-text-secondary dark:text-gray-300">"Is parking included in
+                                        the VIP ticket?"</p>
+                                    <div class="flex gap-2 mt-2">
+                                        <button class="flex-1 bg-green-50 hover:bg-green-100 text-green-700 text-xs font-semibold py-1.5 px-3 rounded transition-colors">
+                                            Approve
+                                        </button>
+                                        <button class="flex-1 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold py-1.5 px-3 rounded transition-colors">
+                                            Reject
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Comment Item 2 -->
+                            <div class="flex gap-3 items-start border-b border-gray-100 dark:border-gray-800 pb-4 last:border-0 last:pb-0">
+                                <div class="shrink-0 bg-center bg-no-repeat bg-cover rounded-full size-8 bg-gray-200"
+                                     data-alt="User avatar female"
+                                     style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAw7TdWRaGibHKUlNnMDOw02pNTmvkAwXN1QF4ygxXz_4HQk6pdHbt8Wo3MXJfj9FxFdjayYQn47Wp7IzUwolxxEpAgOb2e6iYDOvzc6Djm-YYrMbI9LgA8Cc0l37zcOUdu3sjba_YdInfWUPR3_K5D7Earbjc4LRtYSPz-GBWFB-hu0vDROXVf5Xk5DzD7y0bvQLaa_FiPB2fPEZjFD15z29wWj8Svs1kEUgxlWm0hZAn7_OvbmUvyLrTDNARtX-yyuRirFAF8D1z_");'></div>
+                                <div class="flex flex-col flex-1 gap-1">
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-xs font-bold text-text-main dark:text-white">Emily R.</p>
+                                        <span class="text-[10px] text-text-secondary">15m ago</span>
+                                    </div>
+                                    <p class="text-sm text-text-secondary dark:text-gray-300">"Great lineup! Can't wait
+                                        for next week."</p>
+                                    <div class="flex gap-2 mt-2">
+                                        <button class="flex-1 bg-green-50 hover:bg-green-100 text-green-700 text-xs font-semibold py-1.5 px-3 rounded transition-colors">
+                                            Approve
+                                        </button>
+                                        <button class="flex-1 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold py-1.5 px-3 rounded transition-colors">
+                                            Reject
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center pt-2">
+                                <button class="text-primary text-xs font-medium hover:underline">View All Comments
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Upcoming Events Table -->
+                <div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-[#e6eaf4] dark:border-gray-700 shadow-sm overflow-hidden">
+                    <div class="flex items-center justify-between p-6 pb-4 border-b border-[#e6eaf4] dark:border-gray-700">
+                        <h3 class="text-lg font-bold text-text-main dark:text-white">Upcoming Events</h3>
+                        <button class="text-primary text-sm font-semibold hover:underline">View All</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                            <tr class="bg-gray-50 dark:bg-gray-800/50 text-xs uppercase tracking-wider text-text-secondary dark:text-gray-400">
+                                <th class="px-6 py-4 font-semibold">Event Name</th>
+                                <th class="px-6 py-4 font-semibold">Date</th>
+                                <th class="px-6 py-4 font-semibold">Venue</th>
+                                <th class="px-6 py-4 font-semibold">Tickets Sold</th>
+                                <th class="px-6 py-4 font-semibold">Status</th>
+                                <th class="px-6 py-4 font-semibold text-right">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-sm divide-y divide-[#e6eaf4] dark:divide-gray-700">
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                                <td class="px-6 py-4 font-medium text-text-main dark:text-white">Summer Music Festival
+                                </td>
+                                <td class="px-6 py-4 text-text-secondary dark:text-gray-300">Aug 12, 2024</td>
+                                <td class="px-6 py-4 text-text-secondary dark:text-gray-300">Central Park Arena</td>
+                                <td class="px-6 py-4 text-text-main dark:text-white">2,450 / 5,000</td>
+                                <td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> Selling
+                                            </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-text-secondary hover:text-primary transition-colors"><span
+                                            class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                                <td class="px-6 py-4 font-medium text-text-main dark:text-white">Tech Innovators
+                                    Conference
+                                </td>
+                                <td class="px-6 py-4 text-text-secondary dark:text-gray-300">Sep 05, 2024</td>
+                                <td class="px-6 py-4 text-text-secondary dark:text-gray-300">Grand Convention Center
+                                </td>
+                                <td class="px-6 py-4 text-text-main dark:text-white">500 / 500</td>
+                                <td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+<span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Sold Out
+                                            </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-text-secondary hover:text-primary transition-colors"><span
+                                            class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                                <td class="px-6 py-4 font-medium text-text-main dark:text-white">Local Food Carnival
+                                </td>
+                                <td class="px-6 py-4 text-text-secondary dark:text-gray-300">Oct 20, 2024</td>
+                                <td class="px-6 py-4 text-text-secondary dark:text-gray-300">Riverside Plaza</td>
+                                <td class="px-6 py-4 text-text-main dark:text-white">120 / 1,000</td>
+                                <td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Draft
+                                            </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-text-secondary hover:text-primary transition-colors"><span
+                                            class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                                <td class="px-6 py-4 font-medium text-text-main dark:text-white">Winter Jazz Night</td>
+                                <td class="px-6 py-4 text-text-secondary dark:text-gray-300">Dec 15, 2024</td>
+                                <td class="px-6 py-4 text-text-secondary dark:text-gray-300">Blue Note Hall</td>
+                                <td class="px-6 py-4 text-text-main dark:text-white">45 / 300</td>
+                                <td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> Selling
+                                            </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-text-secondary hover:text-primary transition-colors"><span
+                                            class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<th:block th:replace="~{fragment/staff/frag::staffBellScript}"></th:block>
+</body>
+</html>

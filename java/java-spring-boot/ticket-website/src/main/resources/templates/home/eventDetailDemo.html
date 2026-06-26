@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragment/frag::head('Event Detail')}"></head>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .filled {
+        font-variation-settings: 'FILL' 1;
+        color: #fbbf24;
+    }
+</style>
+<style>
+    .tab-container {
+        position: relative;
+        transition: height .35s ease;
+    }
+
+    .tab-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+
+        opacity: 0;
+        transform: translateX(10px);
+        pointer-events: none;
+
+        transition: all .35s ease;
+    }
+
+    .tab-content.active {
+        position: relative;
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto;
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .material-symbols-outlined.fill {
+        font-variation-settings: 'FILL' 1;
+    }
+</style>
+
+<body
+        class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark font-display min-h-screen flex flex-col transition-colors duration-200">
+<div th:replace="~{fragment/frag::loading}"></div>
+<script th:replace="~{fragment/frag::scriptLoading}"></script>
+<!-- Top Navbar -->
+<header th:replace="~{fragment/customer/frag::header}"></header>
+<!-- Main Content -->
+<main class="flex-1 w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div th:if="${errorMessage}"
+         class="mb-4 flex items-start gap-3 p-4 rounded-lg border border-red-200 bg-red-50 text-red-700 shadow-sm animate-pulse
+                                    dark:bg-red-900/20 dark:border-red-800 dark:text-red-400">
+
+                                <span class="material-symbols-outlined text-red-500">
+                                    warning
+                                </span>
+
+        <p class="text-sm font-medium" th:text="${errorMessage}"></p>
+    </div>
+
+    <div th:if="${successMessage}"
+         class="mb-4 flex items-start gap-3 p-4 rounded-lg border border-blue-200 bg-amber-50 text-blue-700 shadow-sm animate-pulse
+                                    dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400">
+
+                                <span class="material-symbols-outlined text-green-500">
+                                check_circle
+                                </span>
+
+        <p class="text-sm font-medium" th:text="${successMessage}"></p>
+    </div>
+    <!-- Hero Section: Banner -->
+    <div class="w-full relative rounded-xl overflow-hidden shadow-lg h-[320px] md:h-[400px] mb-8 group">
+        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+             data-alt="Large conference hall filled with people and stage lights"
+             th:style="|background-image: url('@{/upload/event/banner/{file}(file=${event.bannerImageUrl})}');|">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 w-full p-6 md:p-10 flex flex-col justify-end h-full">
+            <!-- Chips on Image -->
+            <div class="flex flex-wrap gap-3 mb-4">
+                <div
+                        class="flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/10 px-3 py-1 text-white">
+                    <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                    <span th:text="${#temporals.format(event.startDateTime, 'dd MMM yyyy')}
+              + ' - ' +
+              ${#temporals.format(event.endDateTime, 'dd MMM yyyy')}" class="text-sm font-medium">Oct 15-17,
+                            2024</span>
+                </div>
+                <div
+                        class="flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/10 px-3 py-1 text-white">
+                    <span class="material-symbols-outlined text-[18px]">location_on</span>
+                    <span th:text="${event.venue.city + ', ' + event.venue.country}" class="text-sm font-medium">San
+                            Francisco, CA</span>
+                </div>
+                <div class="flex items-center gap-1.5 rounded-full bg-primary/90 px-3 py-1 text-white shadow-sm">
+                    <span class="material-symbols-outlined text-[18px]">category</span>
+                    <span th:text="${event.category.getName()}" class="text-sm font-medium">Category</span>
+                </div>
+            </div>
+            <h1 th:text="${event.title}" class="text-3xl md:text-5xl font-black text-white tracking-tight mb-2">
+                Global
+                Tech Summit 2024</h1>
+            <p th:text="${event.shortDescription}" class="text-gray-200 text-lg md:text-xl font-normal max-w-2xl">
+                The
+                premier technology conference
+                bridging innovation and humanity.</p>
+        </div>
+    </div>
+    <!-- Tabbed Navigation -->
+    <div class="border-b border-slate-200 dark:border-slate-800 mb-8 overflow-x-auto">
+        <nav class="flex gap-8 min-w-max" id="tab-navigation">
+            <a class="tab-link border-b-2 border-primary py-4 text-primary font-bold transition-colors"
+               data-tab="overview" href="javascript:void(0)">Overview</a>
+            <!--            <a class="tab-link border-b-2 border-transparent py-4 text-slate-500 dark:text-slate-400 font-semibold hover:text-primary transition-colors"-->
+            <!--               data-tab="venue" href="javascript:void(0)">Venue</a>-->
+            <!--            <a class="tab-link border-b-2 border-transparent py-4 text-slate-500 dark:text-slate-400 font-semibold hover:text-primary transition-colors"-->
+            <!--               data-tab="tickets" href="javascript:void(0)">Ticket Types</a>-->
+            <a class="tab-link border-b-2 border-transparent py-4 text-slate-500 dark:text-slate-400 font-semibold hover:text-primary transition-colors"
+               data-tab="reviews" href="javascript:void(0)">Reviews</a>
+        </nav>
+    </div>
+    <div class="tab-container">
+        <!-- Event detail Content -->
+        <div id="overview" class="tab-content active">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative">
+                <!-- Left Column: Details (8 cols) -->
+                <div class="lg:col-span-8 flex flex-col gap-8">
+
+                    <!-- Tab Content: Venue & Schedule -->
+                    <div class="lg:col-span-8 flex flex-col gap-8">
+                        <div
+                                class="bg-surface-light dark:bg-surface-dark p-6 md:p-8 rounded-xl shadow-sm border border-border-light dark:border-border-dark">
+                            <h3 class="text-2xl font-bold mb-4">Event Information</h3>
+                            <div
+                                    class="bg-white dark:bg-[#1a202c] rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex items-start gap-4">
+                                    <div class="p-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-primary">
+                                        <span class="material-symbols-outlined text-[24px]">calendar_today</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-neutral-content dark:text-gray-400">Date
+                                            &amp;
+                                            Time
+                                        </p>
+                                        <p class="text-text-main dark:text-white font-semibold mt-0.5" th:text="${#temporals.format(event.startDateTime, 'dd MMM')}
+                                                               + ' - ' +
+                                                               ${#temporals.format(event.endDateTime, 'dd MMM yyyy')}">
+                                        </p>
+
+                                        <p class="text-sm text-gray-500 dark:text-gray-400" th:text="${#temporals.format(event.startDateTime, 'HH:mm')
+                                                        + ' - '
+                                                   + #temporals.format(event.endDateTime, 'HH:mm')}">>
+                                        </p>
+
+                                    </div>
+                                </div>
+                                <div
+                                        class="flex items-start gap-4 border-l-0 md:border-l border-gray-100 dark:border-gray-800 md:pl-6">
+                                    <div class="p-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-primary">
+                                        <span class="material-symbols-outlined text-[24px]">location_on</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-neutral-content dark:text-gray-400">Venue
+                                        </p>
+                                        <p class="text-text-main dark:text-white font-semibold mt-0.5"
+                                           th:text="${event.venue.name}">
+                                        </p>
+
+                                        <p class="text-sm text-gray-500 dark:text-gray-400"
+                                           th:text="${event.venue.getAddress()}">
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <!-- Tab Content: Overview -->
+                        <div
+                                class="bg-surface-light dark:bg-surface-dark p-6 md:p-8 rounded-xl shadow-sm border border-border-light dark:border-border-dark">
+                            <h3 class="text-2xl font-bold mb-4">About the Event</h3>
+                            <div th:style="|white-space: pre-line;|"
+                                 class="space-y-4 text-text-sec-light dark:text-gray-300 leading-relaxed">
+                                <div class="space-y-4 text-text-sec-light dark:text-gray-300 leading-relaxed"
+                                     th:utext="${event.description}">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Ticket Information -->
+                        <section th:if="${canBuy}">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-xl font-bold text-text-main dark:text-white">Select Tickets</h3>
+                                <span th:text="${ticketTypes.size() + ' types available'}"
+                                      class="text-sm text-gray-500 dark:text-gray-400"></span>
+                            </div>
+                            <div class="space-y-4">
+                                <div th:each="ticket : ${ticketTypes}" class="ticket-card grid grid-cols-1 gap-4"
+                                     th:attr="data-id=${ticket.id}, data-name=${ticket.name}, data-price=${ticket.price}, data-max=${ticket.maxTicketsPerUser}">
+                                    <!-- Ticket Card 1 -->
+                                    <div
+                                            class="bg-white dark:bg-[#1a202c] rounded-xl border border-gray-200 dark:border-gray-800 p-5 shadow-sm hover:shadow-md transition-shadow">
+                                        <div class="flex flex-col sm:flex-row gap-6">
+                                            <div class="flex-1">
+                                                <div class="flex justify-between items-start mb-2">
+                                                    <h4 th:text="${ticket.name}"
+                                                        class="text-lg font-bold text-text-main dark:text-white">
+                                                        Early
+                                                        Bird
+                                                        Pass
+                                                    </h4>
+                                                    <span
+                                                            class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-xs font-semibold px-2.5 py-0.5 rounded-full">Best
+                                                            Value</span>
+                                                </div>
+                                                <p th:text="${ticket.description}"
+                                                   class="text-gray-500 dark:text-gray-400 text-sm mb-4">Full
+                                                    access to
+                                                    all
+                                                    keynote
+                                                    sessions and breakout rooms for all 3 days. Includes lunch.</p>
+
+                                                <div
+                                                        class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                                        <span
+                                                                class="material-symbols-outlined text-[16px]">check_circle</span>
+                                                    <span th:text="|Maximum ${ticket.maxTicketsPerUser} tickets per person|">Access to recordings</span>
+                                                </div>
+
+                                                <div
+                                                        class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                                        <span
+                                                                class="material-symbols-outlined text-[16px]">check_circle</span>
+                                                    <span th:text="|There are ${ticket.availableLeft} tickets left|">Access to recordings</span>
+                                                </div>
+
+                                                <div
+                                                        class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                                        <span
+                                                                class="material-symbols-outlined text-[16px]">check_circle</span>
+                                                    <span>Access to recordings</span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                    class="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-4 min-w-[140px] border-t sm:border-t-0 sm:border-l border-gray-100 dark:border-gray-800 pt-4 sm:pt-0 sm:pl-6">
+                                                <div class="text-right">
+                                                        <span
+                                                                th:text="|${#numbers.formatDecimal(ticket.price, 1, 'POINT', 0, 'COMMA')} VND|"
+                                                                class="text-base font-bold text-text-main dark:text-white">$299</span>
+                                                </div>
+                                                <div
+                                                        class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg h-9">
+                                                    <button th:min="${1}"
+                                                            class="qty-minus px-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 h-full rounded-l-lg transition-colors">
+                                                        -
+                                                    </button>
+                                                    <input
+                                                            class="qty-input w-10 text-center text-sm border-none bg-transparent focus:ring-0 p-0 text-text-main dark:text-white font-medium"
+                                                            readonly="" type="text" value="1" />
+                                                    <button
+                                                            class="qty-plus px-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 h-full rounded-r-lg transition-colors">
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div th:if="${!ticket.soldOut
+                                            and ticket.salesStartDate <= #temporals.createNow()
+                                            and ticket.salesEndDate >= #temporals.createNow()}"
+                                             class="mt-5 pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row gap-3 justify-end">
+
+                                            <button class="open-cart-popup bg-blue-600 text-white px-4 py-2 rounded">
+                                                Add to Cart
+                                            </button>
+
+                                            <button class="open-buy-popup bg-green-600 text-white px-4 py-2 rounded">
+                                                Buy Now
+                                            </button>
+                                        </div>
+
+                                        <div th:if="${ticket.salesStartDate > #temporals.createNow()}"
+                                             class="text-yellow-600 text-sm mt-3">
+                                            Sale starts at:
+                                            <span th:text="${#temporals.format(ticket.salesStartDate, 'dd/MM/yyyy HH:mm')}"></span>
+                                        </div>
+
+                                        <div th:if="${ticket.salesEndDate < #temporals.createNow()}"
+                                             class="text-gray-500 text-sm mt-3">
+                                            Sale ended
+                                        </div>
+
+                                        <div th:if="${ticket.soldOut}" class="text-red-500 font-semibold">
+                                            This ticket is sold out
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </section>
+
+                        <div th:if="${!canBuy}"
+                             class="mb-6 flex items-start gap-4 p-5 rounded-xl border border-gray-300 bg-gradient-to-r from-gray-50 to-gray-100
+                            text-gray-700 shadow-sm
+                            dark:from-gray-800 dark:to-gray-900 dark:border-gray-700 dark:text-gray-300">
+
+                            <!-- Icon -->
+                            <span class="material-symbols-outlined text-3xl text-gray-500">
+                                    event_busy
+                            </span>
+
+                            <!-- Content -->
+                            <div>
+                                <h3 class="font-semibold text-lg mb-1">
+                                    Ticket sales closed
+                                </h3>
+
+                                <p class="text-sm">
+                                    This event is no longer selling tickets. Please check back for other events.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Right Column: Booking Card (4 cols) -->
+
+                    </div>
+                </div>
+                <div class="lg:col-span-4 relative">
+                    <div class="sticky top-24 space-y-4">
+                        <!-- Booking Widget -->
+                        <div
+                                class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl border border-border-light dark:border-border-dark overflow-hidden">
+                            <div class="bg-primary p-4 text-center">
+                                <p class="text-white text-sm font-medium opacity-90">Time Remaining to Buy</p>
+                                <div id="countdown"
+                                     th:data-stop-time="${#temporals.format(stopSellTime, 'yyyy-MM-dd''T''HH:mm:ss')}"
+                                     class="text-white font-mono font-bold text-xl flex justify-center items-center gap-2">
+                                    <span id="hh">02</span>:<span id="mm">14</span>:<span id="ss">35</span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <!-- Ticket Options -->
+                                <div
+                                        class="p-6 bg-background-light dark:bg-gray-800/50 border border-primary/20 rounded-xl">
+                                    <h3 class="font-bold mb-3">Order Summary</h3>
+
+                                    <!-- Ticket line -->
+                                    <div id="summaryTickets" class="space-y-2 text-sm mb-1">
+
+<!--                                        <div th:if="${!checkoutItems.isEmpty()}">-->
+<!--                                            <div th:each="item : ${checkoutItems}" class="flex justify-between">-->
+
+<!--                                                    <span class="text-gray-500"><span-->
+<!--                                                            th:text="${item.ticketName}"></span>-->
+<!--                                                        x-->
+<!--                                                        <span th:text="${item.quantity}"></span>-->
+<!--                                                    </span>-->
+
+<!--                                                <span class="font-medium"-->
+<!--                                                      th:text="|${#numbers.formatDecimal(item.price, 1, 'POINT', 0, 'COMMA')} VND|">-->
+<!--                                                    </span>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+
+<!--                                        <div th:if="${checkoutItems.isEmpty()}"-->
+<!--                                             class="flex flex-col items-center justify-center py-6 text-center">-->
+
+<!--                                                <span class="material-symbols-outlined text-gray-300 text-[40px] mb-2">-->
+<!--                                                    confirmation_number-->
+<!--                                                </span>-->
+
+<!--                                            <p class="text-sm text-gray-500">-->
+<!--                                                There are no tickets in the basket.-->
+<!--                                            </p>-->
+
+<!--                                            <a th:href="@{/home}"-->
+<!--                                               class="mt-2 text-sm font-medium text-primary hover:underline">-->
+<!--                                                Explore events-->
+<!--                                            </a>-->
+
+<!--                                        </div>-->
+
+                                    </div>
+
+                                    <!-- Discount -->
+                                    <!--                                    <div class="mt-3">-->
+                                    <!--                                        <input id="discountCode" type="text" placeholder="Discount code"-->
+                                    <!--                                               class="w-full text-sm rounded-lg border px-3 py-2">-->
+                                    <!--                                        <p id="discountMsg" class="text-[11px] mt-1 text-green-600 hidden">-->
+                                    <!--                                            Discount applied-->
+                                    <!--                                        </p>-->
+                                    <!--                                    </div>-->
+
+                                    <div class="border-t my-4"></div>
+
+                                    <!-- Total -->
+                                    <div class="flex justify-between items-center mb-4">
+                                        <span class="font-bold">Total</span>
+                                        <span th:text="|${#numbers.formatDecimal(totalInSession, 1, 'POINT', 0, 'COMMA')} VND|" id="summaryTotal" class="text-xl font-black text-primary">
+                                                0 VND
+                                        </span>
+                                    </div>
+
+                                    <form method="get" th:action="@{/checkout}">
+                                        <input type="text" hidden="" name="isCheckOutWithoutCart" value="true">
+                                        <input type="text" hidden="" name="eventId", th:value="${event.id}">
+                                        <button class="w-full h-11 bg-primary text-white font-bold rounded-lg">
+                                            Proceed to Checkout
+                                        </button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Organizers Card -->
+                        <div
+                                class="bg-white dark:bg-[#1a202c] rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
+                            <div class="p-4 border-b border-gray-100 dark:border-gray-800">
+                                <h4 class="font-bold text-text-main dark:text-white">Organized by</h4>
+                            </div>
+                            <div class="p-4 flex items-center gap-4">
+                                <div class="size-12 rounded-full bg-gray-100 border border-gray-200 dark:border-gray-700 flex items-center justify-center overflow-hidden"
+                                     data-alt="TechEvents Global Logo">
+                                        <span class="material-symbols-outlined text-gray-400">
+                                            Business
+                                        </span>
+                                </div>
+                                <div class="flex-1">
+                                    <p th:text="${event.organizer.getName()}"
+                                       class="font-semibold text-sm text-text-main dark:text-white">Organizer name
+                                    </p>
+                                    <!--                                    <a class="text-xs text-primary font-medium hover:underline" th:href="${organizer.getWebsite()}">Contact-->
+                                    <!--                                        Organizer</a>-->
+                                </div>
+                            </div>
+                            <div class="px-4 pb-4" th:if="${!organizer.description.isEmpty()}">
+                                <p class="text-xs font-semibold text-gray-400 uppercase mb-2">
+                                    About Organizer
+                                </p>
+                                <p th:text="${organizer.getDescription()}"
+                                   class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-4">>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Share Widget -->
+                        <div
+                                class="bg-white dark:bg-[#1a202c] rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm p-4">
+                            <h4 class="font-bold text-text-main dark:text-white text-sm mb-3">Share this event</h4>
+                            <div class="flex gap-2">
+                                <!--                                <button-->
+                                <!--                                        class="flex-1 flex items-center justify-center h-9 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">-->
+                                <!--                                    <span class="material-symbols-outlined text-[18px]">share</span>-->
+                                <!--                                </button>-->
+                                <a th:attr="data-link=@{/event/{id}(id=${event.id})}"
+                                   class="copy-link-btn flex-1 flex items-center justify-center h-9 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">link</span>
+                                </a>
+                                <!--                                <button-->
+                                <!--                                        class="flex-1 flex items-center justify-center h-9 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">-->
+                                <!--                                    <span class="material-symbols-outlined text-[18px]">mail</span>-->
+                                <!--                                </button>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--        Popup Add Cart-->
+        <div class="font-display bg-slate-100 antialiased" th:if="${customer}">
+            <div hidden="" id="addCartModal"
+                 class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+                <!-- Modal Container -->
+                <div
+                        class="bg-white dark:bg-background-dark w-full max-w-lg rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row animate-in fade-in zoom-in duration-300">
+                    <!-- Left Side: Attendee Information Form -->
+                    <div
+                            class="flex-1 p-8 md:p-10 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800">
+                    </div>
+                    <!-- Right Side: Ticket Summary -->
+                    <div
+                            class="w-full md:w-[380px] bg-slate-50 dark:bg-slate-900/50 p-8 flex flex-col justify-between">
+                        <div>
+                            <h3
+                                    class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-6">
+                                Order
+                                Summary</h3>
+                            <div
+                                    class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 mb-6 relative overflow-hidden">
+                                <!-- Abstract ticket pattern element -->
+                                <div
+                                        class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-12 -mt-12">
+                                </div>
+                                <div class="relative z-10">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="material-symbols-outlined text-primary text-sm">event</span>
+                                        <span class="text-xs font-semibold text-primary uppercase">Tech
+                                                Conference</span>
+                                    </div>
+                                    <h4
+                                            class="text-lg font-bold text-slate-900 dark:text-slate-100 leading-tight mb-4">
+                                        Global
+                                        Tech Summit 2024</h4>
+                                    <div class="space-y-3 border-t border-slate-100 dark:border-slate-700 pt-4">
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-slate-500 dark:text-slate-400">Ticket Type</span>
+                                            <span id="modalCartType"
+                                                  class="font-medium text-slate-900 dark:text-slate-100">VIP
+                                                    Access</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-slate-500 dark:text-slate-400">Price per ticket</span>
+                                            <span id="modalCartPrice"
+                                                  class="font-medium text-slate-900 dark:text-slate-100">$450.00</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-slate-500 dark:text-slate-400">Quantity</span>
+                                            <span id="modalCartQty"
+                                                  class="font-medium text-slate-900 dark:text-slate-100">1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-2 mb-8">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-500 dark:text-slate-400">Subtotal</span>
+                                    <span id="modalSubtotalCart"
+                                          class="text-slate-900 dark:text-slate-100">$450.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-500 dark:text-slate-400">Processing Fee</span>
+                                    <span class="text-slate-900 dark:text-slate-100">0.00</span>
+                                </div>
+                                <div
+                                        class="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-slate-700 mt-4">
+                                        <span class="text-base font-bold text-slate-900 dark:text-slate-100">Total
+                                            Amount</span>
+                                    <span id="modalTotalCart" class="text-2xl font-bold text-primary">$450.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Bottom Action Area -->
+                        <div class="flex items-center gap-3">
+                            <button id="closeCartModal"
+                                    class="flex-1 py-3 px-4 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors text-sm">
+                                Cancel
+                            </button>
+
+                            <form id="cartForm" th:action="@{/cart/add}" method="post">
+                                <input type="hidden" name="ticketTypeId" id="cartTicketId">
+                                <input type="hidden" name="quantity" id="cartQuantity">
+                                <button type="submit"
+                                        class="flex-[2] py-3 px-4 rounded-lg bg-primary text-white font-semibold hover:bg-blue-600 transition-colors shadow-lg shadow-primary/20 flex items-center justify-center gap-2 text-sm">
+                                    Confirm Purchase
+                                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div
+                            class="flex-1 p-8 md:p-10 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--            popup Buy-->
+        <div class="font-display bg-slate-100 antialiased" th:if="${customer}">
+            <div hidden="" id="buyNowModal"
+                 class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+                <!-- Modal Container -->
+                <div
+                        class="bg-white dark:bg-background-dark w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row animate-in fade-in zoom-in duration-300">
+                    <!-- Left Side: Attendee Information Form -->
+                    <div
+                            class="flex-1 p-8 md:p-10 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800">
+                        <div class="mb-8">
+                            <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Attendee
+                                Information</h2>
+                            <p class="text-slate-500 dark:text-slate-400 mt-1">Please provide your details to
+                                receive
+                                the
+                                tickets.</p>
+                        </div>
+                        <form class="space-y-6">
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300"
+                                       for="full-name">Full Name</label>
+                                <div class="relative">
+                                        <span
+                                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">person</span>
+                                    <input
+                                            class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all text-slate-900 dark:text-slate-100 placeholder:text-slate-400"
+                                            id="full-name" placeholder="John Doe" type="text"
+                                            th:value="${customer.getFullName()}" disabled />
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300"
+                                       for="email">Email
+                                    Address</label>
+                                <div class="relative">
+                                        <span
+                                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">mail</span>
+                                    <input
+                                            class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all text-slate-900 dark:text-slate-100 placeholder:text-slate-400"
+                                            id="email" placeholder="john@company.com" type="email"
+                                            th:value="${customer.email}" disabled />
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 mt-4">
+                                <input class="mt-1 h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary"
+                                       id="terms" type="checkbox" />
+                                <label class="text-xs text-slate-500 dark:text-slate-400 leading-tight" for="terms">
+                                    I agree to the Terms of Service and Privacy Policy. I understand tickets are
+                                    non-refundable.
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Right Side: Ticket Summary -->
+                    <div
+                            class="w-full md:w-[380px] bg-slate-50 dark:bg-slate-900/50 p-8 flex flex-col justify-between">
+                        <div>
+                            <h3
+                                    class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-6">
+                                Order
+                                Summary</h3>
+                            <div
+                                    class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm border border-slate-100 dark:border-slate-700 mb-6 relative overflow-hidden">
+                                <!-- Abstract ticket pattern element -->
+                                <div
+                                        class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-12 -mt-12">
+                                </div>
+                                <div class="relative z-10">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="material-symbols-outlined text-primary text-sm">event</span>
+                                        <span class="text-xs font-semibold text-primary uppercase">Tech
+                                                Conference</span>
+                                    </div>
+                                    <h4
+                                            class="text-lg font-bold text-slate-900 dark:text-slate-100 leading-tight mb-4">
+                                        Global
+                                        Tech Summit 2024</h4>
+                                    <div class="space-y-3 border-t border-slate-100 dark:border-slate-700 pt-4">
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-slate-500 dark:text-slate-400">Ticket Type</span>
+                                            <span id="modalTicketType"
+                                                  class="font-medium text-slate-900 dark:text-slate-100">VIP
+                                                    Access</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-slate-500 dark:text-slate-400">Price per ticket</span>
+                                            <span id="modalTicketPrice"
+                                                  class="font-medium text-slate-900 dark:text-slate-100">$450.00</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-slate-500 dark:text-slate-400">Quantity</span>
+                                            <span id="modalTicketQty"
+                                                  class="font-medium text-slate-900 dark:text-slate-100">1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-2 mb-8">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-500 dark:text-slate-400">Subtotal</span>
+                                    <span id="modalSubtotal"
+                                          class="text-slate-900 dark:text-slate-100">$450.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-500 dark:text-slate-400">Processing Fee</span>
+                                    <span class="text-slate-900 dark:text-slate-100">0.00</span>
+                                </div>
+                                <div
+                                        class="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-slate-700 mt-4">
+                                        <span class="text-base font-bold text-slate-900 dark:text-slate-100">Total
+                                            Amount</span>
+                                    <span id="modalTotal" class="text-2xl font-bold text-primary">$450.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Bottom Action Area -->
+                        <div class="flex items-center gap-3">
+                            <button id="closeBuyModal"
+                                    class="flex-1 py-3 px-4 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors text-sm">
+                                Cancel
+                            </button>
+                            <form th:action="@{/checkout/add}" method="post">
+                                <input name="ticketTypeId" id="currentTicketId" type="hidden">
+                                <input name="ticketName" id="currentTicketName" type="hidden">
+                                <input name="price" id="currentTicketPrice" type="hidden">
+                                <input name="quantity" id="currentTicketQty" type="hidden">
+
+                                <button id="confirmBuyBtn"
+                                        class="flex-[2] py-3 px-4 rounded-lg bg-primary text-white font-semibold hover:bg-blue-600 transition-colors shadow-lg shadow-primary/20 flex items-center justify-center gap-2 text-sm">
+                                    Confirm Purchase
+                                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Venue Content -->
+        <!--        <div class="tab-content hidden-tab" id="venue">-->
+        <!--            <div-->
+        <!--                    class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">-->
+        <!--                <h3 class="text-2xl font-bold mb-4">The Venue</h3>-->
+        <!--                <div-->
+        <!--                        class="aspect-video w-full bg-slate-100 dark:bg-slate-800 rounded-lg mb-6 flex items-center justify-center">-->
+        <!--                    <span class="material-symbols-outlined text-4xl text-slate-400">map</span>-->
+        <!--                </div>-->
+        <!--                <h4 class="font-bold text-lg">Moscone Center</h4>-->
+        <!--                <p class="text-slate-500 mb-4">747 Howard St, San Francisco, CA 94103</p>-->
+        <!--                <p class="text-slate-600 dark:text-slate-300">Located in the heart of San Francisco, the Moscone-->
+        <!--                    Center is world-renowned for its modern facilities and central location.</p>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--        &lt;!&ndash; Tickets Content &ndash;&gt;-->
+        <!--        <div class="tab-content hidden-tab" id="tickets">-->
+        <!--            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">-->
+        <!--                <div-->
+        <!--                        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">-->
+        <!--                    <h4 class="text-xl font-bold mb-2">General Admission</h4>-->
+        <!--                    <div class="text-3xl font-black text-primary mb-4">$499</div>-->
+        <!--                    <ul class="space-y-2 mb-6 text-slate-600 dark:text-slate-300">-->
+        <!--                        <li class="flex items-center gap-2"><span-->
+        <!--                                class="material-symbols-outlined text-green-500 text-sm">check_circle</span> All-->
+        <!--                            main stage sessions-->
+        <!--                        </li>-->
+        <!--                        <li class="flex items-center gap-2"><span-->
+        <!--                                class="material-symbols-outlined text-green-500 text-sm">check_circle</span>-->
+        <!--                            Exhibition hall access-->
+        <!--                        </li>-->
+        <!--                    </ul>-->
+        <!--                    <button-->
+        <!--                            class="w-full py-2 border-2 border-primary text-primary font-bold rounded-lg hover:bg-primary hover:text-white transition-colors">-->
+        <!--                        Select-->
+        <!--                    </button>-->
+        <!--                </div>-->
+        <!--                <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-primary shadow-lg">-->
+        <!--                    <div-->
+        <!--                            class="bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded absolute -top-3 right-6">-->
+        <!--                        POPULAR-->
+        <!--                    </div>-->
+        <!--                    <h4 class="text-xl font-bold mb-2">VIP Pass</h4>-->
+        <!--                    <div class="text-3xl font-black text-primary mb-4">$899</div>-->
+        <!--                    <ul class="space-y-2 mb-6 text-slate-600 dark:text-slate-300">-->
+        <!--                        <li class="flex items-center gap-2"><span-->
+        <!--                                class="material-symbols-outlined text-green-500 text-sm">check_circle</span>-->
+        <!--                            Priority seating-->
+        <!--                        </li>-->
+        <!--                        <li class="flex items-center gap-2"><span-->
+        <!--                                class="material-symbols-outlined text-green-500 text-sm">check_circle</span>-->
+        <!--                            Exclusive networking lounge-->
+        <!--                        </li>-->
+        <!--                        <li class="flex items-center gap-2"><span-->
+        <!--                                class="material-symbols-outlined text-green-500 text-sm">check_circle</span>-->
+        <!--                            After-party invite-->
+        <!--                        </li>-->
+        <!--                    </ul>-->
+        <!--                    <button-->
+        <!--                            class="w-full py-2 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors">-->
+        <!--                        Select-->
+        <!--                    </button>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!-- Reviews Content -->
+        <div class="tab-content hidden-tab" id="reviews" th:if="${listComments}">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column: Stats & Post Review -->
+                <div class="lg:col-span-1 space-y-6">
+                    <!-- Rating Summary Card -->
+                    <div
+                            class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                        <h3 class="text-lg font-bold mb-4">Attendee Rating</h3>
+                        <!-- Has no reviews! -->
+                        <div th:if="${listComments.size() == 0}">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="text-5xl font-black text-slate-900 dark:text-white">0.0</div>
+                                <div class="flex flex-col">
+                                    <div class="flex text-amber-400">
+                                            <span
+                                                    class="cursor-pointer transition-transform material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                                        <span
+                                                class="cursor-pointer transition-transform material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                                        <span
+                                                class="cursor-pointer transition-transform material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                                        <span
+                                                class="cursor-pointer transition-transform material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                                        <span
+                                                class="cursor-pointer transition-transform material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                                    </div>
+                                    <span
+                                            th:classappend="${listComments.size() == 0 ? 'text-red-600' : 'text-slate-500'}"
+                                            th:text="${listComments.size() == 0 ? 'This event has no reviews yet.' : 'Based on ' + listComments.size() + ' reviews'}"
+                                            class="text-sm ">Based on 124 reviews</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">5</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" style="width: 0%"></div>
+                                    </div>
+                                    <span class="text-xs text-slate-500 w-8 text-right">0%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">4</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" style="width: 0%"></div>
+                                    </div>
+                                    <span class="text-xs text-slate-500 w-8 text-right">0%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">3</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" style="width: 0%"></div>
+                                    </div>
+                                    <span class="text-xs text-slate-500 w-8 text-right">0%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">2</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" style="width: 0%"></div>
+                                    </div>
+                                    <span class="text-xs text-slate-500 w-8 text-right">0%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">1</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" style="width: 0%"></div>
+                                    </div>
+                                    <span class="text-xs text-slate-500 w-8 text-right">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Has reviews -->
+                        <div th:if="${listComments.size() != 0}">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div th:text="${ratingAvg}"
+                                     class="text-5xl font-black text-slate-900 dark:text-white">
+                                    4.8
+                                </div>
+                                <div class="flex flex-col">
+                                    <div class="flex text-amber-400">
+                                        <!--                                            <span th:each="i : ${#numbers.sequence(1,5)}"-->
+                                        <!--                                                  class="material-symbols-outlined cursor-pointer hover:scale-110 transition-transform"-->
+                                        <!--                                                  th:text="${i <= T(java.lang.Math).floor(ratingAvg) ? 'star' :-->
+                                        <!--                                                       (i == T(java.lang.Math).ceil(ratingAvg) && ratingAvg - T(java.lang.Math).floor(ratingAvg) >= 0.5 ? 'star_half' : 'star_outline')}"-->
+                                        <!--                                                  th:classappend="${i <= T(java.lang.Math).floor(ratingAvg) ||-->
+                                        <!--                                                               (i == T(java.lang.Math).ceil(ratingAvg) && ratingAvg - T(java.lang.Math).floor(ratingAvg) >= 0.5) ? ' filled' : ''}">-->
+                                        <!--                                            </span>-->
+                                    </div>
+                                    <!-- Hiển thị số lượng reviews -->
+                                    <span
+                                            th:classappend="${listComments.size() == 0 ? 'text-red-600' : 'text-slate-500'}"
+                                            th:text="${listComments.size() == 0 ? 'This event has no reviews yet.' : 'Based on ' + listComments.size() + ' reviews'}"
+                                            class="text-sm">
+                                            Based on 124 reviews
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">5</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" th:style="|width: ${five * 100}%|"></div>
+                                    </div>
+                                    <span
+                                            th:text="|${#numbers.formatDecimal(five * 100, 0, 'POINT', 0, 'DEFAULT')}%|"
+                                            class="text-xs text-slate-500 w-8 text-right">85%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">4</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" th:style="|width: ${four * 100}%|"></div>
+                                    </div>
+                                    <span
+                                            th:text="|${#numbers.formatDecimal(four * 100, 0, 'POINT', 0, 'DEFAULT')}%|"
+                                            class="text-xs text-slate-500 w-8 text-right">85%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">3</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" th:style="|width: ${three * 100}%|"></div>
+                                    </div>
+                                    <span
+                                            th:text="|${#numbers.formatDecimal(three * 100, 0, 'POINT', 0, 'DEFAULT')}%|"
+                                            class="text-xs text-slate-500 w-8 text-right">85%</span>
+
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">2</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" th:style="|width: ${two * 100}%|"></div>
+                                    </div>
+                                    <span
+                                            th:text="|${#numbers.formatDecimal(two * 100, 0, 'POINT', 0, 'DEFAULT')}%|"
+                                            class="text-xs text-slate-500 w-8 text-right">85%</span>
+
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-medium w-3">1</span>
+                                    <div
+                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary" th:style="|width: ${one * 100}%|"></div>
+                                    </div>
+                                    <span
+                                            th:text="|${#numbers.formatDecimal(one * 100, 0, 'POINT', 0, 'DEFAULT')}%|"
+                                            class="text-xs text-slate-500 w-8 text-right">85%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Leave a Review Section: dành cho user đã đăng nhập và sự kiện đã kết thúc -->
+                    <form
+                            th:if="${event.eventStatus.equalsIgnoreCase('Completed') && countOrderOfCus != 0 && hasCommented == false}"
+                            th:action="@{/event/{id}/comment(id=${event.id})}" method="post" th:object="${comment}">
+                        <div sec:authorize="isAuthenticated()"
+                             class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                            <h3 class="text-lg font-bold mb-4">Leave a Review</h3>
+                            <input type="hidden" th:field="*{event.id}">
+                            <p class="text-sm text-slate-500 mb-4">Share your experience with other attendees.</p>
+                            <div class="review-stars flex gap-1 mb-4" id="rating-stars">
+                                <button type="button" class="star material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</button>
+                                <button type="button" class="star material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</button>
+                                <button type="button" class="star material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</button>
+                                <button type="button" class="star material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</button>
+                                <button type="button" class="star material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</button>
+                            </div>
+
+                            <input type="hidden" name="rating" th:field="*{rating}" id="ratingInput">
+                            <textarea th:field="*{content}"
+                                      class="w-full h-32 p-3 text-sm border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all dark:text-slate-100 mb-4"
+                                      placeholder="Describe your experience at the event..."></textarea>
+                            <button type="submit"
+                                    class="w-full bg-primary text-white py-2.5 rounded-lg font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+                                Post Review
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Chưa mua vé || không thể cmt -->
+                    <div th:if="${event.eventStatus.equalsIgnoreCase('Completed') && countOrderOfCus == 0}"
+                         sec:authorize="isAuthenticated()" class="relative bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800
+                                opacity-50 grayscale pointer-events-none select-none">
+
+                        <h3 class="text-lg font-bold mb-4">Only attendees who purchased tickets can leave
+                            reviews.</h3>
+
+                        <p class="text-sm text-slate-500 mb-4">
+                            Share your experience with other attendees.
+                        </p>
+
+                        <div class="review-stars flex gap-1 mb-4">
+                            <span class="material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                            <span class="material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                            <span class="material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                            <span class="material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                            <span class="material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                        </div>
+
+                        <textarea
+                                class="w-full h-32 p-3 text-sm border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg dark:text-slate-100 mb-4"
+                                placeholder="Describe your experience at the event..."></textarea>
+
+                        <button
+                                class="w-full bg-primary text-white py-2.5 rounded-lg font-bold shadow-lg shadow-primary/20">
+                            Post Review
+                        </button>
+
+                    </div>
+
+                    <!-- Đã mua vé, đã cmt -->
+                    <div th:if="${event.eventStatus.equalsIgnoreCase('Completed') && countOrderOfCus != 0 && hasCommented == true}"
+                         sec:authorize="isAuthenticated()" class="relative bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800
+                                opacity-50 grayscale pointer-events-none select-none">
+
+                        <h3>You have already reviewed this event.</h3>
+
+                        <p class="text-sm text-slate-500 mb-4">
+                            Share your experience with other attendees.
+                        </p>
+
+                        <div class="review-stars flex gap-1 mb-4">
+                            <span class="material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                            <span class="material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                            <span class="material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                            <span class="material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                            <span class="material-symbols-outlined filled text-gray-300 dark:text-gray-600">star</span>
+                        </div>
+
+                        <textarea
+                                class="w-full h-32 p-3 text-sm border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg dark:text-slate-100 mb-4"
+                                placeholder="Describe your experience at the event..."></textarea>
+
+                        <button
+                                class="w-full bg-primary text-white py-2.5 rounded-lg font-bold shadow-lg shadow-primary/20">
+                            Post Review
+                        </button>
+
+                    </div>
+
+                    <!--                    &lt;!&ndash; User chưa đăng nhập => Không có form để review luôn&ndash;&gt;-->
+                    <!--                    <div th:if="${event.eventStatus.equalsIgnoreCase('Completed')}" sec:authorize="!isAuthenticated()"-->
+                    <!--                         class="relative bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800-->
+                    <!--                                opacity-50 grayscale pointer-events-none select-none">-->
+
+                    <!--                        <h3 class="text-lg font-bold mb-4">Only attendees who purchased tickets can leave reviews.</h3>-->
+
+                    <!--                        <p class="text-sm text-slate-500 mb-4">-->
+                    <!--                            Share your experience with other attendees.-->
+                    <!--                        </p>-->
+
+                    <!--                        <div class="review-stars flex gap-1 mb-4">-->
+                    <!--                            <span class="material-symbols-outlined text-slate-300">star</span>-->
+                    <!--                            <span class="material-symbols-outlined text-slate-300">star</span>-->
+                    <!--                            <span class="material-symbols-outlined text-slate-300">star</span>-->
+                    <!--                            <span class="material-symbols-outlined text-slate-300">star</span>-->
+                    <!--                            <span class="material-symbols-outlined text-slate-300">star</span>-->
+                    <!--                        </div>-->
+
+                    <!--                        <textarea-->
+                    <!--                                class="w-full h-32 p-3 text-sm border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg dark:text-slate-100 mb-4"-->
+                    <!--                                placeholder="Describe your experience at the event..."></textarea>-->
+
+                    <!--                        <button-->
+                    <!--                                class="w-full bg-primary text-white py-2.5 rounded-lg font-bold shadow-lg shadow-primary/20">-->
+                    <!--                            Post Review-->
+                    <!--                        </button>-->
+
+                    <!--                    </div>-->
+                </div>
+                <!--Right Column: Review List-->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-xl font-bold">What people are saying</h3>
+                        <div class="flex gap-2">
+                            <select
+                                    class="text-sm bg-transparent border-none font-medium text-slate-600 dark:text-slate-400 focus:ring-0 cursor-pointer">
+                                <option>Most Recent</option>
+                                <option>Highest Rating</option>
+                                <option>Lowest Rating</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Sample Review 1 -->
+                    <div th:each="review : ${listComments}"
+                         class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <img alt="Attendee Profile"
+                                     class="w-12 h-12 rounded-full object-cover border-2 border-primary/10"
+                                     th:src="${review.avatarUrl()}"
+                                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuAndOxIg9cocskqhZMATETZ1zpaGFyE5gZwY4IrxzEMhKsNBiMSMUSgID1lwuU0pgH3i5S-VxWdrPBbS8SG-0uWjfRjECP9C_5IVT9DEo03XRiP58xIhKo4MIyWuxAfVsZw7QTf09k3UYZBNliKHbeCKHbmpj_qBzcTcrqdbI9K0nUxKa3g_E5bqVI-93ZlSYwHs9wDEVRWYwEd8J5GQg6EX6yCtoVvH1Vo8UT8K2pdSuit0ksKo7lALw_Tk-8kyjBtoXOot5kDgcId" />
+                                <div>
+                                    <h4 th:text="${review.customerFullName()}"
+                                        class="font-bold text-slate-900 dark:text-white">Marcus Sterling</h4>
+                                    <p th:text="${#temporals.format(review.updatedAt(), 'MMMM dd, yyyy')}"
+                                       class="text-xs text-slate-500">September 12, 2024</p>
+                                </div>
+                            </div>
+                            <div class="flex text-amber-400">
+                                    <span class="material-symbols-outlined"
+                                          th:classappend="${review.rating() >= 1 ? 'filled' : 'filled text-gray-300 dark:text-gray-600'}">star</span>
+                                <span class="material-symbols-outlined"
+                                      th:classappend="${review.rating() >= 2 ? 'filled' : 'filled text-gray-300 dark:text-gray-600'}">star</span>
+                                <span class="material-symbols-outlined"
+                                      th:classappend="${review.rating() >= 3 ? 'filled' : 'filled text-gray-300 dark:text-gray-600'}">star</span>
+                                <span class="material-symbols-outlined"
+                                      th:classappend="${review.rating() >= 4 ? 'filled' : 'filled text-gray-300 dark:text-gray-600'}">star</span>
+                                <span class="material-symbols-outlined"
+                                      th:classappend="${review.rating() == 5 ? 'filled' : 'filled text-gray-300 dark:text-gray-600'}">star</span>
+                            </div>
+                        </div>
+                        <!-- VIEW MODE -->
+                        <p class="comment-text text-slate-600 dark:text-slate-300 leading-relaxed italic"
+                           th:text="${review.comment()}"></p>
+
+                        <!-- EDIT MODE -->
+                        <form
+                                th:action="@{/event/{eventId}/comment/edit/{reviewId}(eventId=${event.id}, reviewId=${review.id})}"
+                                method="post" class="edit-form hidden mt-3">
+
+                                <textarea name="content"
+                                          class="w-full p-3 text-sm border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all dark:text-slate-100 mb-3"
+                                          th:text="${review.comment()}"></textarea>
+
+                            <div class="flex justify-end gap-2">
+                                <button type="button"
+                                        class="cancel-edit py-1 px-3 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors text-sm">
+                                    Cancel
+                                </button>
+
+                                <button type="submit"
+                                        class="px-3 py-1 text-sm rounded-lg bg-primary text-white font-bold">
+                                    Save
+                                </button>
+                            </div>
+                        </form>
+                        <div th:if="${review.username().equalsIgnoreCase(currentUserEmail)}"
+                             class="action-buttons flex justify-end">
+                            <button
+                                    class="edit-btn flex px-4 py-1 items-center justify-center rounded-lg bg-blue-500 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 transition-colors text-white dark:text-slate-300 text-sm font-bold">
+                                Edit
+                            </button>
+                            <!-- Delete Comment Button -->
+                            <button
+                                    th:attr="data-action=@{/event/{eventId}/comment/delete/{reviewId}(eventId=${event.id}, reviewId=${review.id})}"
+                                    id="deleteCommentBtn"
+                                    class="ml-2 flex px-4 py-1 items-center justify-center rounded-lg bg-red-600 ml-2 flex px-4 py-1 items-center justify-center rounded-lg bg-red-600 border border-slate-200 center dark:bg-slate-800 dark:border-slate-700 transition-colors text-white dark:text-slate-300 text-sm font-bold">
+                                Delete
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <!-- Event is not completed => not to review! -->
+                    <div th:if="${event.eventStatus.equalsIgnoreCase('Completed') && listComments.size() == 0}"
+                         class="lg:col-span-2 space-y-6">
+                        <div
+                                class="flex flex-col items-center justify-center py-16 px-4 text-center bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                            <div class="bg-primary/10 p-6 rounded-full mb-6">
+                                <span class="material-symbols-outlined text-6xl text-primary">rate_review</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">No reviews yet</h3>
+                            <p class="text-slate-500 dark:text-slate-400 max-w-sm">
+                                Be the first to share your experience with this event!
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Empty: Review List -->
+                    <div th:if="${!event.eventStatus.equalsIgnoreCase('Completed')}"
+                         class="lg:col-span-2 space-y-6">
+                        <div
+                                class="flex flex-col items-center justify-center py-16 px-4 text-center bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                            <div class="bg-primary/10 p-6 rounded-full mb-6">
+                                <span class="material-symbols-outlined text-6xl text-primary">rate_review</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">No reviews yet</h3>
+                            <p class="text-red-600 dark:text-slate-400 max-w-sm">
+                                Reviews are only available after the event is completed.
+                            </p>
+                        </div>
+                    </div>
+                    <!--                    <button-->
+                    <!--                            class="w-full py-4 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl text-slate-500 font-semibold hover:border-primary hover:text-primary transition-all">-->
+                    <!--                        Load 24 more reviews-->
+                    <!--                    </button>-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+</main>
+<!-- Simple Footer -->
+<footer th:replace="~{fragment/frag::footer}" ></footer>
+<!--Popup message-->
+<div id="popupMessage" th:if="${hasMessage}"
+     class="transition-opacity duration-300 fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div
+            class="bg-white dark:bg-slate-900 w-50 max-w-sm rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+        <div class="p-6 flex flex-col items-center text-center">
+            <div class="size-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-red-600 dark:text-red-500 text-[32px]">warning</span>
+            </div>
+            <h3 th:text="${errorTitle}" class="text-xl font-bold text-slate-900 dark:text-white mb-2">File Too
+                Large</h3>
+            <p th:text="${message}" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                The selected image exceeds the maximum size limit of 5MB. Please choose a smaller file.
+            </p>
+        </div>
+        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 flex justify-center">
+            <button id="closePopup"
+                    class="w-50 py-2.5 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-bold rounded-lg transition-colors shadow-lg shadow-blue-500/20">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm delete comment popup -->
+<div id="popupConfirm"
+     class="transition-opacity duration-300 fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div
+            class="bg-white dark:bg-slate-900 w-50 max-w-sm rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+        <div class="p-6 flex flex-col items-center text-center">
+            <div class="size-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-red-600 dark:text-red-500 text-[32px]">warning</span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                Confirm Delete Comment
+            </h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                Are you sure you want to delete this comment?
+            </p>
+        </div>
+        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 flex justify-center gap-4">
+            <!-- Form với action sẽ set bằng JS -->
+            <form id="deleteForm" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit"
+                        class="w-24 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg transition-colors shadow-lg shadow-red-500/20">
+                    Yes
+                </button>
+            </form>
+            <button id="confirmNo"
+                    class="w-24 py-2.5 px-4 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 text-slate-900 dark:text-white text-sm font-bold rounded-lg transition-colors shadow-lg shadow-gray-300/20">
+                No
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Popup Delete Successful -->
+<div id="popupDeleted"
+     class="transition-opacity duration-300 fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div
+            class="bg-white dark:bg-slate-900 w-50 max-w-sm rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+        <div class="p-6 flex flex-col items-center text-center">
+            <div
+                    class="size-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
+                    <span
+                            class="material-symbols-outlined text-green-600 dark:text-green-500 text-[32px]">check_circle</span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                Comment Deleted
+            </h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                The comment has been successfully deleted.
+            </p>
+        </div>
+        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 flex justify-center">
+            <button id="deletedOk"
+                    class="w-24 py-2.5 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-bold rounded-lg transition-colors shadow-lg shadow-blue-500/20">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Popup Post Comment Successful -->
+<div id="popupPosted"
+     class="transition-opacity duration-300 fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div
+            class="bg-white dark:bg-slate-900 w-50 max-w-sm rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+        <div class="p-6 flex flex-col items-center text-center">
+            <div
+                    class="size-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
+                    <span
+                            class="material-symbols-outlined text-green-600 dark:text-green-500 text-[32px]">check_circle</span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                Comment Posted
+            </h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                Your comment has been successfully posted.
+            </p>
+        </div>
+        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 flex justify-center">
+            <button id="postedOk"
+                    class="w-24 py-2.5 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-bold rounded-lg transition-colors shadow-lg shadow-blue-500/20">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+
+</body>
+<!--<th:block th:replace="fragment/frag :: headerScripts"></th:block>-->
+
+<script src="/js/script.js"></script>
+<!--<script th:src="@{/js/eventDetail/script.js}"></script>-->
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // =============================
+        // Popup Message (Error)
+        // =============================
+        const popupMessage = document.getElementById("popupMessage");
+        const btnClosePopup = document.getElementById("closePopup");
+
+        if (popupMessage && btnClosePopup) {
+            btnClosePopup.addEventListener("click", function () {
+                popupMessage.classList.add("opacity-0");
+                setTimeout(() => popupMessage.remove(), 300);
+            });
+        }
+
+        // =============================
+        // Popup Deleted (Success)
+        // =============================
+        const popupDeleted = document.getElementById('popupDeleted');
+        const deletedOk = document.getElementById('deletedOk');
+        const deleted = [[${ deleted }]];
+
+        if (deleted && popupDeleted) {
+            popupDeleted.classList.remove('hidden');
+        }
+
+        if (deletedOk && popupDeleted) {
+            deletedOk.addEventListener('click', () => {
+                popupDeleted.classList.add('hidden');
+            });
+
+            popupDeleted.addEventListener('click', (e) => {
+                if (e.target === popupDeleted) {
+                    popupDeleted.classList.add('hidden');
+                }
+            });
+        }
+
+        // =============================
+        // Tabs Logic
+        // =============================
+        const tabLinks = document.querySelectorAll(".tab-link");
+        const tabContents = document.querySelectorAll(".tab-content");
+        const container = document.querySelector(".tab-container");
+
+        function setContainerHeight(tab) {
+            if (container && tab) {
+                container.style.height = tab.offsetHeight + "px";
+            }
+        }
+
+        const activeTab = document.querySelector(".tab-content.active");
+        if (activeTab) {
+            setContainerHeight(activeTab);
+        }
+
+        tabLinks.forEach(link => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                const targetTabId = link.getAttribute("data-tab");
+                const targetTab = document.getElementById(targetTabId);
+                if (!targetTab) return;
+
+                tabLinks.forEach(l => {
+                    l.classList.remove("border-primary", "text-primary", "font-bold");
+                    l.classList.add("border-transparent", "text-slate-500", "dark:text-slate-400", "font-semibold");
+                });
+
+                link.classList.remove("border-transparent", "text-slate-500", "dark:text-slate-400", "font-semibold");
+                link.classList.add("border-primary", "text-primary", "font-bold");
+
+                tabContents.forEach(tab => tab.classList.remove("active"));
+                targetTab.classList.add("active");
+
+                setContainerHeight(targetTab);
+            });
+        });
+
+        // =============================
+        // Rating Stars
+        // =============================
+        const ratingContainer = document.querySelector(".review-stars");
+        const ratingInput = document.getElementById("ratingInput");
+
+        if (ratingContainer && ratingInput) {
+            const stars = ratingContainer.querySelectorAll(".star");
+            let rating = 0;
+
+            stars.forEach((star, index) => {
+                star.addEventListener("mouseenter", () => {
+                    paint(index + 1);
+                });
+
+                star.addEventListener("click", () => {
+                    rating = index + 1;
+                    ratingInput.value = rating;
+                    paint(rating);
+                });
+            });
+
+            ratingContainer.addEventListener("mouseleave", () => {
+                paint(rating);
+            });
+
+            function paint(value) {
+                stars.forEach((star, i) => {
+                    if (i < value) {
+                        // ⭐ vàng
+                        star.classList.add("text-amber-400");
+                        star.classList.remove("text-gray-300", "dark:text-gray-600");
+                    } else {
+                        // ⭐ xám (filled gray như bạn yêu cầu)
+                        star.classList.remove("text-amber-400");
+                        star.classList.add("text-gray-300", "dark:text-gray-600");
+                    }
+                });
+            }
+        }
+
+        // =============================
+        // Copy Link
+        // =============================
+        document.querySelectorAll(".copy-link-btn").forEach(btn => {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                const link = this.getAttribute("data-link");
+
+                navigator.clipboard.writeText(window.location.origin + link)
+                    .then(() => alert("Copied link!"))
+                    .catch(() => alert("Copy failed!"));
+            });
+        });
+
+        // =============================
+        // Confirm Delete Comment
+        // =============================
+        const popupConfirm = document.getElementById('popupConfirm');
+        const confirmNo = document.getElementById('confirmNo');
+        const deleteForm = document.getElementById('deleteForm');
+
+        if (popupConfirm && deleteForm) {
+            const confirmYes = deleteForm.querySelector('button[type="submit"]');
+            const deleteBtns = document.querySelectorAll('[id="deleteCommentBtn"]');
+
+            deleteBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+
+                    const actionUrl = btn.getAttribute('data-action');
+                    if (!actionUrl) {
+                        console.error('Delete button missing data-action!');
+                        return;
+                    }
+
+                    deleteForm.setAttribute('action', actionUrl);
+                    deleteForm.setAttribute('method', 'post');
+
+                    popupConfirm.classList.remove('hidden');
+                });
+            });
+
+            if (confirmYes) {
+                confirmYes.addEventListener('click', (e) => {
+                    e.preventDefault();
+
+                    const actionUrl = deleteForm.getAttribute('action');
+                    if (!actionUrl) {
+                        console.error('Form action chưa set!');
+                        return;
+                    }
+
+                    deleteForm.submit();
+                });
+            }
+
+            if (confirmNo) {
+                confirmNo.addEventListener('click', () => {
+                    popupConfirm.classList.add('hidden');
+                });
+            }
+
+            popupConfirm.addEventListener('click', (e) => {
+                if (e.target === popupConfirm) {
+                    popupConfirm.classList.add('hidden');
+                }
+            });
+        }
+
+    });
+
+    // =============================
+    // Popup Posted (Success)
+    // =============================
+    const popupPosted = document.getElementById('popupPosted');
+    const postedOk = document.getElementById('postedOk');
+    const posted = [[${ posted }]];
+
+    if (posted && popupPosted) {
+        popupPosted.classList.remove('hidden');
+    }
+
+    if (postedOk && popupPosted) {
+        postedOk.addEventListener('click', () => {
+            popupPosted.classList.add('hidden');
+        });
+
+        popupPosted.addEventListener('click', (e) => {
+            if (e.target === popupPosted) {
+                popupPosted.classList.add('hidden');
+            }
+        });
+    }
+
+    // =============================
+    // Edit Comment UI (Improved)
+    // =============================
+    document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+
+            const reviewCard = btn.closest(".bg-white, .dark\\:bg-slate-900");
+
+            const text = reviewCard.querySelector(".comment-text");
+            const form = reviewCard.querySelector(".edit-form");
+            const actions = reviewCard.querySelector(".action-buttons");
+
+            if (!text || !form || !actions) return;
+
+            // Ẩn text + nút
+            text.classList.add("hidden");
+            actions.classList.add("hidden");
+
+            // Hiện form
+            form.classList.remove("hidden");
+        });
+    });
+
+    document.querySelectorAll(".cancel-edit").forEach(btn => {
+        btn.addEventListener("click", function () {
+
+            const form = btn.closest(".edit-form");
+            const reviewCard = btn.closest(".bg-white, .dark\\:bg-slate-900");
+
+            const text = reviewCard.querySelector(".comment-text");
+            const actions = reviewCard.querySelector(".action-buttons");
+
+            if (!form || !text || !actions) return;
+
+            // Hiện lại text + nút
+            text.classList.remove("hidden");
+            actions.classList.remove("hidden");
+
+            // Ẩn form
+            form.classList.add("hidden");
+        });
+    });
+</script>
+<div th:replace="~{fragment/customer/frag::headerScripts}"></div>
+
+</html>

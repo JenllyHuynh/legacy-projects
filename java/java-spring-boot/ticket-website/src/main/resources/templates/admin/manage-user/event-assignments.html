@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>EventAdmin - User Management</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap"
+          rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+          rel="stylesheet" />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                    },
+                    fontFamily: {
+                        "headline": ["Public Sans", "sans-serif"],
+                        "body": ["Public Sans", "sans-serif"],
+                        "label": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900">
+<!-- TopNavBar -->
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-slate-200 h-16 flex items-center justify-between px-4">
+    <div class="flex items-center gap-8">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event</span>
+            </div>
+            <span class="text-xl font-bold tracking-tight text-slate-800">EventAdmin</span>
+        </div>
+        <div class="relative w-96">
+        <span
+                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+            <input
+                    class="w-full pl-10 pr-4 py-2 bg-slate-100 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary-500"
+                    placeholder="Search assignments..." type="text" />
+        </div>
+    </div>
+    <div class="flex items-center gap-4">
+        <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors relative">
+            <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+            <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+        </button>
+        <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+            <span class="material-symbols-outlined" data-icon="help">help</span>
+        </button>
+        <div class="h-8 w-px bg-slate-200 mx-2"></div>
+        <div class="flex items-center gap-3 pl-2">
+            <div class="text-right hidden sm:block">
+                <p class="text-xs font-semibold text-slate-900">Admin User</p>
+                <p class="text-[10px] text-slate-500 uppercase tracking-wider">Super Admin</p>
+            </div>
+            <img alt="Admin Avatar" class="w-10 h-10 rounded-full border border-slate-200 object-cover"
+                 data-alt="Close up portrait of a professional man"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCqJxQyVY-SKCjVkrvQl3uq9E31KPb1Edboz6ltzhnMIA-cQa_ahx6muOsy9TSKTYl6RiCzNCpG2FMGqCrOlWW2jgyr9gZaHdYuWyVKErhxXJiZR0q4kW_CzF_nIxax__0D0zMjUumMnVQH50NBl7AGjFIUKw_ySKuFLD436uSghHZRBB1qYuJxLmQZ1v2KLjNi_OrAg3NjVf1l9D74iROjo0XEs7lhjxvUORxtgPbtk7cvLRZpTJXPKUtSDD-D4uitSGXv9UX2yw" />
+        </div>
+    </div>
+</nav>
+<div class="flex pt-16 h-screen overflow-hidden">
+    <!-- SideNavBar -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0">
+        <div class="p-6 border-b border-slate-100">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Event System</h2>
+            <p class="text-sm font-medium text-slate-600 mt-1">Admin Console</p>
+        </div>
+        <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 rounded-lg group transition-all"
+               href="#">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-primary-600"
+                data-icon="dashboard">dashboard</span>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 rounded-lg group transition-all"
+               href="#">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-primary-600"
+                data-icon="event">event</span>
+                <span class="text-sm font-medium">Events</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 rounded-lg group transition-all"
+               href="#">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-primary-600"
+                data-icon="group">group</span>
+                <span class="text-sm font-medium">Customers</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 rounded-lg group transition-all"
+               href="#">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-primary-600"
+                data-icon="shopping_cart">shopping_cart</span>
+                <span class="text-sm font-medium">Orders</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 bg-primary-50 text-primary-700 rounded-lg group transition-all"
+               href="#">
+          <span class="material-symbols-outlined text-primary-600" data-icon="manage_accounts"
+                style="font-variation-settings: 'FILL' 1;">manage_accounts</span>
+                <span class="text-sm font-bold">User Management</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 rounded-lg group transition-all"
+               href="#">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-primary-600"
+                data-icon="analytics">analytics</span>
+                <span class="text-sm font-medium">Analytics</span>
+            </a>
+            <div class="pt-4 mt-4 border-t border-slate-100">
+                <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 rounded-lg group transition-all"
+                   href="#">
+            <span class="material-symbols-outlined text-slate-400 group-hover:text-primary-600"
+                  data-icon="settings">settings</span>
+                    <span class="text-sm font-medium">Settings</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+    <!-- Main Content Canvas -->
+    <main class="flex-1 overflow-y-auto bg-slate-50">
+        <div class="max-w-7xl mx-auto p-8">
+            <!-- Header & Tabs -->
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold text-slate-900">User Management</h1>
+                <p class="text-slate-500 mt-1">Manage staff roles and event assignments</p>
+                <div class="flex items-center gap-8 mt-6 border-b border-slate-200">
+                    <button class="pb-4 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">All
+                        Users</button>
+                    <button
+                            class="pb-4 text-sm font-bold text-primary-600 border-b-2 border-primary-600 transition-colors">Event
+                        Assignments</button>
+                    <button class="pb-4 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">Access
+                        Controls</button>
+                    <button class="pb-4 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">Activity
+                        Logs</button>
+                </div>
+            </div>
+            <!-- Assignment Form Section -->
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-8">
+                <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary-500">person_add</span>
+                    New Event Assignment
+                </h3>
+                <div class="flex flex-wrap items-end gap-4">
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1.5 ml-1">Select Event</label>
+                        <div class="relative">
+                            <select
+                                    class="w-full bg-slate-50 border-slate-200 rounded-lg text-sm py-2.5 pl-3 pr-10 appearance-none focus:border-primary-500 focus:ring-primary-500">
+                                <option>Tech Summit 2024</option>
+                                <option>Global Marketing Gala</option>
+                                <option>Startup Expo Q3</option>
+                                <option>Corporate Retreat</option>
+                            </select>
+                            <span
+                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1.5 ml-1">Select Staff</label>
+                        <div class="relative">
+                            <select
+                                    class="w-full bg-slate-50 border-slate-200 rounded-lg text-sm py-2.5 pl-3 pr-10 appearance-none focus:border-primary-500 focus:ring-primary-500">
+                                <option>Sarah Johnson</option>
+                                <option>Michael Chen</option>
+                                <option>Elena Rodriguez</option>
+                                <option>Marcus Wright</option>
+                            </select>
+                            <span
+                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1.5 ml-1">Select Role</label>
+                        <div class="relative">
+                            <select
+                                    class="w-full bg-slate-50 border-slate-200 rounded-lg text-sm py-2.5 pl-3 pr-10 appearance-none focus:border-primary-500 focus:ring-primary-500">
+                                <option>Event Coordinator</option>
+                                <option>On-site Supervisor</option>
+                                <option>Technical Support</option>
+                                <option>Registration Desk</option>
+                            </select>
+                            <span
+                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                        </div>
+                    </div>
+                    <button
+                            class="bg-primary hover:bg-primary-700 text-white font-bold text-sm px-6 py-2.5 rounded-lg transition-all shadow-sm flex items-center gap-2 h-[42px]">
+                        <span class="material-symbols-outlined text-sm">add</span>
+                        Assign Staff to Event
+                    </button>
+                </div>
+            </div>
+            <!-- Bento Grid / Assignments Table -->
+            <div class="grid grid-cols-1 gap-6">
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                        <h3 class="text-sm font-bold text-slate-800">Current Assignments</h3>
+                        <div class="flex gap-2">
+                            <button class="p-1.5 text-slate-400 hover:text-primary-600 transition-colors">
+                                <span class="material-symbols-outlined">filter_list</span>
+                            </button>
+                            <button class="p-1.5 text-slate-400 hover:text-primary-600 transition-colors">
+                                <span class="material-symbols-outlined">download</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                            <tr class="bg-slate-50/50">
+                                <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Event Name</th>
+                                <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Staff Name</th>
+                                <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Role</th>
+                                <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Assigned By</th>
+                                <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Assigned Date</th>
+                                <th class="px-6 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded bg-primary-100 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-primary-600 text-sm">rocket_launch</span>
+                                        </div>
+                                        <span class="text-sm font-semibold text-slate-800">Tech Summit 2024</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <img alt="Staff" class="w-8 h-8 rounded-full border border-slate-200"
+                                             data-alt="Portrait of a woman smiling"
+                                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8gHO5KKRiYpLCG-M-VuEZq62wJsFr5CqjljXNP1BaC1AZq5eNf9BgsHVFfugf0Wf58y_7WwF9Hl8llPKyvi6Us7rFBb-pYmIHEe_VyvUmujJyZrq6Acx0ROTbYBbAHQJmzi1PLJvTP-NoofzsF4_4jlp3C0mT5qG9E3jtcP20Xz1BjfOpcuw7M6j_XeH6DLeazPqmENxrfq6Ja0p50qGTKBV52Cg56YgawpJhJ7_dj06tiVldWaSr6v78PFL4AZ_IenVr2AXIN_o" />
+                                        <span class="text-sm text-slate-700">Sarah Johnson</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                      <span
+                              class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-700 border border-blue-200 uppercase">Coordinator</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm text-slate-600">Admin User</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-500 font-medium">May 12, 2024</td>
+                                <td class="px-6 py-4">
+                                    <button class="text-slate-400 hover:text-red-600 transition-colors">
+                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded bg-indigo-100 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-indigo-600 text-sm">campaign</span>
+                                        </div>
+                                        <span class="text-sm font-semibold text-slate-800">Marketing Gala</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <img alt="Staff" class="w-8 h-8 rounded-full border border-slate-200"
+                                             data-alt="Portrait of a man with beard"
+                                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAa24dyy31KjQ9ehCFKB1Nb3Si5HuAza5-PgW1XhZpNdhPWLIiDjUj79jirEVx51sG_uJTuNnwgLQzOLHAgbm09eJjw1WwGtu892fljsa4MocdgzyHMpxGFbkQqdMFRbmqSaNuCjFmVAQX-5g3IvSF3OyrDVEA8XM_gF-8eJ47WZ1K5h7T4RJBVE7CLevQHoAnDDoiWOVEAjGchhwdVKeVHcTQs9sHNCGIE-Nq-94FNO53twJHrThc1Ktrm-ZlNenwvFSv_s_OPxEU" />
+                                        <span class="text-sm text-slate-700">Michael Chen</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                      <span
+                              class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-700 border border-amber-200 uppercase">Supervisor</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm text-slate-600">Admin User</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-500 font-medium">Jun 02, 2024</td>
+                                <td class="px-6 py-4">
+                                    <button class="text-slate-400 hover:text-red-600 transition-colors">
+                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded bg-emerald-100 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-emerald-600 text-sm">architecture</span>
+                                        </div>
+                                        <span class="text-sm font-semibold text-slate-800">Startup Expo Q3</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <img alt="Staff" class="w-8 h-8 rounded-full border border-slate-200"
+                                             data-alt="Professional woman looking confident"
+                                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAESqouQgwP2FUashTO5ZWhq0cI46IuVGrO5hfwRUPkBuIaL275NvkGSA3Jtjv52ITqQxVgPhDxXfyTsD3EhiFg_d1EPyzjFp0K8aqyzJqA2_r6Bs4z7ef7tO9wKrSb0mUZWu4Ia33_r2D4wOrYzcYr9Ouah4TY6zpCPk9i8yeflG10b_CQe2K_-d5Dl5oL3wKnk2gxr0A0L6uV9Mx0URZCjRLmYXH5897Un8ckZQroJzVcK8ODRYvIHCb1LGtXqZWABWR_EQT4LL0" />
+                                        <span class="text-sm text-slate-700">Elena Rodriguez</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                      <span
+                              class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-100 text-purple-700 border border-purple-200 uppercase">Technical
+                        Support</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm text-slate-600">Super Admin</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-500 font-medium">Jul 18, 2024</td>
+                                <td class="px-6 py-4">
+                                    <button class="text-slate-400 hover:text-red-600 transition-colors">
+                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-6 py-4 border-b-0">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded bg-rose-100 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-rose-600 text-sm">meeting_room</span>
+                                        </div>
+                                        <span class="text-sm font-semibold text-slate-800">Corporate Retreat</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 border-b-0">
+                                    <div class="flex items-center gap-3">
+                                        <img alt="Staff" class="w-8 h-8 rounded-full border border-slate-200"
+                                             data-alt="Man in casual professional attire"
+                                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxk7g2WrUH5j4tSeZQ6HX40zXaQ2gSmwEFtEKdc1fyXz5fvrjU5f9MkpvwS9cyvvaJIThLbwziZKnCUHFV-1iHNGbPKsDqPJIFELH7yJ1ILLSzbBtn6Qs19sakQm5BfXdUf1S2Pe4K6OV5VZhydnJv70pgM-A5FqvD0_lw8wq8FVkQOS-sF-KaVyinPgh6QscdkAL2u88jbhnER6NYDvuVXujXUMtRzFEu6gy5IoW9qkIvi8Dt5Svx3Ui42eHHizbmd3hPsedE8-g" />
+                                        <span class="text-sm text-slate-700">Marcus Wright</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 border-b-0">
+                      <span
+                              class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200 uppercase">Registration</span>
+                                </td>
+                                <td class="px-6 py-4 border-b-0">
+                                    <span class="text-sm text-slate-600">Admin User</span>
+                                </td>
+                                <td class="px-6 py-4 border-b-0 text-sm text-slate-500 font-medium">Aug 05, 2024</td>
+                                <td class="px-6 py-4 border-b-0">
+                                    <button class="text-slate-400 hover:text-red-600 transition-colors">
+                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-xs font-medium text-slate-500">Showing 4 of 28 assignments</span>
+                        <div class="flex gap-1">
+                            <button
+                                    class="px-3 py-1 border border-slate-200 rounded text-xs font-medium hover:bg-white transition-colors disabled:opacity-50"
+                                    disabled="">Previous</button>
+                            <button
+                                    class="px-3 py-1 border border-slate-200 rounded text-xs font-medium bg-white text-primary-600 border-primary-100">1</button>
+                            <button
+                                    class="px-3 py-1 border border-slate-200 rounded text-xs font-medium hover:bg-white transition-colors">2</button>
+                            <button
+                                    class="px-3 py-1 border border-slate-200 rounded text-xs font-medium hover:bg-white transition-colors">3</button>
+                            <button
+                                    class="px-3 py-1 border border-slate-200 rounded text-xs font-medium hover:bg-white transition-colors">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+
+</html>

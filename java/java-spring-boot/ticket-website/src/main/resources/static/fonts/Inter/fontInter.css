@@ -1,0 +1,96 @@
+/*!* Inter - normal *!*/
+/*@font-face {*/
+/*    font-family: 'Inter';*/
+/*    font-style: normal;*/
+/*    font-weight: 100 900;*/
+/*    font-display: swap;*/
+/*    src: url('Inter24pt-Regular.woff2') format('woff2');*/
+/*}*/
+
+/*!* Inter - italic *!*/
+/*@font-face {*/
+/*    font-family: 'Inter';*/
+/*    font-style: italic;*/
+/*    font-weight: 100 900;*/
+/*    font-display: swap;*/
+/*    src: url('Inter24pt-Italic.woff2') format('woff2');*/
+/*}*/
+
+/*Test*/
+@font-face {
+    font-family: 'Inter';
+    src: url('Inter24pt-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('Inter24pt-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('Inter24pt-Italic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* ===== Material Symbols ===== */
+
+@font-face {
+    font-family: 'Material Symbols Outlined';
+    font-style: normal;
+    font-weight: 100 700;
+    font-display: swap;
+    src: url('../material-symbols/MaterialSymbolsOutlined-Medium.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Material Symbols Filled';
+    font-style: normal;
+    font-weight: 100 700;
+    font-display: swap;
+    src: url('../material-symbols/MaterialSymbolsOutlined_Filled-Medium.woff2') format('woff2');
+}
+
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+
+    font-size: 24px;
+    line-height: 1;
+
+    display: inline-block;
+    white-space: nowrap;
+
+    direction: ltr;
+
+    /* icon rendering */
+    font-feature-settings: 'liga';
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+
+    /* variable axes */
+    font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+}
+
+.material-symbols-outlined.filled {
+    font-family: 'Material Symbols Filled';
+
+    font-variation-settings:
+            'FILL' 1,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+}

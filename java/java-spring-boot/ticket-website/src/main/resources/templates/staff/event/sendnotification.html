@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/frag::head('Send Notification')}"></head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white flex overflow-hidden h-screen">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+<aside th:replace="~{fragment/staff/frag::staffSidebar('notification')}"></aside>
+
+<div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    <header th:replace="~{fragment/staff/frag::header('Send Notification')}"></header>
+
+    <main class="flex-1">
+        <div class="max-w-3xl mx-auto p-8">
+
+            <!-- ── Breadcrumb ── -->
+            <nav class="flex items-center gap-2 text-xs text-slate-400 mb-6">
+                <a th:href="@{/staff/event}" class="hover:text-primary transition-colors">Events</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <a th:href="@{/staff/event/{id}(id=${event.id})}"
+                   th:text="${event.title}"
+                   class="hover:text-primary transition-colors truncate max-w-[200px]">Event Detail</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span class="text-slate-600 dark:text-slate-300 font-medium">Send Notification</span>
+            </nav>
+
+            <!-- ── Banners ── -->
+            <div th:if="${successMessage}"
+                 class="mb-6 flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-800 px-5 py-4">
+                <span class="material-symbols-outlined text-green-500 text-[20px] mt-0.5 shrink-0">check_circle</span>
+                <p th:text="${successMessage}" class="text-sm text-green-800 dark:text-green-300 font-medium"></p>
+            </div>
+            <div th:if="${errorMessage}"
+                 class="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800 px-5 py-4">
+                <span class="material-symbols-outlined text-red-500 text-[20px] mt-0.5 shrink-0">error</span>
+                <div>
+                    <p th:text="${errorTitle}" class="text-sm font-bold text-red-800 dark:text-red-300"></p>
+                    <p th:text="${errorMessage}" class="text-sm text-red-700 dark:text-red-400 mt-0.5"></p>
+                </div>
+            </div>
+
+            <!-- ── Event Summary Card ── -->
+            <div class="mb-6 flex items-center gap-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm">
+                <div class="h-14 w-14 rounded-lg bg-cover bg-center bg-slate-200 shrink-0"
+                     th:style="|background-image: url('@{/upload/event/thumbnail/{t}(t=${event.thumbnailUrl})}')|"></div>
+                <div class="flex-1 min-w-0">
+                    <p th:text="${event.title}" class="font-bold text-slate-900 dark:text-white truncate"></p>
+                    <p class="text-xs text-slate-400 mt-0.5" th:text="${eventDateStr}">-</p>
+                </div>
+                <div class="flex items-center gap-5 shrink-0">
+                    <div class="text-center">
+                        <p th:text="${attendeeCount}" class="text-xl font-black text-primary">0</p>
+                        <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wide">Attendees</p>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200 dark:bg-slate-700"></div>
+                    <div class="text-center">
+                        <p th:text="${staffCount}" class="text-xl font-black text-amber-500">0</p>
+                        <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wide">Staff</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── AF-1 Warning ── -->
+            <div th:if="${attendeeCount == 0 and staffCount == 0}"
+                 class="mb-6 flex items-start gap-3 recipientScoperounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800 px-5 py-4">
+                <span class="material-symbols-outlined text-amber-500 text-[20px] mt-0.5 shrink-0">warning</span>
+                <div>
+                    <p class="text-sm font-bold text-amber-800 dark:text-amber-300">No recipients available</p>
+                    <p class="text-sm text-amber-700 dark:text-amber-400 mt-0.5">
+                        This event has no registered attendees and no assigned staff yet.
+                    </p>
+                </div>
+            </div>
+
+            <!-- ── Form ── -->
+            <form th:action="@{/staff/event/{id}/notification/send(id=${event.id})}"
+                  method="post" id="notifForm">
+
+                <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+
+                    <!-- Section 1: Message Content -->
+                    <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800">
+                        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Message Content</h2>
+
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                    Title <span class="text-red-500">*</span>
+                                </label>
+                                <span id="titleCount" class="text-xs text-slate-400">0 / 200</span>
+                            </div>
+                            <input type="text" name="title" id="titleInput" maxlength="200" required
+                                   placeholder="Enter notification title..."
+                                   class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"/>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                    Message <span class="text-red-500">*</span>
+                                </label>
+                                <span id="messageCount" class="text-xs text-slate-400">0 / 1000</span>
+                            </div>
+                            <textarea name="message" id="messageInput" maxlength="1000" required rows="4"
+                                      placeholder="Enter notification message..."
+                                      class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow resize-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Recipients -->
+                    <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800">
+                        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Send To</h2>
+
+                        <!-- Hidden radio group thật sự submit -->
+                        <input type="hidden" id="recipientScopeInput" name="recipientScope" value="ALL_CUSTOMERS"/>
+
+                        <div class="grid grid-cols-3 gap-3">
+
+                            <!-- All Attendees -->
+                            <div id="card_customers"
+                                 class="recipient-card flex flex-col gap-3 rounded-xl border-2 p-4 cursor-pointer transition-all border-slate-200 dark:border-slate-700"
+                                 th:classappend="${attendeeCount == 0} ? 'opacity-40 pointer-events-none' : ''"
+                                 data-value="ALL_CUSTOMERS">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
+                                        <span class="material-symbols-outlined text-blue-500 text-[20px]">group</span>
+                                    </div>
+                                    <span class="check-icon hidden material-symbols-outlined text-blue-500 text-[16px]">check_circle</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-800 dark:text-white">Attendees</p>
+                                    <p class="text-xs text-slate-400 mt-0.5">
+                                        <span th:text="${attendeeCount}">0</span> registered
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Staff Team -->
+                            <div id="card_staff"
+                                 class="recipient-card flex flex-col gap-3 rounded-xl border-2 p-4 cursor-pointer transition-all border-slate-200 dark:border-slate-700"
+                                 th:classappend="${staffCount == 0} ? 'opacity-40 pointer-events-none' : ''"
+                                 data-value="ALL_STAFF">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30">
+                                        <span class="material-symbols-outlined text-amber-500 text-[20px]">badge</span>
+                                    </div>
+                                    <span class="check-icon hidden material-symbols-outlined text-amber-500 text-[16px]">check_circle</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-800 dark:text-white">Staff Team</p>
+                                    <p class="text-xs text-slate-400 mt-0.5">
+                                        <span th:text="${staffCount}">0</span> assigned
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Everyone -->
+                            <div id="card_both"
+                                 class="recipient-card flex flex-col gap-3 rounded-xl border-2 p-4 cursor-pointer transition-all border-slate-200 dark:border-slate-700"
+                                 th:classappend="${attendeeCount == 0 or staffCount == 0} ? 'opacity-40 pointer-events-none' : ''"
+                                 data-value="BOTH">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-900/30">
+                                        <span class="material-symbols-outlined text-violet-500 text-[20px]">diversity_3</span>
+                                    </div>
+                                    <span class="check-icon hidden material-symbols-outlined text-violet-500 text-[16px]">check_circle</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-800 dark:text-white">Everyone</p>
+                                    <p class="text-xs text-slate-400 mt-0.5">
+                                        <span th:text="${attendeeCount + staffCount}">0</span> total
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Channels -->
+                    <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800">
+                        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Channels</h2>
+                        <div class="flex flex-wrap gap-3">
+                            <label class="flex items-center gap-3 rounded-xl border-2 border-primary/30 bg-primary/5 px-4 py-3 cursor-pointer hover:border-primary transition-all">
+                                <input type="checkbox" name="channels" value="INAPP" checked class="accent-primary w-4 h-4"/>
+                                <span class="material-symbols-outlined text-primary text-[18px]">notifications</span>
+                                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">In-App</span>
+                            </label>
+                            <label class="flex items-center gap-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 px-4 py-3 cursor-pointer hover:border-amber-400 transition-all">
+                                <input type="checkbox" name="channels" value="EMAIL" class="accent-amber-500 w-4 h-4"/>
+                                <span class="material-symbols-outlined text-amber-500 text-[18px]">mail</span>
+                                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Email</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between">
+                        <button type="button" id="previewBtn"
+                                class="flex items-center gap-2 h-10 px-4 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">preview</span>
+                            Preview
+                        </button>
+                        <button type="submit" id="sendBtn"
+                                th:disabled="${attendeeCount == 0 and staffCount == 0}"
+                                class="flex items-center gap-2 h-10 px-6 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
+                            <span class="material-symbols-outlined text-[18px]">send</span>
+                            Send Notification
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+<!-- ── Preview Modal ── -->
+<div id="previewModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800">
+            <h3 class="font-bold text-slate-900 dark:text-white">Preview</h3>
+            <button onclick="document.getElementById('previewModal').classList.add('hidden')"
+                    class="text-slate-400 hover:text-slate-600">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-5">
+            <div class="rounded-xl border border-slate-200 dark:border-slate-700 p-4 mb-3">
+                <div class="flex items-start gap-3">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 shrink-0">
+                        <span class="material-symbols-outlined text-primary text-[18px]">notifications</span>
+                    </div>
+                    <div>
+                        <p id="previewTitle" class="text-sm font-bold text-slate-900 dark:text-white">—</p>
+                        <p id="previewMessage" class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">—</p>
+                        <p class="text-[10px] text-slate-400 mt-2">Just now</p>
+                    </div>
+                </div>
+            </div>
+            <p id="previewRecipientLabel" class="text-xs text-center text-slate-400 mt-2"></p>
+        </div>
+        <div class="px-5 pb-4 flex justify-end">
+            <button onclick="document.getElementById('previewModal').classList.add('hidden')"
+                    class="h-9 px-4 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ── Char counters ─────────────────────────────────────────────────
+    const titleInput   = document.getElementById('titleInput');
+    const messageInput = document.getElementById('messageInput');
+    titleInput.addEventListener('input', () =>
+        document.getElementById('titleCount').textContent = titleInput.value.length + ' / 200');
+    messageInput.addEventListener('input', () =>
+        document.getElementById('messageCount').textContent = messageInput.value.length + ' / 1000');
+
+    // ── Recipient card selection ──────────────────────────────────────
+    const borderMap = {
+        ALL_CUSTOMERS: 'border-blue-400',
+        ALL_STAFF:     'border-amber-400',
+        BOTH:          'border-violet-400'
+    };
+
+    const hiddenInput = document.getElementById('recipientScopeInput');
+
+    function selectCard(value) {
+        // Cập nhật hidden input
+        hiddenInput.value = value;
+
+        // Reset tất cả cards
+        document.querySelectorAll('.recipient-card').forEach(card => {
+            const cardValue = card.getAttribute('data-value');
+            const icon = card.querySelector('.check-icon');
+            const color = borderMap[cardValue];
+
+            // Xóa tất cả border màu
+            Object.values(borderMap).forEach(c => card.classList.remove(c));
+            card.classList.remove('shadow-sm');
+            card.classList.add('border-slate-200');
+            icon.classList.add('hidden');
+
+            // Highlight card được chọn
+            if (cardValue === value) {
+                card.classList.remove('border-slate-200');
+                card.classList.add(color, 'shadow-sm');
+                icon.classList.remove('hidden');
+            }
+        });
+    }
+
+    // Gắn click event cho mỗi card
+    document.querySelectorAll('.recipient-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const value = card.getAttribute('data-value');
+            selectCard(value);
+        });
+    });
+
+    // Highlight card mặc định khi load
+    selectCard('ALL_CUSTOMERS');
+
+    // ── Channel guard ─────────────────────────────────────────────────
+    document.querySelectorAll('input[name="channels"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+            const any = document.querySelectorAll('input[name="channels"]:checked').length;
+            if (any === 0) cb.checked = true;
+        });
+    });
+
+    // ── Preview ───────────────────────────────────────────────────────
+    document.getElementById('previewBtn').addEventListener('click', () => {
+        const value = hiddenInput.value;
+        const scopeMap = {
+            ALL_CUSTOMERS: 'Attendees only',
+            ALL_STAFF:     'Staff only',
+            BOTH:          'Attendees & Staff'
+        };
+        document.getElementById('previewTitle').textContent          = titleInput.value.trim()   || '(No title)';
+        document.getElementById('previewMessage').textContent        = messageInput.value.trim() || '(No message)';
+        document.getElementById('previewRecipientLabel').textContent = 'Recipients: ' + (scopeMap[value] || '—');
+        document.getElementById('previewModal').classList.remove('hidden');
+    });
+
+    // ── Confirm submit ────────────────────────────────────────────────
+    document.getElementById('notifForm').addEventListener('submit', function(e) {
+        const value = hiddenInput.value;
+        const labelMap = {
+            ALL_CUSTOMERS: 'all attendees',
+            ALL_STAFF:     'all staff members',
+            BOTH:          'attendees and staff'
+        };
+        if (!confirm(`Send this notification to ${labelMap[value]}?`)) {
+            e.preventDefault();
+        }
+    });
+</script>
+<th:block th:replace="~{fragment/staff/frag::staffBellScript}"></th:block>
+</body>
+</html>

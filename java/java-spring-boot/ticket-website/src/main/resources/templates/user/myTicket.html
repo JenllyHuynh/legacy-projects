@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/frag::head('My Ticket')}"></head>
+
+<body
+        class="font-display bg-background-light text-text-main antialiased selection:bg-primary/20 selection:text-primary">
+
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+
+<div class="relative flex h-screen w-full flex-col overflow-hidden bg-background-light">
+    <!-- Header -->
+    <header th:replace="~{fragment/customer/frag::header}"></header>
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside th:replace="~{fragment/customer/frag::sidebar('myticket')}"></aside>
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto bg-background-light p-6 md:p-10">
+            <div class="mx-auto max-w-6xl">
+                <!-- Page Header -->
+                <div class="mb-8 flex flex-col gap-1">
+                    <h1 class="text-3xl font-black tracking-tight text-text-main md:text-4xl">My Tickets
+                    </h1>
+                    <p class="text-base text-text-muted">Manage your upcoming concerts, festivals, and ticket
+                        details.</p>
+                </div>
+                <!-- Tabs -->
+                <div class="mb-6 border-b border-border-light">
+                    <div class="flex gap-8">
+                        <a data-filter="Upcoming" class="tab-item relative flex items-center gap-2 border-b-[3px] border-primary pb-3 pt-2 text-primary"
+                           href="#">
+                            <span class="material-symbols-outlined text-[20px]">event_upcoming</span>
+                            <span class="text-sm font-bold tracking-wide">Upcoming Events</span>
+                        </a>
+                        <a data-filter="Attended" class="tab-item group relative flex items-center gap-2 border-b-[3px] border-transparent pb-3 pt-2 text-text-muted hover:text-text-main transition-colors"
+                           href="#">
+                            <span class="material-symbols-outlined text-[20px]">history</span>
+                            <span class="text-sm font-medium tracking-wide">Attended Events</span>
+                        </a>
+                        <a data-filter="Ended" class="tab-item group relative flex items-center gap-2 border-b-[3px] border-transparent pb-3 pt-2 text-text-muted hover:text-text-main transition-colors"
+                           href="#">
+                            <span class="material-symbols-outlined text-[20px]">cancel</span>
+                            <span class="text-sm font-medium tracking-wide">Cancelled/Ended</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Table Container -->
+                <div class="rounded-xl border border-border-light bg-surface-light shadow-sm overflow-hidden">
+                    <div class="w-full overflow-x-auto">
+                        <table class="w-full min-w-[800px] text-left">
+                            <thead class="bg-background-light border-b border-border-light">
+                            <tr>
+                                <th
+                                        class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-text-muted w-[35%]">
+                                    Event
+                                </th>
+                                <th
+                                        class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-text-muted w-[15%]">
+                                    Ticket Type
+                                </th>
+                                <th
+                                        class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-text-muted w-[10%]">
+                                    Ticket Code
+                                </th>
+                                <th
+                                        class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-text-muted w-[15%]">
+                                    Date
+                                </th>
+                                <th
+                                        class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-text-muted w-[10%]">
+                                    Status
+                                </th>
+                                <th
+                                        class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-text-muted text-right w-[15%]">
+                                    Actions
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-border-light" id="ticketTable">
+                            <!-- Row 1 -->
+                            <tr th:each="ticket : ${tickets}" class="ticket-row group hover:bg-background-light/50 transition-colors" th:attr="data-status=${ticket.displayStatus}">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                                class="relative h-14 w-20 flex-none overflow-hidden rounded-lg bg-gray-200">
+                                            <div class="absolute inset-0 bg-cover bg-center"
+                                                 data-alt="Concert stage with neon lights"
+                                                 th:style="|background-image: url('@{/upload/event/thumbnail/{file}(file=${ticket.thumbnailUrl})}');|">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p th:text="${ticket.eventTitle}"
+                                                    class="text-sm font-bold text-text-main group-hover:text-primary transition-colors">
+                                                Neon Lights Festival 2024</p>
+                                            <p class="text-xs text-text-muted">Main Arena, Downtown</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-text-main">
+                                            <span th:text="${ticket.ticketTypeName}"
+                                                    class="inline-flex items-center gap-1.5 rounded bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">
+                                                <span class="material-symbols-outlined text-[14px]">star</span>
+                                            </span>
+                                </td>
+                                <td th:text="${ticket.ticketNumber}" class="px-6 py-4 text-sm text-text-muted">2</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col">
+                                        <span th:text="${#temporals.format(ticket.startDateTime, 'MMM dd, yyyy')}" class="text-sm font-medium text-text-main">Oct 15, 2024</span>
+                                        <span th:text="${#temporals.format(ticket.startDateTime, 'h:mm a')}" class="text-xs text-text-muted">8:00 PM</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                            <span th:text="${ticket.displayStatus}"
+                                                    class="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
+                                                <span class="size-1.5 rounded-full bg-primary"></span>
+                                            </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button th:onclick="'downloadTicketQR(' + ${ticket.ticketId} + ')'"
+                                                class="flex size-8 items-center justify-center rounded-lg text-text-muted hover:bg-background-light hover:text-primary transition-colors"
+                                                title="Download Ticket">
+                                            <span class="material-symbols-outlined text-[20px]">download</span>
+                                        </button>
+<!--                                        <button-->
+<!--                                                class="flex size-8 items-center justify-center rounded-lg text-text-muted hover:bg-background-light hover:text-primary transition-colors"-->
+<!--                                                title="View Details">-->
+<!--                                                    <span-->
+<!--                                                            class="material-symbols-outlined text-[20px]">visibility</span>-->
+<!--                                        </button>-->
+                                    </div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination Footer -->
+                    <div
+                            class="flex items-center justify-between border-t border-border-light bg-surface-light px-6 py-4">
+                            <span class="text-sm text-text-muted">Showing <span id="startItem"
+                                    class="font-medium text-text-main">1</span> to <span id="endItem"
+                                    class="font-medium text-text-main">4</span> of <span id="totalItems"
+                                    class="font-medium text-text-main">4</span> results</span>
+                        <div class="flex gap-2">
+                            <button id="prevBtn"
+                                    class="flex items-center justify-center rounded border border-border-light bg-white px-3 py-1.5 text-sm font-medium text-text-muted hover:bg-background-light hover:text-primary disabled:opacity-50">
+                                Previous
+                            </button>
+                            <button id="nextBtn"
+                                    class="flex items-center justify-center rounded border border-border-light bg-white px-3 py-1.5 text-sm font-medium text-text-muted hover:bg-background-light hover:text-primary disabled:opacity-50">
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script>
+
+    const rows = Array.from(document.querySelectorAll(".ticket-row"));
+    const tabs = document.querySelectorAll(".tab-item");
+
+    const rowsPerPage = 10;
+
+    let currentPage = 1;
+    let currentFilter = "Upcoming";
+
+    const startItem = document.getElementById("startItem");
+    const endItem = document.getElementById("endItem");
+    const totalItems = document.getElementById("totalItems");
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function setActiveTab(activeTab) {
+
+        tabs.forEach(tab => {
+
+            tab.classList.remove("border-primary", "text-primary");
+            tab.classList.add("border-transparent", "text-text-muted");
+
+        });
+
+        activeTab.classList.remove("border-transparent", "text-text-muted");
+        activeTab.classList.add("border-primary", "text-primary");
+
+    }
+
+    function getFilteredRows() {
+
+        return rows.filter(row => row.dataset.status === currentFilter);
+
+    }
+
+    function renderTable() {
+
+        const filteredRows = getFilteredRows();
+
+        const total = filteredRows.length;
+        const totalPages = Math.ceil(total / rowsPerPage) || 1;
+
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        rows.forEach(row => row.style.display = "none");
+
+        filteredRows.slice(start, end).forEach(row => {
+            row.style.display = "";
+        });
+
+        startItem.textContent = total === 0 ? 0 : start + 1;
+        endItem.textContent = Math.min(end, total);
+        totalItems.textContent = total;
+
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage >= totalPages;
+
+    }
+
+    tabs.forEach(tab => {
+
+        tab.addEventListener("click", function(e) {
+
+            e.preventDefault();
+
+            currentFilter = this.dataset.filter;
+            currentPage = 1;
+
+            setActiveTab(this);
+            renderTable();
+
+        });
+
+    });
+
+    prevBtn.addEventListener("click", () => {
+
+        currentPage--;
+        renderTable();
+
+    });
+
+    nextBtn.addEventListener("click", () => {
+
+        currentPage++;
+        renderTable();
+
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const defaultTab = document.querySelector('[data-filter="Upcoming"]');
+
+        setActiveTab(defaultTab);
+        renderTable();
+
+    });
+
+    async function downloadTicketQR(ticketId) {
+        const response = await fetch(`/api/tickets/${ticketId}/qr`);
+        const blob = await response.blob();
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `ticket-${ticketId}.png`;
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+    }
+
+</script>
+<th:block th:replace="~{fragment/customer/frag::headerScripts}"></th:block>
+<footer th:replace="~{fragment/frag::footer}"></footer>
+
+</body>
+
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/frag::head('Manage Ticket Type')}"></head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#0d111c] dark:text-white overflow-hidden">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+
+<div class="flex h-screen w-full">
+    <!-- Sidebar -->
+    <aside th:replace="~{fragment/staff/frag::staffSidebar('eventList')}"></aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark">
+
+        <!-- Top Navbar -->
+        <header th:replace="~{fragment/staff/frag::header('Ticket Type Management')}"></header>
+
+        <!-- Scrollable Content Area -->
+        <div class="flex-1 overflow-y-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="w-full max-w-6xl mx-auto flex flex-col gap-6">
+
+                <!-- Success/Error Messages -->
+                <div th:if="${success}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                    <span th:text="${success}"></span>
+                </div>
+                <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    <span th:text="${error}"></span>
+                </div>
+
+                <!-- Breadcrumbs -->
+                <div class="flex flex-col gap-2">
+                    <a th:href="@{/staff/event/{id}(id=${eventId})}" class="inline-flex items-center gap-1 text-slate-500 hover:text-primary text-sm font-medium transition-colors mb-2">
+                        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                        Back to Events
+                    </a>
+                </div>
+
+                <!-- Page Header -->
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                            Manage Ticket Types
+                            <span class="text-primary" th:if="${eventTitle}" th:text="' - ' + ${eventTitle}"></span>
+                        </h1>
+                        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Create, edit, and manage ticket types for this event.</p>
+                    </div>
+                    <a th:href="@{/staff/event/{eventId}/ticket-types/create(eventId=${eventId})}"
+                       class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white text-sm font-semibold h-10 px-5 rounded-lg shadow-sm transition-all active:scale-[0.98]">
+                        <span class="material-symbols-outlined text-[20px]">add</span>
+                        Create Ticket Type
+                    </a>
+                </div>
+
+                <!-- Table Container -->
+                <div class="w-full bg-white dark:bg-[#1a202c] rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                            <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
+                                <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider">Description</th>
+                                <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider">Price</th>
+                                <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider">Qty</th>
+                                <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider">Sales Period</th>
+                                <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-right">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="ticket : ${ticketTypes}"
+                                th:class="${ticket.active} ? 'group hover:bg-slate-50 dark:hover:bg-slate-800/50' : 'opacity-50'">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mr-3">
+                                            <span class="material-symbols-outlined text-[20px]">confirmation_number</span>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-bold text-slate-900 dark:text-white" th:text="${ticket.name}"></div>
+                                            <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" th:text="'ID: #T-' + ${ticket.id}"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-slate-600 dark:text-slate-300 line-clamp-2" th:text="${ticket.description}"></div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-slate-900 dark:text-white"
+                                         th:text="|${#numbers.formatDecimal(ticket.price, 0, 'POINT', 0, 'DEFAULT')} VND|"></div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div th:with="percentage=${ticket.quantity > 0 ? (ticket.soldTickets * 100.0 / ticket.quantity) : 0}">
+                                        <div class="flex flex-col gap-1">
+                                            <div class="text-sm font-medium text-slate-900 dark:text-white"
+                                                 th:text="${ticket.soldTickets} + ' / ' + ${ticket.quantity}"></div>
+                                            <div class="w-16 h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                                                <span th:if="${ticket.soldTickets >= ticket.quantity}"
+                                                      th:style="'width: 100%;'"
+                                                      class="block h-full rounded-full bg-red-500"></span>
+                                                <span th:if="${ticket.soldTickets < ticket.quantity and percentage >= 80}"
+                                                      th:style="'width: ' + ${percentage} + '%;'"
+                                                      class="block h-full rounded-full bg-orange-500"></span>
+                                                <span th:if="${ticket.soldTickets < ticket.quantity and percentage < 80}"
+                                                      th:style="'width: ' + ${percentage} + '%;'"
+                                                      class="block h-full rounded-full bg-green-500"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <button type="button"
+                                            class="status-toggle-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer transition-all focus:outline-none focus:ring-2"
+                                            th:data-id="${ticket.id}"
+                                            th:data-event-id="${ticket.eventId}"
+                                            th:data-active="${ticket.active}"
+                                            th:classappend="${ticket.active} ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800 hover:bg-green-200 dark:hover:bg-green-800/50 focus:ring-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800 hover:bg-red-200 dark:hover:bg-red-800/50 focus:ring-red-300'"
+                                            onclick="toggleStatus(this)">
+                                        <span th:class="${ticket.active} ? 'size-1.5 rounded-full bg-green-500' : 'size-1.5 rounded-full bg-red-500'"></span>
+                                        <span th:text="${ticket.active} ? 'Active' : 'Inactive'"></span>
+                                    </button>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-slate-600 dark:text-slate-300"
+                                         th:text="${#temporals.format(ticket.salesStartDate, 'MMM dd, yyyy HH:mm')} + ' - ' +
+                                                      ${#temporals.format(ticket.salesEndDate, 'MMM dd, yyyy HH:mm')}"></div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex justify-end gap-2">
+                                        <!-- Edit button -->
+                                        <a th:href="@{/staff/event/{eventId}/ticket-types/{id}/edit(eventId=${ticket.eventId}, id=${ticket.id})}"
+                                           class="p-1.5 text-slate-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors"
+                                           title="Edit">
+                                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        </a>
+
+                                        <!-- Hard Delete Form (only if no tickets sold) -->
+                                        <form th:if="${ticket.soldTickets == 0}"
+                                              th:action="@{/staff/event/{eventId}/ticket-types/{id}/hard-delete(eventId=${ticket.eventId}, id=${ticket.id})}"
+                                              method="post"
+                                              onsubmit="return confirm('Permanently delete this ticket type? This action cannot be undone.');"
+                                              class="inline">
+                                            <button type="submit"
+                                                    class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
+                                                    title="Permanently Delete">
+                                                <span class="material-symbols-outlined text-[20px]">delete_forever</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(ticketTypes)}">
+                                <td colspan="7" class="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+                                    No ticket types found. <a th:href="@{/staff/event/{eventId}/ticket-types/create(eventId=${eventId})}"
+                                                              class="text-primary hover:underline">Create one</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- End Scrollable Content Area -->
+
+    </main>
+</div>
+
+<!-- JavaScript cho AJAX Toggle -->
+<script>
+    function toggleStatus(button) {
+        const ticketId = button.getAttribute('data-id');
+        const eventId = button.getAttribute('data-event-id');
+        const isActive = button.getAttribute('data-active') === 'true';
+
+        const confirmMsg = isActive
+            ? 'Deactivate this ticket type?'
+            : 'Activate this ticket type?';
+
+        if (!confirm(confirmMsg)) {
+            return;
+        }
+
+        const action = isActive ? 'delete' : 'activate';
+        const url = `/staff/event/${eventId}/ticket-types/${ticketId}/${action}`;
+
+        // CSRF token từ meta trong head
+        const csrfMeta   = document.querySelector('meta[name=\"_csrf\"]');
+        const csrfHeader = document.querySelector('meta[name=\"_csrf_header\"]');
+        const csrfToken  = csrfMeta ? csrfMeta.content : null;
+        const csrfHeaderName = csrfHeader ? csrfHeader.content : 'X-CSRF-TOKEN';
+
+        button.disabled = true;
+        button.style.opacity = '0.6';
+        button.style.cursor = 'wait';
+
+        const headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        };
+        if (csrfToken) {
+            headers[csrfHeaderName] = csrfToken;
+        }
+
+        fetch(url, {
+            method: 'POST',
+            headers
+        })
+            .then(response => {
+                if (response.ok) {
+                    const newActive = !isActive;
+                    button.setAttribute('data-active', newActive);
+
+                    button.className = 'status-toggle-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer transition-all focus:outline-none focus:ring-2';
+
+                    if (newActive) {
+                        button.className += ' bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800 hover:bg-green-200 dark:hover:bg-green-800/50 focus:ring-green-300';
+                        button.querySelector('span:last-child').textContent = 'Active';
+                        button.querySelector('span:first-child').className = 'size-1.5 rounded-full bg-green-500';
+                    } else {
+                        button.className += ' bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800 hover:bg-red-200 dark:hover:bg-red-800/50 focus:ring-red-300';
+                        button.querySelector('span:last-child').textContent = 'Inactive';
+                        button.querySelector('span:first-child').className = 'size-1.5 rounded-full bg-red-500';
+                    }
+
+                    showToast('Status updated successfully!', 'success');
+                    button.disabled = false;
+                    button.style.opacity = '1';
+                    button.style.cursor = 'pointer';
+
+                } else {
+                    showToast('Failed to update status. Please try again.', 'error');
+                    button.disabled = false;
+                    button.style.opacity = '1';
+                    button.style.cursor = 'pointer';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Network error. Please check your connection.', 'error');
+                button.disabled = false;
+                button.style.opacity = '1';
+                button.style.cursor = 'pointer';
+            });
+    }
+
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `fixed top-4 right-4 px-4 py-3 rounded-lg text-white shadow-lg z-50 transform transition-all duration-300 ${
+            type === 'success' ? 'bg-green-500' : 'bg-red-500'
+        }`;
+        toast.textContent = message;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '1';
+        }, 10);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3000);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sign In — EventGo</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          rel="stylesheet"/>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1f62ff',
+                        'primary-hover': '#1a4fcc',
+                        'background-light': '#f5f6f8',
+                        'background-dark': '#0f1523',
+                        'text-primary': '#0c111d',
+                        'text-secondary': '#4560a1',
+                        'border-light': '#cdd6ea',
+                        'surface-dark': '#1a202c',
+                        'border-dark': '#374151',
+                        'amber-light': '#fef3c7',
+                        'amber-dark': '#92400e',
+                        'red-light': '#fee2e2',
+                        'red-dark': '#991b1b',
+                        'green-light': '#d1fae5',
+                        'green-dark': '#065f46',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'lg': '0.5rem',
+                        'xl': '0.75rem',
+                    },
+                    boxShadow: {
+                        'card': '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+                        'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both',
+                        'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': {opacity: '0', transform: 'translateY(28px)'},
+                            '100%': {opacity: '1', transform: 'translateY(0)'},
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+
+    <!-- Custom CSS for background pattern -->
+    <style>
+        .bg-pattern {
+            background-image: radial-gradient(#4560a1 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+
+        /* Progress bar animation */
+        .progress-bar {
+            transition: width 0.3s ease-in-out;
+        }
+
+        /* Pulse animation for forgot password link */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .animate-pulse-slow {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-sans antialiased min-h-screen flex items-center justify-center p-6 transition-colors duration-200 relative">
+<div th:replace="~{fragment/frag::loading}"></div>
+<script th:replace="~{fragment/frag::scriptLoading}"></script>
+
+<!-- Background Pattern -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-40 dark:opacity-10 bg-pattern"></div>
+
+<!-- Login Card -->
+<div class="w-full max-w-[480px] bg-white dark:bg-surface-dark rounded-xl shadow-card border border-border-light dark:border-border-dark p-8 animate-slide-up transition-colors duration-200">
+
+    <!-- Logo Section -->
+    <a th:href="@{/home}">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-3xl">event_available</span>
+            </div>
+            <span class="font-bold text-2xl tracking-tight text-text-primary dark:text-white">
+            Event<span class="text-primary">Go</span>
+        </span>
+        </div>
+    </a>
+
+    <!-- Header -->
+    <h1 class="text-[28px] font-bold tracking-tight text-text-primary dark:text-white mb-1">
+        Welcome Back
+    </h1>
+    <p class="text-text-secondary dark:text-gray-400 text-sm mb-6">
+        Sign in to manage your events.
+    </p>
+
+    <!-- Alert Messages -->
+    <div id="alertArea">
+
+        <!-- FORGOT PASSWORD SUGGESTION - HIỆN SAU 5 LẦN SAI -->
+        <div th:if="${showForgotSuggestion != null and showForgotSuggestion}"
+             class="mb-4 p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800"
+             id="forgotSuggestionDiv">
+
+            <div class="flex items-start gap-3">
+                <div class="flex-shrink-0">
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-amber-800 dark:text-amber-400 mb-1">
+                        Having trouble signing in?
+                    </h3>
+                    <p class="text-sm text-amber-700 dark:text-amber-500 mb-3">
+                        You've tried <span class="font-bold"
+                                           th:text="${failedAttempts != null ? failedAttempts : 5}">5</span> times
+                        without success.
+                        It looks like you might have forgotten your password.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <a th:href="@{/auth/forgot-password(email=${suggestedEmail != null ? suggestedEmail : ''})}"
+                           class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors">
+                            Reset Password Now
+                        </a>
+                        <button onclick="continueTrying()"
+                                class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-amber-300 dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-gray-600 text-amber-800 dark:text-amber-400 text-sm font-medium rounded-lg transition-colors">
+                            <span class="material-symbols-outlined text-lg">refresh</span>
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NORMAL ERROR - HIỆN KHI SAI < 5 LẦN -->
+        <div th:if="${loginError != null and loginError and (showForgotSuggestion == null or !showForgotSuggestion)}"
+             class="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+
+            <div class="flex items-center gap-2 text-red-700 dark:text-red-400 text-sm">
+                <span class="material-symbols-outlined text-lg">error</span>
+                <div>
+                    <span>Invalid email or password.</span>
+                    <span th:if="${remainingAttempts != null and remainingAttempts > 0}"
+                          class="font-semibold block mt-1 text-xs"
+                          th:text="'You have ' + ${remainingAttempts} + ' more attempt(s) before we suggest password reset.'">
+                    You have 4 more attempts before we suggest password reset.
+                </span>
+                </div>
+            </div>
+
+            <!-- Progress bar -->
+            <div th:if="${failedAttempts != null}"
+                 class="mt-2 h-1.5 w-full bg-red-100 dark:bg-red-900/30 rounded-full overflow-hidden">
+                <div class="h-full bg-red-600 dark:bg-red-500 rounded-full progress-bar"
+                     th:style="'width: ' + (${failedAttempts} * 20) + '%'"></div>
+            </div>
+        </div>
+
+        <!-- Logout Success -->
+        <div th:if="${param.logout != null}"
+             class="mb-4 p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 text-sm flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">check_circle</span>
+            <span>You have been logged out successfully.</span>
+        </div>
+
+        <!-- Registration Success -->
+        <div th:if="${success != null}"
+             class="mb-4 p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 text-sm flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">check_circle</span>
+            <span th:text="${success}">Registration successful! Please login.</span>
+        </div>
+
+        <!-- Session Expired -->
+        <div th:if="${param.invalid != null or param.expired != null}"
+             class="mb-4 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400 text-sm flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">timer</span>
+            <span>Your session has expired. Please login again.</span>
+        </div>
+
+    </div><!-- /alertArea -->
+
+    <!-- Login Form -->
+    <form class="space-y-5" id="loginForm" onsubmit="return false;">
+        <!-- Email Field -->
+        <div class="space-y-2">
+            <label for="email" class="block text-sm font-medium text-text-primary dark:text-gray-200">
+                Email Address
+            </label>
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary dark:text-gray-400 text-xl">
+                    mail
+                </span>
+                <input type="email"
+                       id="email"
+                       name="email"
+                       placeholder="name@company.com"
+                       autocomplete="email"
+                       required
+                       th:value="${email}"
+                       class="w-full h-12 pl-10 pr-4 bg-gray-50 dark:bg-gray-800 border border-border-light dark:border-gray-600 rounded-lg text-text-primary dark:text-white placeholder:text-text-secondary dark:placeholder:text-gray-500 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"/>
+            </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="space-y-2">
+            <label for="password" class="block text-sm font-medium text-text-primary dark:text-gray-200">
+                Password
+            </label>
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary dark:text-gray-400 text-xl">
+                    lock
+                </span>
+                <input type="password"
+                       id="password"
+                       name="password"
+                       placeholder="••••••••"
+                       autocomplete="current-password"
+                       required
+                       class="w-full h-12 pl-10 pr-12 bg-gray-50 dark:bg-gray-800 border border-border-light dark:border-gray-600 rounded-lg text-text-primary dark:text-white placeholder:text-text-secondary dark:placeholder:text-gray-500 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"/>
+                <button type="button"
+                        onclick="togglePassword(this, 'password')"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-xl">visibility_off</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="flex items-center justify-between flex-wrap gap-3">
+            <label class="flex items-center gap-2 cursor-pointer group">
+                <input type="checkbox"
+                       name="remember-me"
+                       class="w-4 h-4 rounded border-2 border-border-light dark:border-gray-600 bg-transparent text-primary checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-surface-dark transition-all cursor-pointer"/>
+                <span class="text-sm text-text-primary dark:text-gray-300 group-hover:text-primary transition-colors">
+                    Remember me
+                </span>
+            </label>
+            <a th:href="@{/auth/forgot-password}"
+               class="text-sm text-primary font-medium hover:text-primary-hover hover:underline transition-colors"
+               th:classappend="${showForgotSuggestion != null and showForgotSuggestion} ? 'animate-pulse-slow font-bold' : ''">
+                Forgot password?
+            </a>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" id="loginBtn"
+                class="w-full h-12 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg shadow-sm hover:shadow-lg transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-surface-dark flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+            <span id="loginBtnIcon" class="material-symbols-outlined text-lg">login</span>
+            <span id="loginBtnText">Log in</span>
+        </button>
+    </form>
+
+    <!-- Divider -->
+    <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-border-light dark:border-gray-700"></div>
+        </div>
+        <div class="relative flex justify-center">
+            <span class="bg-white dark:bg-surface-dark px-3 text-sm text-text-secondary dark:text-gray-400">
+                Or continue with
+            </span>
+        </div>
+    </div>
+
+    <!-- Google Login -->
+    <a href="/oauth2/authorization/google"
+       class="flex items-center justify-center gap-2 w-full h-11 border border-border-light dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg text-text-primary dark:text-white text-sm font-medium transition-colors">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23.766 12.276c0-.816-.066-1.636-.207-2.439H12.24v4.621h6.482a5.557 5.557 0 01-2.399 3.643v3H20.19c2.271-2.09 3.576-5.176 3.576-8.824z"
+                  fill="#4285F4"/>
+            <path d="M12.24 24c3.237 0 5.966-1.063 7.952-2.899l-3.867-3a7.22 7.22 0 01-4.085 1.152c-3.13 0-5.784-2.112-6.736-4.952H1.517v3.091C3.554 21.443 7.703 24 12.24 24z"
+                  fill="#34A853"/>
+            <path d="M5.504 14.301a7.197 7.197 0 010-4.602V6.615H1.517a12.01 12.01 0 000 10.777l3.987-3.091z"
+                  fill="#FBBC05"/>
+            <path d="M12.24 4.75c1.711-.026 3.364.617 4.603 1.799l3.426-3.426C18.1 1.086 15.22-.035 12.24 0 7.703 0 3.554 2.557 1.517 6.615l3.987 3.091C6.456 6.863 9.11 4.75 12.24 4.75z"
+                  fill="#EA4335"/>
+        </svg>
+        Sign in with Google
+    </a>
+
+    <!-- Register Link -->
+    <div class="mt-6 text-center">
+        <p class="text-sm text-text-secondary dark:text-gray-400">
+            Don't have an account?
+            <a th:href="@{/auth/register}"
+               class="font-medium text-primary hover:text-primary-hover hover:underline transition-colors">
+                Register for free
+            </a>
+        </p>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+    // Toggle password visibility
+    function togglePassword(button, inputId) {
+        const input = document.getElementById(inputId);
+        const icon = button.querySelector('.material-symbols-outlined');
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = 'visibility';
+        } else {
+            input.type = 'password';
+            icon.textContent = 'visibility_off';
+        }
+    }
+
+    // Continue trying to login (hide suggestion)
+    function continueTrying() {
+        const suggestionDiv = document.getElementById('forgotSuggestionDiv');
+        if (suggestionDiv) {
+            suggestionDiv.style.display = 'none';
+        }
+        document.getElementById('password').focus();
+    }
+
+    // Reset failed attempts when login successful
+    function resetAttempts(email) {
+        if (email) {
+            fetch(`/auth/reset-attempts?email=${encodeURIComponent(email)}`)
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Failed attempts reset for:', email);
+                    }
+                })
+                .catch(error => console.error('Error resetting attempts:', error));
+        }
+    }
+
+    // Dark mode setup
+    (function () {
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('theme')) {
+                if (e.matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+        });
+    })();
+
+    // AJAX
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const btn = document.getElementById('loginBtn');
+        const btnIcon = document.getElementById('loginBtnIcon');
+        const btnText = document.getElementById('loginBtnText');
+
+        // Basic client-side validation
+        if (!email || !email.includes('@')) {
+            showError('Please enter a valid email address.');
+            return;
+        }
+        if (!password || password.length < 6) {
+            showError('Password must be at least 6 characters.');
+            return;
+        }
+
+        // Loading state
+        btn.disabled = true;
+        btnIcon.textContent = 'hourglass_top';
+        btnText.textContent = 'Signing in...';
+
+        try {
+            const params = new URLSearchParams({email, password});
+            const res = await fetch('/auth/login-ajax', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: params.toString()
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                // Thành công chuyển trang
+                btnIcon.textContent = 'check_circle';
+                btnText.textContent = 'Success!';
+                btn.classList.replace('bg-primary', 'bg-green-600');
+                btn.classList.replace('hover:bg-primary-hover', 'hover:bg-green-700');
+                setTimeout(() => {
+                    window.location.href = data.redirectUrl;
+                }, 400);
+                return;
+            }
+
+            // Thất bại restore button
+            btn.disabled = false;
+            btnIcon.textContent = 'login';
+            btnText.textContent = 'Log in';
+
+            if (data.errorType === 'SUGGEST_FORGOT') {
+                showForgotSuggestion(data.failedAttempts, data.suggestedEmail);
+            } else if (data.errorType === 'DISABLED') {
+                showError(data.message);
+            } else {
+                showLoginError(data.remainingAttempts, data.failedAttempts);
+            }
+
+        } catch (err) {
+            btn.disabled = false;
+            btnIcon.textContent = 'login';
+            btnText.textContent = 'Log in';
+            showError('Network error. Please try again.');
+        }
+    });
+
+    // Chỉnh sửa ui / ux
+    function clearAlerts() {
+        document.querySelectorAll('.ajax-alert').forEach(el => el.remove());
+    }
+
+    function showError(msg) {
+        clearAlerts();
+        const div = document.createElement('div');
+        div.className = 'ajax-alert mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm flex items-center gap-2 animate-slide-up';
+        div.innerHTML = `<span class="material-symbols-outlined text-lg">error</span><span>${msg}</span>`;
+        document.getElementById('alertArea').prepend(div);
+    }
+
+    function showLoginError(remaining, failed) {
+        clearAlerts();
+        const max = 5;
+        const pct = Math.min((failed / max) * 100, 100);
+        const div = document.createElement('div');
+        div.className = 'ajax-alert mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 animate-slide-up';
+        div.innerHTML = `
+            <div class="flex items-center gap-2 text-red-700 dark:text-red-400 text-sm">
+                <span class="material-symbols-outlined text-lg">error</span>
+                <div>
+                    <span>Invalid email or password.</span>
+                    ${remaining > 0 ? `<span class="font-semibold block mt-1 text-xs">You have ${remaining} more attempt(s) before we suggest password reset.</span>` : ''}
+                </div>
+            </div>
+            <div class="mt-2 h-1.5 w-full bg-red-100 dark:bg-red-900/30 rounded-full overflow-hidden">
+                <div class="h-full bg-red-600 dark:bg-red-500 rounded-full transition-all duration-500" style="width:${pct}%"></div>
+            </div>`;
+        document.getElementById('alertArea').prepend(div);
+
+        // Shake the password field
+        const pwField = document.getElementById('password');
+        pwField.classList.add('border-red-500');
+        pwField.animate([
+            {transform: 'translateX(-4px)'}, {transform: 'translateX(4px)'},
+            {transform: 'translateX(-4px)'}, {transform: 'translateX(0)'}
+        ], {duration: 300, iterations: 1});
+        setTimeout(() => pwField.classList.remove('border-red-500'), 2000);
+    }
+
+    function showForgotSuggestion(failed, email) {
+        clearAlerts();
+        const div = document.createElement('div');
+        div.className = 'ajax-alert mb-4 p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 animate-slide-up';
+        div.innerHTML = `
+            <div class="flex items-start gap-3">
+                <div class="flex-1">
+                    <h3 class="font-semibold text-amber-800 dark:text-amber-400 mb-1">Having trouble signing in?</h3>
+                    <p class="text-sm text-amber-700 dark:text-amber-500 mb-3">
+                        You've tried <strong>${failed}</strong> times without success. It looks like you might have forgotten your password.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <a href="/auth/forgot-password?email=${encodeURIComponent(email)}"
+                           class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors">
+                            Reset Password Now
+                        </a>
+                        <button onclick="dismissSuggestion()"
+                                class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-amber-300 dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-gray-600 text-amber-800 dark:text-amber-400 text-sm font-medium rounded-lg transition-colors">
+                            <span class="material-symbols-outlined text-lg">refresh</span>
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        document.getElementById('alertArea').prepend(div);
+    }
+
+    function dismissSuggestion() {
+        clearAlerts();
+        document.getElementById('password').focus();
+    }
+
+    // Auto-focus password if email is present
+    document.addEventListener('DOMContentLoaded', function () {
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        // Kiểm tra nếu email đã được điền
+        if (emailInput && emailInput.value && emailInput.value.trim() !== '') {
+            passwordInput.focus();
+        }
+    });
+</script>
+
+<!-- Fallback for auto-focus if email in URL -->
+<script>
+    (function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('email')) {
+            // Đợi một chút để DOM load xong, còn load ko xong là bug :/
+            setTimeout(function () {
+                document.getElementById('password')?.focus();
+            }, 100);
+        }
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>EventAdmin - User Management</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap"
+          rel="stylesheet" />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        slate: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    },
+                    fontFamily: {
+                        "headline": ["Public Sans", "sans-serif"],
+                        "body": ["Public Sans", "sans-serif"],
+                        "label": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+
+<body class="text-slate-900">
+<div class="flex h-screen overflow-hidden">
+    <!-- SideNavBar -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0">
+        <div class="p-6 border-b border-slate-100">
+            <h2 class="text-lg font-bold text-primary-700 font-headline">Event System</h2>
+            <p class="text-xs text-slate-500 font-label">Admin Console</p>
+        </div>
+        <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+            <a class="flex items-center px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50"
+               href="#">
+                <span class="material-symbols-outlined mr-3 text-slate-400">dashboard</span>
+                Dashboard
+            </a>
+            <a class="flex items-center px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50"
+               href="#">
+                <span class="material-symbols-outlined mr-3 text-slate-400">event</span>
+                Events
+            </a>
+            <a class="flex items-center px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50"
+               href="#">
+                <span class="material-symbols-outlined mr-3 text-slate-400">group</span>
+                Customers
+            </a>
+            <a class="flex items-center px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50"
+               href="#">
+                <span class="material-symbols-outlined mr-3 text-slate-400">shopping_cart</span>
+                Orders
+            </a>
+            <a class="flex items-center px-3 py-2 text-sm font-medium bg-primary-50 text-primary-700 rounded-lg"
+               href="#">
+                    <span class="material-symbols-outlined mr-3 text-primary-600"
+                          style="font-variation-settings: 'FILL' 1;">manage_accounts</span>
+                User Management
+            </a>
+            <a class="flex items-center px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50"
+               href="#">
+                <span class="material-symbols-outlined mr-3 text-slate-400">analytics</span>
+                Analytics
+            </a>
+            <a class="flex items-center px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50"
+               href="#">
+                <span class="material-symbols-outlined mr-3 text-slate-400">settings</span>
+                Settings
+            </a>
+        </nav>
+        <div class="p-4 border-t border-slate-100">
+            <div class="flex items-center p-2 rounded-xl bg-slate-50">
+                <img alt="Admin Avatar" class="w-8 h-8 rounded-full bg-primary-100"
+                     data-alt="Professional avatar of a systems administrator"
+                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwu3gkvUi5Be13BSbrv87p1YWL3IjyNXQdESCchDC6aU1li3Bvr2yOhfsjTpiXW6qGq5fMArat5ksRzhBFPdGQohypln-NQ6wPiSMDq83WEXcKF1E_dki4qo1Iu6CyuT7Xq52aiSLFTm56R6qrygOlzkYXJAhOM_5nepFb6H4EcGPwN4FM1Nvpb5AodxgpWVpA1Z53jBW9heyygHQA9TtmWHqEefqZvqZD943JBuD11plsH6UFd6AP2xqCJf5SNF9YwnSthWu4IXo" />
+                <div class="ml-3 overflow-hidden">
+                    <p class="text-xs font-semibold text-slate-900 truncate">Alex Rivera</p>
+                    <p class="text-[10px] text-slate-500 truncate">Super Admin</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 flex flex-col min-w-0 bg-slate-50">
+        <!-- TopNavBar -->
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
+            <div class="flex items-center flex-1">
+                <div class="relative w-96">
+                        <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                    <input
+                            class="w-full pl-10 pr-4 py-2 bg-slate-100 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary-500"
+                            placeholder="Search resources..." type="text" />
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full relative">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span
+                            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+                <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full">
+                    <span class="material-symbols-outlined">help</span>
+                </button>
+                <div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+                <span class="text-sm font-medium text-slate-700">EventAdmin</span>
+            </div>
+        </header>
+        <!-- Dashboard Body -->
+        <div class="flex-1 overflow-y-auto p-8">
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <nav aria-label="Breadcrumb" class="flex mb-2">
+                        <ol class="flex items-center space-x-2 text-xs font-medium text-slate-500">
+                            <li>User Management</li>
+                            <li class="flex items-center">
+                                <span class="material-symbols-outlined text-sm mx-1">chevron_right</span>
+                                <span class="text-primary-600">Roles &amp; Permissions</span>
+                            </li>
+                        </ol>
+                    </nav>
+                    <h1 class="text-2xl font-bold text-slate-900 font-headline">Roles &amp; Permissions</h1>
+                    <p class="text-slate-500 mt-1">Define access levels and manage permissions for all platform
+                        users.</p>
+                </div>
+                <button
+                        class="inline-flex items-center justify-center px-4 py-2.5 bg-primary text-white font-semibold rounded-lg shadow-sm shadow-primary-200 hover:bg-primary-700 transition-colors">
+                    <span class="material-symbols-outlined mr-2 text-lg">add</span>
+                    Add New Role
+                </button>
+            </div>
+            <!-- Tabs Navigation -->
+            <div class="flex border-b border-slate-200 mb-6">
+                <button
+                        class="px-6 py-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">Users</button>
+                <button class="px-6 py-3 text-sm font-bold text-primary-600 border-b-2 border-primary-600 relative">
+                    Roles
+                </button>
+                <button
+                        class="px-6 py-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">Activity
+                    Logs</button>
+                <button
+                        class="px-6 py-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">API
+                    Keys</button>
+            </div>
+            <!-- Roles Content: Bento Grid & Table -->
+            <div class="grid grid-cols-12 gap-6">
+                <!-- Stats Overview -->
+                <div
+                        class="col-span-12 md:col-span-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center">
+                    <div class="w-12 h-12 bg-primary-50 rounded-lg flex items-center justify-center mr-4">
+                            <span class="material-symbols-outlined text-primary-600"
+                                  style="font-variation-settings: 'FILL' 1;">security</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500">Active Roles</p>
+                        <p class="text-2xl font-bold text-slate-900">12</p>
+                    </div>
+                </div>
+                <div
+                        class="col-span-12 md:col-span-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center">
+                    <div class="w-12 h-12 bg-emerald-50 rounded-lg flex items-center justify-center mr-4">
+                            <span class="material-symbols-outlined text-emerald-600"
+                                  style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500">Admin Privileged</p>
+                        <p class="text-2xl font-bold text-slate-900">4</p>
+                    </div>
+                </div>
+                <div
+                        class="col-span-12 md:col-span-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center">
+                    <div class="w-12 h-12 bg-amber-50 rounded-lg flex items-center justify-center mr-4">
+                            <span class="material-symbols-outlined text-amber-600"
+                                  style="font-variation-settings: 'FILL' 1;">group</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500">Unassigned Users</p>
+                        <p class="text-2xl font-bold text-slate-900">0</p>
+                    </div>
+                </div>
+                <!-- Roles Table Section -->
+                <div class="col-span-12 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div
+                            class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                        <h3 class="font-bold text-slate-800">Role List</h3>
+                        <div class="flex items-center space-x-2">
+                            <button class="p-1.5 text-slate-400 hover:text-slate-600">
+                                <span class="material-symbols-outlined text-xl">filter_list</span>
+                            </button>
+                            <button class="p-1.5 text-slate-400 hover:text-slate-600">
+                                <span class="material-symbols-outlined text-xl">download</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                            <tr
+                                    class="bg-white text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
+                                <th class="px-6 py-4 border-b border-slate-100">Role ID</th>
+                                <th class="px-6 py-4 border-b border-slate-100">Role Name</th>
+                                <th class="px-6 py-4 border-b border-slate-100">Permissions Summary</th>
+                                <th class="px-6 py-4 border-b border-slate-100">Linked Users Count</th>
+                                <th class="px-6 py-4 border-b border-slate-100 text-right">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="px-6 py-4 text-sm font-mono text-slate-500">#ROL-001</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-2 h-2 rounded-full bg-primary-500 mr-2"></div>
+                                        <span class="text-sm font-semibold text-slate-900">Super Admin</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-wrap gap-1">
+                                                <span
+                                                        class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded font-medium">FULL_ACCESS</span>
+                                        <span
+                                                class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded font-medium">BILLING_MGR</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="flex -space-x-2 mr-3">
+                                            <img class="w-6 h-6 rounded-full border-2 border-white"
+                                                 data-alt="Avatar of user assigned to super admin role"
+                                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-m52lqwy2D3YBgOAdq1bsGgqpWiQ7bVns3KWwya8Or_Zjxvg7JpdaggizG-KJdpMayANjMua3iemsAoocTqECb8gaWUQawoYXEKGZ5Ar4wg0m54CFuBNgvkS6oCPaH23Q7PJnLL2shXcOXqZbWY9AVB1_ZmIY-kP0m7YYrmCOmjtsrtgzZRfsrKSnEogXkU9hcvUT4i404n-H9Jf0yP0fJh1X-3BKO7WNBZsheYzaNPFg6NUgcLO2yF20A_FrQDeb8WQXya_hp3I" />
+                                            <img class="w-6 h-6 rounded-full border-2 border-white"
+                                                 data-alt="Avatar of second user assigned to super admin role"
+                                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIR0ZzPxQYh2pxuRqEqaOauu2wjDU18poWwwx79AU-4ikclE2xfmKe1A0_wcVffVNgRULhBy_vCyEc-uCj4D-0LztdejPT-cj_Ov2vKptl3-bDeepsXoTL32D6c6Vdyi1s0oMRL4I9xo79Tx025BGMQ0ExlfMzis-DeweWxJXJu5sQwolkbV9Kt3tDkrm6YY4MrA7z6mBuKSaUmZ0Ho9uL70JHmdQ2ZV8jYXQZllGNseGOOrjFv35WMLnYK7cEXZD6rWpSpioK9us" />
+                                            <div
+                                                    class="w-6 h-6 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-[8px] font-bold text-slate-600">
+                                                +1</div>
+                                        </div>
+                                        <span class="text-sm text-slate-600 font-medium">3 users</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end space-x-1">
+                                        <button
+                                                class="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg">
+                                            <span class="material-symbols-outlined text-lg">edit</span>
+                                        </button>
+                                        <button
+                                                class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg">
+                                            <span class="material-symbols-outlined text-lg">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="px-6 py-4 text-sm font-mono text-slate-500">#ROL-002</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></div>
+                                        <span class="text-sm font-semibold text-slate-900">Event Manager</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-wrap gap-1">
+                                                <span
+                                                        class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded font-medium">EVT_CREATE</span>
+                                        <span
+                                                class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded font-medium">EVT_EDIT</span>
+                                        <span
+                                                class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded font-medium">+4
+                                                    more</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="flex -space-x-2 mr-3">
+                                            <img class="w-6 h-6 rounded-full border-2 border-white"
+                                                 data-alt="Avatar of event manager user"
+                                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS4B3KWGsEnS2xPqBs-D6EnjH0XB9xkM5ErINNYwe4_R2k1esHlN4yOfLkRhLX9ThANmFtahfdRfgl2eWbNMTyLi7b5h0dORa3V0BCadCuqB3_rcVCw_lNGJjfTvRGe-dmiA6f0UrJT9pdn1ebcX3Gx19XAjTIUHjDpiJWni2ONdjrT1CzH-eWjUboFcWPDcuRiBnsr40UuTYbjWy4z2Q8AYw0Lcm11yfQhNXHwrTE6XvZvuPd586lVoRpUk6ydwhKAcNGCEYJmiM" />
+                                            <img class="w-6 h-6 rounded-full border-2 border-white"
+                                                 data-alt="Avatar of second event manager user"
+                                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9ua5j3rsBEbjiURUVsX22-N5I_Ja4qUJBM7iJa6T4N4ACQkIrY69CQvNmSA0tcPf2ORXh6Asj_YWAOGn2KFkt9lsw9zDI0PFGLOCl8trqLdyRqPXQ-s8Mn47qdnTosx38yStx_-45GAIHf7RalLn5HWZKMmfCJfhGvwpSI2TzF1wWWxkQg3Sq98HPJyF22ORKWfra5RsdfeU2QQSJo0jtl91X_YaCGlnsSRrBJJR8APXOp45AObaa1Y1aLzn60BNt0Ray8INjgGo" />
+                                        </div>
+                                        <span class="text-sm text-slate-600 font-medium">12 users</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end space-x-1">
+                                        <button
+                                                class="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg">
+                                            <span class="material-symbols-outlined text-lg">edit</span>
+                                        </button>
+                                        <button
+                                                class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg">
+                                            <span class="material-symbols-outlined text-lg">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="px-6 py-4 text-sm font-mono text-slate-500">#ROL-003</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-2 h-2 rounded-full bg-slate-400 mr-2"></div>
+                                        <span class="text-sm font-semibold text-slate-900">Analyst</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-wrap gap-1">
+                                                <span
+                                                        class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded font-medium">VIEW_ONLY</span>
+                                        <span
+                                                class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded font-medium">EXP_REPORTS</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="flex -space-x-2 mr-3">
+                                            <img class="w-6 h-6 rounded-full border-2 border-white"
+                                                 data-alt="Avatar of data analyst user"
+                                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZnuDtRVpsJKJ1rp_K5ea4MF6TiPAEte1FKnB6HcHnVHghRzWk3xk6X5TIawC7gKcJYCwuHpYA4LX2OJmaAJAw5moAPOTm0H_UPZR0Es1Xr45awUIKemIrGmJgFbw6-Pd5NTstPYCfP0YMseoKA4NQVbxSe8urRRCOWjIQcQYBnmS0l3b357-dXQlldBx0tigFNkiyNIDcdIyqLG2CEgMrBO8ZPMdeEqOcKEtZPsFglbs5BMnwrIwhhEcQDRnHeKgZWaoSxtCYiqs" />
+                                        </div>
+                                        <span class="text-sm text-slate-600 font-medium">8 users</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end space-x-1">
+                                        <button
+                                                class="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg">
+                                            <span class="material-symbols-outlined text-lg">edit</span>
+                                        </button>
+                                        <button
+                                                class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg">
+                                            <span class="material-symbols-outlined text-lg">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="px-6 py-4 text-sm font-mono text-slate-500">#ROL-004</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-2 h-2 rounded-full bg-amber-500 mr-2"></div>
+                                        <span class="text-sm font-semibold text-slate-900">Support Lead</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-wrap gap-1">
+                                                <span
+                                                        class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded font-medium">TICKET_ADMIN</span>
+                                        <span
+                                                class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded font-medium">USER_VIEW</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="flex -space-x-2 mr-3">
+                                            <img class="w-6 h-6 rounded-full border-2 border-white"
+                                                 data-alt="Avatar of support lead agent"
+                                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxY5A-zWUqWBJWSmkVdzwodQ9a5c8_XJMYQ0yqq0-x7BTkuzJIaJkrUA_CUyBP3IqGGi8X_EGbPc6ijlscGEWCFN99Q3gg2UtmtzJpboGvQuJH4koQ6ae0FY38GbDfe5V-TJxOUUXYAE1udnws5LXpbI4LdsgODh6-5nazh1PwwR1wLg_NJzemtM2FJS9ye0NCa3ermfQixOfTt5XTx_VT5SQ1NCUW2YnPASfN1r0FigStRotUjXRYkHpd49pQPLCtaJrgo8mrPt4" />
+                                        </div>
+                                        <span class="text-sm text-slate-600 font-medium">5 users</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end space-x-1">
+                                        <button
+                                                class="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg">
+                                            <span class="material-symbols-outlined text-lg">edit</span>
+                                        </button>
+                                        <button
+                                                class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg">
+                                            <span class="material-symbols-outlined text-lg">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-sm text-slate-500">Showing 4 of 12 roles</span>
+                        <div class="flex items-center space-x-2">
+                            <button
+                                    class="px-3 py-1 text-sm font-medium text-slate-400 border border-slate-200 rounded-md cursor-not-allowed">Previous</button>
+                            <button
+                                    class="px-3 py-1 text-sm font-medium text-primary-600 border border-primary-200 bg-primary-50 rounded-md">1</button>
+                            <button
+                                    class="px-3 py-1 text-sm font-medium text-slate-600 border border-slate-200 rounded-md hover:bg-slate-50">2</button>
+                            <button
+                                    class="px-3 py-1 text-sm font-medium text-slate-600 border border-slate-200 rounded-md hover:bg-slate-50">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+
+</html>

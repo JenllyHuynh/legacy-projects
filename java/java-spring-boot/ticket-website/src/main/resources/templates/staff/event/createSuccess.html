@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/frag::head('Create Ticket')}"></head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+<div class="flex h-screen overflow-hidden">
+    <aside th:replace="~{fragment/staff/frag::staffSidebar('eventList')}" ></aside>
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-16 flex items-center justify-between px-8 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-emerald-500">check_circle</span>
+                    <h2 class="text-slate-900 dark:text-white text-lg font-bold tracking-tight">Success</h2>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="text-right mr-4">
+                    <p class="text-xs font-bold text-slate-900 dark:text-white leading-none">Alex Morgan</p>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest mt-1">Senior Producer</p>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800"></div>
+            </div>
+        </header>
+        <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark flex items-center justify-center p-8">
+            <div class="max-w-2xl w-full text-center">
+                <div class="mb-8 flex justify-center">
+                    <div class="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-500">
+                        <span class="material-symbols-outlined text-6xl font-light">check_circle</span>
+                    </div>
+                </div>
+                <h3 class="text-slate-900 dark:text-white text-4xl font-black tracking-tight mb-4">Event Created Successfully!</h3>
+                <p class="text-slate-500 dark:text-slate-400 text-lg mb-12 max-w-md mx-auto leading-relaxed">
+                    Your event is now live and ready for attendees. You can start sharing the link or manage your ticket sales.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a th:href="@{/staff/event}" class="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-xl font-bold text-sm shadow-xl shadow-primary/20 transition-all flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-lg">list_alt</span>
+                        Back to Event List
+                    </a>
+                </div>
+                <div class="mt-20 pt-10 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-3">
+                            <span class="material-symbols-outlined text-xl">share</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-1">Share Event</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Copy unique link</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-3">
+                            <span class="material-symbols-outlined text-xl">analytics</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-1">View Stats</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Track registrations</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-3">
+                            <span class="material-symbols-outlined text-xl">mail</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-1">Notify Team</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Send invitations</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Tailwind safelist helper -->
+            <div class="hidden">
+                <div class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"></div>
+                <div class="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"></div>
+                <div class="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"></div>
+                <div class="bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300"></div>
+                <div class="bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400"></div>
+                <div class="bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400"></div>
+                <div class="bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700"></div>
+                <div class="bg-red-600 text-white animate-pulse shadow-lg shadow-red-500/40"></div>
+            </div>
+        </main>
+    </div>
+</div>
+
+</body></html>

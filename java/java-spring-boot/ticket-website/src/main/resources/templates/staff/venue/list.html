@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/frag::head('Venues')}"></head>
+<body class=" overflow-hidden text-slate-900 dark:text-slate-100 h-screen flex">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+<aside th:replace="~{fragment/staff/frag::staffSidebar('venue')}"></aside>
+<div class="bg-background-light flex-1 flex flex-col min-w-0 overflow-y-auto">
+    <header th:replace="~{fragment/staff/frag::header('Venue Mangement')}"></header>
+    <main class="flex-1 min-h-screen flex flex-col">
+            <div class="p-8">
+                <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <p class="text-slate-500 dark:text-slate-400 mt-1">
+                            Configure and monitor your event locations across various wards.
+                        </p>
+                    </div>
+                    <div class="flex shrink-0">
+                        <button th:onclick="|location.href='@{/staff/venue/new}'|"
+                                class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-lg text-sm font-bold transition-all shadow-lg shadow-primary/20">
+                            <span class="material-symbols-outlined text-[20px]">add_circle</span>
+                            Add New Venue
+                        </button>
+                    </div>
+                </div>
+
+            <div class="grid !bg-white grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-surface-light  p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-50  rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400">
+                            <span class="material-symbols-outlined">location_city</span>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-semibold">Total Venues</p>
+                            <p th:text="${totalVenue}" class="text-xl font-bold">24</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-light  p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-600 dark:text-green-400">
+                            <span class="material-symbols-outlined">check_circle</span>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-semibold">Active</p>
+                            <p th:text="${totalActive}" class="text-xl font-bold">18</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-light  p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/30 rounded-full flex items-center justify-center text-amber-600 dark:text-amber-400">
+                            <span class="material-symbols-outlined">groups</span>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-semibold">Total Capacity</p>
+                            <p th:text="${totalCapacity}" class="text-xl font-bold">85,400</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div class="bg-white p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                    <form th:action="@{/staff/venue}" class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="material-symbols-outlined text-gray-400">search</span>
+                        </div>
+                        <input name="keyword" class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg leading-5 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+                               th:value="${keyword}"
+                               placeholder="Search by code..." type="text"/>
+                        <input name="filter" th:value="${filter}" hidden>
+                        <button type="submit" class="hidden"></button>
+                    </form>
+                    <div class="relative">
+                        <form th:action="@{/staff/venue}" method="get" class="relative">
+                            <select name="filter"
+                                    onchange="this.form.submit()"
+                                    class="appearance-none bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 py-2.5 pl-4 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+                                <option value="all" th:selected="${filter == 'all'}">All Status</option>
+                                <option value="isActive" th:selected="${filter == 'isActive'}">Active</option>
+                                <option value="inActive" th:selected="${filter == 'inActive'}">Inactive</option>
+                            </select>
+                            <input th:if="${!keyword.isEmpty()}" name="keyword" th:value="${keyword}" hidden>
+
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="bg-white overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 dark:bg-slate-800/50">
+                        <tr class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            <th class="px-6 py-4">Venue Name</th>
+                            <th class="px-6 py-4">Address Details</th>
+                            <th class="px-6 py-4">Capacity</th>
+                            <th class="px-6 py-4">Created At</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        <tr th:if="${venueList == null or venueList.isEmpty()}">
+                            <td colspan="7" class="text-center">No Data Found</td>
+                        </tr>
+                        <tr th:each="v : ${venueList}" th:id="${v.id}"
+                            class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4">
+                                <div th:text="${v.name}" class="font-semibold text-sm">Central Park Arena</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div th:text="|${v.street}, ${v.ward}|" class="text-sm">789 Broadway Ave, Ward 12</div>
+                                <div th:text="|${v.city}, ${v.country}|" class="text-xs text-slate-500">
+                                    Manhattan, New York, USA
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                            <span th:text="${v.capacity}"
+                                  class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-medium">15,000</span>
+                            </td>
+                            <td th:text="${#temporals.format(v.createdAt, 'MM dd, YYYY')}"
+                                class="px-6 py-4 text-sm text-slate-500">
+                                Aug 12, 2023
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                <button th:disabled="${v.staff.id != staffId}"
+                                        th:onclick="|deactivate(${v.id})|"
+                                        th:if="${v.isActive}"
+                                        th:text="Active"
+                                      class="disabled:cursor-not-allowed px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">Active</button>
+                                <button th:disabled="${v.staff.id != staffId}"
+                                        th:onclick="|deactivate(${v.id})|"
+                                        th:unless="${v.isActive}"
+                                        th:text="Inactive"
+                                      class="disabled:cursor-not-allowed px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300">Active</button>
+
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <button th:disabled="${v.staff.id != staffId}"
+                                            th:onclick="|location.href='@{/staff/venue/edit(id=${v.id})}'|"
+                                            class="p-1.5 text-slate-400 hover:text-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><span
+                                            class="material-symbols-outlined text-xl">edit</span></button>
+                                    <button th:disabled="${v.staff.id != staffId}"
+                                            th:onclick="|openModal(${v.id})|"
+                                            class="p-1.5 text-slate-400 hover:text-red-500 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><span
+                                            class="material-symbols-outlined text-xl">delete</span></button>
+                                </div>
+                            </td>
+
+                            <!--MODAL-->
+                            <div th:id="|modal${v.id}|"
+                                 class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm transition-opacity hidden">
+
+                                <div class="bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-md w-full mx-4 transform transition-all">
+                                    <div class="flex items-center gap-4 text-red-500 mb-4">
+                                        <span class="material-symbols-outlined text-3xl">error_outline</span>
+                                        <h3 class="text-xl font-bold">Confirm Venue Deletion!</h3>
+                                    </div>
+
+                                    <p th:utext="|Are you sure you want to delete venue ${v.name}?<br>This action cannot be undone!|"
+                                       class="text-slate-600 dark:text-slate-400 mb-6">
+
+                                    </p>
+
+                                    <div class="flex justify-end gap-4">
+                                        <button th:onclick="|closeModal(${v.id})|"
+                                                class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-6 py-2 rounded-lg font-semibold transition-all">
+                                            Cancel
+                                        </button>
+                                        <button th:onclick="|confirmDelete(${v.id})|"
+                                                class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white px-6 py-2 rounded-lg font-semibold transition-all shadow-sm">
+                                            Comfirm Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between border-t border-slate-200 dark:border-slate-800">
+                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700 dark:text-gray-400">
+                                Showing <span th:text="${currentPage}" class="font-medium text-gray-900 dark:text-white">1</span> to <span
+                                    th:text="${totalElementsOfPage}" class="font-medium text-gray-900 dark:text-white">5</span> of <span
+                                    th:text="${totalElements}" class="font-medium text-gray-900 dark:text-white">24</span> results
+                            </p>
+                        </div>
+                        <div th:if="${venueList == null or !venueList.isEmpty()}">
+                            <nav aria-label="Pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                                <a th:if="${hasPrevious}" th:href="@{${url}(page=${currentPage} - 1)}"
+                                   class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                   href="#">
+                                    <span class="sr-only">Previous</span>
+                                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                                </a>
+                                <a aria-current="page"
+                                   th:classappend="${currentPage == 1} ? 'z-10 bg-primary/10 border-primary text-primary' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
+                                   class="z-10  relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                                   th:href="@{${url}(page=1)}">
+                                    1
+                                </a>
+                                <a th:if="${before}" aria-current="page"
+                                   class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                                >
+                                    ...
+                                </a>
+                                <a th:each="vp : ${viewPages}" th:text="${vp}" aria-current="page"
+                                   th:classappend="${currentPage == vp} ? 'z-10 bg-primary/10 border-primary text-primary' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
+                                   class="z-10 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                                   th:href="@{${url}(page=${vp})}">
+                                    1
+                                </a>
+                                <a th:if="${after}" aria-current="page"
+                                   class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                                >
+                                    ...
+                                </a>
+                                <a th:if="${lastPage}"
+                                   th:text="${lastPage}" aria-current="page"
+                                   th:classappend="${currentPage == lastPage} ? 'z-10 bg-primary/10 border-primary text-primary' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
+                                   class="z-10 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                                   th:href="@{${url}(page=${lastPage})}">
+                                    8
+                                </a>
+                                <a th:if="${hasNext}" th:href="@{${url}(page=${currentPage} + 1)}"
+                                   class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                   href="#">
+                                    <span class="sr-only">Next</span>
+                                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <footer class="mt-auto p-8 border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
+            <div class="flex flex-col md:flex-row justify-between gap-4">
+                <div class="flex items-center gap-6">
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">Last DB Sync</p>
+                        <p class="text-xs font-medium flex items-center gap-1">
+                            <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                            2026
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">System Health</p>
+                        <p class="text-xs font-medium flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px] text-blue-500">check_circle</span>
+                            All Nodes Operational
+                        </p>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-500 flex items-center gap-4">
+                    <a class="hover:text-primary" href="#">Documentation</a>
+                    <a class="hover:text-primary" href="#">API Reference</a>
+                    <a class="hover:text-primary" href="#">Support</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+</div>
+
+<div id="editModal"
+     class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm transition-opacity"
+     th:classappend="${excep == '1'} ? '' : 'hidden'">
+
+    <div class="bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-md w-full mx-4 transform transition-all">
+        <div class="flex items-center gap-4 text-red-500 mb-4">
+            <span class="material-symbols-outlined text-3xl">error_outline</span>
+            <h3 class="text-xl font-bold">Cannot Delete!</h3>
+        </div>
+
+        <p class="text-slate-600 dark:text-slate-400 mb-6">
+            This venue is currently linked to an Event and cannot be deleted.
+        </p>
+
+        <div class="flex justify-end gap-4">
+            <button th:onclick="|deactivate(${id})|"
+                    class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-6 py-2 rounded-lg font-semibold transition-all">
+                Deactivate Venue
+            </button>
+            <button onclick="document.getElementById('editModal').classList.add('hidden')"
+                    class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-6 py-2 rounded-lg font-semibold transition-all">
+                Got it
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Xác nhận xóa
+    function openModal(id) {
+        console.log('modal' + id);
+        const deleteModal = document.getElementById('modal' + id);
+        deleteModal.classList.remove("hidden");
+    }
+    function closeModal(id) {
+        console.log('modal' + id);
+        const deleteModal = document.getElementById('modal' + id);
+        deleteModal.classList.add("hidden");
+    }
+    async function confirmDelete(id) {
+        location.href = '/staff/venue/delete?id=' + id;
+    }
+    // vô hiệu hóa venue
+
+    async function deactivate(id) {
+        const csrfMeta   = document.querySelector('meta[name="_csrf"]');
+        const csrfHMeta  = document.querySelector('meta[name="_csrf_header"]');
+        const csrfToken  = csrfMeta  ? csrfMeta.content  : '';
+        const csrfHeader = csrfHMeta ? csrfHMeta.content : 'X-CSRF-TOKEN';
+
+        if (!csrfToken || !csrfHeader) {
+            console.error("Không tìm thấy CSRF Token. Hãy kiểm tra lại file fragment/head.");
+            alert("Lỗi bảo mật: Không tìm thấy mã xác thực.");
+            return;
+        }
+        try {
+            const res = await fetch(window.location.origin + '/staff/venue/deactive', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    [csrfHeader]: csrfToken
+                },
+                body: new URLSearchParams({'id': id})
+            });
+
+            if(res.ok) {
+                location.reload();
+            }
+        } catch (error) {
+            console.error("lỗi:", error);
+        }
+    }
+
+</script>
+<th:block th:replace="~{fragment/staff/frag::staffBellScript}"></th:block>
+</body>
+</html>

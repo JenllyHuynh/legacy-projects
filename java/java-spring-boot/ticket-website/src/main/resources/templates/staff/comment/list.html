@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/frag::head('Comment Management')}"></head>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Comment Management</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary":          "#2464f9",
+                        "primary-dark":     "#1649c2",
+                        "background-light": "#f5f6f8",
+                        "background-dark":  "#0f1523",
+                        "surface-light":    "#ffffff",
+                        "surface-dark":     "#1a202c",
+                        "text-main":        "#0d111c",
+                        "text-secondary":   "#47619e",
+                    },
+                    fontFamily: { "display": ["Inter", "sans-serif"] },
+                    borderRadius: { "DEFAULT": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .star-filled {
+            color: #f59e0b;
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white flex overflow-hidden h-screen">
+<div th:replace="~{fragment/frag::loading}" ></div>
+<script th:replace="~{fragment/frag::scriptLoading}" ></script>
+
+<!-- ===== Sidebar ===== -->
+<aside th:replace="~{fragment/staff/frag::staffSidebar('comments')}"></aside>
+
+<!-- ===== Main ===== -->
+<div class="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar">
+
+    <!-- Header -->
+    <header th:replace="~{fragment/staff/frag::header('Comment Management')}"></header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ── Toast: Success ── -->
+        <div th:if="${successMessage}"
+             id="toastSuccess"
+             class="fixed top-6 right-6 z-[200] flex items-center gap-3 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg text-sm font-semibold">
+            <span class="material-symbols-outlined text-[20px]">check_circle</span>
+            <span th:text="${successMessage}">Comment deleted successfully.</span>
+            <button onclick="document.getElementById('toastSuccess').remove()" class="ml-2 hover:opacity-75">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+        </div>
+
+        <!-- ── Toast: Error ── -->
+        <div th:if="${errorMessage}"
+             id="toastError"
+             class="fixed top-6 right-6 z-[200] flex items-center gap-3 bg-red-600 text-white px-5 py-3 rounded-xl shadow-lg text-sm font-semibold">
+            <span class="material-symbols-outlined text-[20px]">error_outline</span>
+            <span th:text="${errorMessage}">An error occurred.</span>
+            <button onclick="document.getElementById('toastError').remove()" class="ml-2 hover:opacity-75">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+        </div>
+
+        <!-- ── Breadcrumb ── -->
+        <nav aria-label="Breadcrumb" class="flex mb-4">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white"
+                       th:href="@{/staff}">
+                        <span class="material-symbols-outlined text-[18px] mr-2">home</span>Home
+                    </a>
+                </li>
+                <li aria-current="page">
+                    <div class="flex items-center">
+                        <span class="material-symbols-outlined text-gray-400 text-[18px]">chevron_right</span>
+                        <span class="ml-1 text-sm font-medium text-gray-900 dark:text-white md:ml-2">Comments</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- ── Page Header ── -->
+        <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-3xl font-bold leading-7 text-gray-900 dark:text-white sm:text-4xl tracking-tight">
+                    Comment Management
+                </h2>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    Monitor and moderate attendee comments across your assigned events.
+                </p>
+            </div>
+        </div>
+
+        <!-- ── Stats Cards ── -->
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-8">
+            <!-- Total Comments -->
+            <div class="relative overflow-hidden rounded-lg bg-surface-light dark:bg-surface-dark px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6 border border-gray-100 dark:border-gray-800">
+                <dt>
+                    <div class="absolute rounded-md bg-blue-100 dark:bg-blue-900/30 p-3">
+                        <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">forum</span>
+                    </div>
+                    <p class="ml-16 truncate text-sm font-medium text-gray-500 dark:text-gray-400">Total Comments</p>
+                </dt>
+                <dd class="ml-16 flex items-baseline pb-1 sm:pb-7">
+                    <p th:text="${totalComments}" class="text-2xl font-semibold text-gray-900 dark:text-white">0</p>
+                </dd>
+            </div>
+            <!-- New Today -->
+            <div class="relative overflow-hidden rounded-lg bg-surface-light dark:bg-surface-dark px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6 border border-gray-100 dark:border-gray-800">
+                <dt>
+                    <div class="absolute rounded-md bg-amber-100 dark:bg-amber-900/30 p-3">
+                        <span class="material-symbols-outlined text-amber-600 dark:text-amber-400">add_comment</span>
+                    </div>
+                    <p class="ml-16 truncate text-sm font-medium text-gray-500 dark:text-gray-400">New Today</p>
+                </dt>
+                <dd class="ml-16 flex items-baseline pb-1 sm:pb-7">
+                    <p th:text="${todayComments}" class="text-2xl font-semibold text-gray-900 dark:text-white">0</p>
+                </dd>
+            </div>
+            <!-- Average Rating -->
+            <div class="relative overflow-hidden rounded-lg bg-surface-light dark:bg-surface-dark px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6 border border-gray-100 dark:border-gray-800">
+                <dt>
+                    <div class="absolute rounded-md bg-yellow-100 dark:bg-yellow-900/30 p-3">
+                        <span class="material-symbols-outlined text-yellow-600 dark:text-yellow-400">star</span>
+                    </div>
+                    <p class="ml-16 truncate text-sm font-medium text-gray-500 dark:text-gray-400">Average Rating</p>
+                </dt>
+                <dd class="ml-16 flex items-baseline gap-1 pb-1 sm:pb-7">
+                    <p th:text="${#numbers.formatDecimal(avgRating, 1, 1)}"
+                       class="text-2xl font-semibold text-gray-900 dark:text-white">0.0</p>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">/ 5</span>
+                </dd>
+            </div>
+        </div>
+
+        <!-- ── Table Container ── -->
+        <div class="bg-surface-light dark:bg-surface-dark shadow border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
+
+            <!-- Toolbar: Search + Filters -->
+            <div class="p-5 border-b border-gray-200 dark:border-gray-800">
+                <form method="get" th:action="@{/staff/comments}"
+                      class="flex flex-col sm:flex-row sm:items-center gap-3">
+
+                    <!-- Search -->
+                    <div class="relative flex-1 max-w-lg">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="material-symbols-outlined text-gray-400">search</span>
+                        </div>
+                        <input name="keyword"
+                               th:value="${keyword}"
+                               class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+                               placeholder="Search by customer name or comment content..."
+                               type="text"/>
+                    </div>
+
+                    <!-- Filter: Event -->
+                    <div class="relative">
+                        <select name="eventId"
+                                class="appearance-none bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 py-2.5 pl-4 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+                            <option value="">All Events</option>
+                            <option th:each="ev : ${eventList}"
+                                    th:value="${ev.id}"
+                                    th:text="${ev.title}"
+                                    th:selected="${ev.id == selectedEventId}">
+                                Event Name
+                            </option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                            <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                        </div>
+                    </div>
+
+                    <!-- Filter: Rating -->
+                    <div class="relative">
+                        <select name="rating"
+                                class="appearance-none bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 py-2.5 pl-4 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+                            <option value="">All Ratings</option>
+                            <option value="5" th:selected="${selectedRating == 5}">★★★★★ (5)</option>
+                            <option value="4" th:selected="${selectedRating == 4}">★★★★☆ (4)</option>
+                            <option value="3" th:selected="${selectedRating == 3}">★★★☆☆ (3)</option>
+                            <option value="2" th:selected="${selectedRating == 2}">★★☆☆☆ (2)</option>
+                            <option value="1" th:selected="${selectedRating == 1}">★☆☆☆☆ (1)</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                            <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                            class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all">
+                        <span class="material-symbols-outlined text-[18px] mr-1">search</span>Search
+                    </button>
+                </form>
+            </div>
+
+            <!-- ── AF-1: Empty State ── -->
+            <div th:if="${commentList == null or commentList.isEmpty()}"
+                 class="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-gray-600">
+                <span class="material-symbols-outlined filled text-[56px] mb-3">chat_bubble_outline</span>
+                <p class="text-base font-semibold text-gray-500 dark:text-gray-400">No comments available</p>
+                <p class="text-sm text-gray-400 dark:text-gray-600 mt-1">
+                    There are no comments matching your current filters.
+                </p>
+            </div>
+
+            <!-- ── Comment Cards ── -->
+            <div th:if="${commentList != null and !commentList.isEmpty()}"
+                 class="divide-y divide-gray-100 dark:divide-gray-800">
+
+                <div th:each="c : ${commentList}"
+                     class="p-6 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors">
+                    <div class="flex gap-4">
+
+                        <!-- Avatar -->
+                        <div class="shrink-0">
+                            <div th:if="${c.customerAvatarUrl != null and !c.customerAvatarUrl.isEmpty()}"
+                                 class="w-12 h-12 rounded-full bg-cover bg-center border-2 border-white dark:border-gray-700 shadow-sm"
+                                 th:style="|background-image: url('${c.customerAvatarUrl}')|"></div>
+                            <div th:if="${c.customerAvatarUrl == null or c.customerAvatarUrl.isEmpty()}"
+                                 class="w-12 h-12 rounded-full bg-primary/20 dark:bg-primary/30 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary text-[24px]">person</span>
+                            </div>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="flex-1 min-w-0">
+                            <!-- Name + Event + Timestamp -->
+                            <div class="flex items-start justify-between gap-4 mb-2">
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-white text-sm"
+                                        th:text="${c.customerFullName != null ? c.customerFullName : c.customerEmail}">
+                                        Customer Name
+                                    </h4>
+                                    <p class="text-xs text-primary font-medium mt-0.5 uppercase tracking-wide"
+                                       th:text="${c.eventTitle}">Event Title</p>
+                                </div>
+                                <span class="text-xs text-gray-400 dark:text-gray-500 shrink-0"
+                                      th:text="${#temporals.format(c.createdAt, 'MMM dd, yyyy HH:mm')}">
+                                    Jan 01, 2025 10:00
+                                </span>
+                            </div>
+
+                            <!-- Star Rating -->
+                            <div th:if="${c.rating != null}" class="flex items-center gap-0.5 mb-3">
+                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <span th:class="${i <= c.rating
+                                        ? 'material-symbols-outlined filled star-filled text-[18px]'
+                                        : 'material-symbols-outlined filled text-gray-300 dark:text-gray-600 text-[18px]'}">
+                                        star
+                                    </span>
+                                </th:block>
+                                <span class="ml-1 text-xs text-gray-500 dark:text-gray-400"
+                                      th:text="|${c.rating}/5|"></span>
+                            </div>
+
+                            <!-- Comment text -->
+                            <p th:text="${c.content}"
+                               class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                                Comment content here...
+                            </p>
+
+                            <!-- Action: Chỉ có Delete -->
+                            <!-- Spec Assumption: "Comment editing is not supported — only remove" -->
+                            <div class="flex items-center gap-3">
+                                <button th:onclick="|openModal(${c.commentId})|"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors border border-red-200 dark:border-red-800">
+                                    <span class="material-symbols-outlined text-[16px]">delete</span>
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── Confirm Delete Modal (UC-30 step 5–6 + AF-2) ── -->
+                    <div th:id="|modal${c.commentId}|"
+                         class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm hidden">
+                        <div class="bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-md w-full mx-4">
+                            <div class="flex items-center gap-4 text-red-500 mb-4">
+                                <span class="material-symbols-outlined text-3xl">error_outline</span>
+                                <h3 class="text-xl font-bold">Confirm Delete Comment</h3>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-400 mb-6"
+                               th:utext="|Are you sure you want to delete this comment by &lt;strong&gt;${c.customerFullName != null ? c.customerFullName : c.customerEmail}&lt;/strong&gt;?&lt;br/&gt;This action cannot be undone.|">
+                            </p>
+                            <div class="flex justify-end gap-4">
+                                <!-- AF-2: Cancel → đóng modal, không xóa -->
+                                <button th:onclick="|closeModal(${c.commentId})|"
+                                        class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-6 py-2 rounded-lg font-semibold transition-all">
+                                    Cancel
+                                </button>
+                                <!-- Normal Flow step 6: Confirm delete -->
+                                <button th:onclick="|confirmDelete(${c.commentId})|"
+                                        class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white px-6 py-2 rounded-lg font-semibold transition-all shadow-sm">
+                                    Confirm Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ── Pagination ── -->
+            <div th:if="${totalPages != null and totalPages > 1}"
+                 class="bg-surface-light dark:bg-surface-dark px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-800 sm:px-6">
+                <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                    <p class="text-sm text-gray-700 dark:text-gray-400">
+                        Showing
+                        <span class="font-medium text-gray-900 dark:text-white"
+                              th:text="${(currentPage - 1) * pageSize + 1}">1</span>
+                        to
+                        <span class="font-medium text-gray-900 dark:text-white"
+                              th:text="${(currentPage - 1) * pageSize + commentList.size()}">10</span>
+                        of
+                        <span class="font-medium text-gray-900 dark:text-white"
+                              th:text="${totalComments}">0</span>
+                        comments
+                    </p>
+                    <nav aria-label="Pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                        <!-- Prev -->
+                        <a th:href="@{/staff/comments(page=${currentPage - 1}, keyword=${keyword}, eventId=${selectedEventId}, rating=${selectedRating})}"
+                           th:classappend="${currentPage <= 1 ? 'pointer-events-none opacity-40' : ''}"
+                           class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                        </a>
+                        <!-- Page numbers -->
+                        <th:block th:each="p : ${#numbers.sequence(1, totalPages)}">
+                            <a th:href="@{/staff/comments(page=${p}, keyword=${keyword}, eventId=${selectedEventId}, rating=${selectedRating})}"
+                               th:text="${p}"
+                               th:class="${p == currentPage
+                                   ? 'z-10 bg-primary/10 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium'
+                                   : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium'}">
+                            </a>
+                        </th:block>
+                        <!-- Next -->
+                        <a th:href="@{/staff/comments(page=${currentPage + 1}, keyword=${keyword}, eventId=${selectedEventId}, rating=${selectedRating})}"
+                           th:classappend="${currentPage >= totalPages ? 'pointer-events-none opacity-40' : ''}"
+                           class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+        </div><!-- end table container -->
+    </main>
+
+    <footer class="mt-auto bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500 dark:text-gray-400">
+            © 2024 EventAdmin Platform. All rights reserved.
+        </div>
+    </footer>
+</div>
+
+<script>
+    function openModal(id) {
+        document.getElementById('modal' + id).classList.remove('hidden');
+    }
+    function closeModal(id) {
+        document.getElementById('modal' + id).classList.add('hidden');
+    }
+    function confirmDelete(id) {
+        location.href = '/staff/comments/delete?id=' + id;
+    }
+    // Auto-hide toast sau 4 giây
+    setTimeout(() => {
+        ['toastSuccess', 'toastError'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        });
+    }, 4000);
+</script>
+<th:block th:replace="~{fragment/staff/frag::staffBellScript}"></th:block>
+</body>
+</html>

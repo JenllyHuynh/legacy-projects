@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Invoice - EventGo Co., Ltd.</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; background-color: #f9f9f9; -webkit-print-color-adjust: exact;">
+<!-- Main Container -->
+<div style="max-width: 800px; margin: 20px auto; background-color: #fff; padding: 40px; box-shadow: 0 0 10px rgba(0,0,0,0.1); box-sizing: border-box; min-height: 297mm;">
+
+    <!-- Print Button (Hidden during print) -->
+    <div style="text-align: right; margin-bottom: 20px;">
+        <form th:action="@{/invoice/{txnRef}/download(txnRef=${payment.transactionId})}" method="get">
+            <button type="submit"
+                    style="background-color: #000; color: #fff; border: none; padding: 10px 20px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border-radius: 4px;">
+                Download Invoice
+            </button>
+        </form>
+    </div>
+
+    <!-- Header Section -->
+    <header style="border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+            <h1 style="margin: 0; font-size: 32px; font-weight: bold; color: #000; letter-spacing: 2px; text-transform: uppercase;">
+                INVOICE</h1>
+        </div>
+        <div style="text-align: right; font-size: 14px; line-height: 1.6;">
+            <p style="margin: 0;"><strong>Transaction ID:</strong> <span
+                    th:text="${payment.transactionId}">TXN-123456</span></p>
+            <p style="margin: 0;"><strong>Date:</strong> <span
+                    th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy : HH:mm:ss')}">Oct 27, 2026</span></p>
+            <p style="margin: 0;"><strong>VNPay Ref:</strong> <span
+                    th:text="${payment.vnpTransactionno}">vnp_778899</span></p>
+        </div>
+    </header>
+
+    <!-- Address Section -->
+    <div style="display: flex; gap: 40px; margin-bottom: 40px;">
+        <!-- Seller Information -->
+        <div style="flex: 1;">
+            <h2 style="font-size: 14px; text-transform: uppercase; color: #777; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px; font-weight: bold;">
+                Seller Information</h2>
+            <div style="font-size: 14px; line-height: 1.5;">
+                <p style="margin: 0; font-weight: bold; font-size: 16px;">EventGo Co., Ltd.</p>
+                <p style="margin: 0;">600 Nguyen Van Cu Street</p>
+                <p style="margin: 0;">Can Tho, Vietnam</p>
+                <p style="margin: 0;">Email: eventgo.pro.vn@gmail.com</p>
+                <p style="margin: 0;">Phone: +84 337 337 337</p>
+            </div>
+        </div>
+        <!-- Bill To Information -->
+        <div style="flex: 1;">
+            <h2 style="font-size: 14px; text-transform: uppercase; color: #777; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px; font-weight: bold;">
+                Bill To</h2>
+            <div style="font-size: 14px; line-height: 1.5;">
+                <p th:text="${customer.fullName}" style="margin: 0; font-weight: bold; font-size: 16px;">Alex
+                    Johnson</p>
+                <p th:text="|Email: ${customer.email}|" style="margin: 0;">Email: alex.j@example.com</p>
+                <p th:text="|Phone: ${customer.phone != null ? customer.phone : 'N/A'}|" style="margin: 0;">Phone: +1
+                    (555) 012-3456</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Information Details -->
+    <section
+            style="background-color: #fcfcfc; padding: 20px; border-radius: 4px; border: 1px solid #eee; margin-bottom: 40px;">
+        <h2 style="font-size: 14px; text-transform: uppercase; color: #777; margin-top: 0; margin-bottom: 15px; font-weight: bold;">
+            Order Details</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px;">
+            <p style="margin: 0;"><strong>Transaction ID:</strong> <span th:text="${payment.transactionId}" >Sunset Music Festival 2026</span></p>
+            <p style="margin: 0;"><strong>Payment Method:</strong> VNPay</p>
+            <p style="margin: 0;"><strong>Bank:</strong> <span th:text="${payment.vnp_BankCode}">NCB</span></p>
+            <p style="margin: 0;"><strong>Card Type:</strong> <span th:text="${payment.vnp_CardType}">ATM</span></p>
+            <p style="margin: 0; grid-column: span 2;"><strong>Bank Tran No:</strong> <span
+                    th:text="${payment.vnp_BankTranNo}">99887766</span></p>
+        </div>
+    </section>
+
+    <!-- Items Table -->
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 14px;">
+        <thead>
+        <tr style="background-color: #333; color: #fff;">
+            <th style="padding: 12px; text-align: left; text-transform: uppercase; font-weight: bold;">Item
+                Description
+            </th>
+            <th style="padding: 12px; text-align: center; text-transform: uppercase; font-weight: bold; width: 60px;">
+                Qty
+            </th>
+            <th style="padding: 12px; text-align: right; text-transform: uppercase; font-weight: bold; width: 120px;">
+                Unit Price
+            </th>
+            <th style="padding: 12px; text-align: right; text-transform: uppercase; font-weight: bold; width: 120px;">
+                Total
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Thymeleaf Loop for entries -->
+        <th:block th:each="entry : ${eventTickets}">
+            <!-- Thymeleaf Loop for tickets within entry -->
+            <tr th:each="ticket, iterStat : ${entry.value}"
+                th:style="${iterStat.odd} ? 'background-color: #fff;' : 'background-color: #f9f9f9;'">
+                <td style="padding: 12px; border-bottom: 1px solid #eee; vertical-align: top;">
+                    <div style="font-weight: bold; color: #000;" th:text="|[${entry.key.title}]|">Festival Name</div>
+                    <div style="color: #666; font-size: 13px; margin-top: 4px;" th:text="${ticket.name}">VIP Ticket
+                    </div>
+                </td>
+                <td th:text="${ticket.qty}"
+                    style="padding: 12px; border-bottom: 1px solid #eee; text-align: center; vertical-align: top;">2
+                </td>
+                <td th:text="|${#numbers.formatDecimal(ticket.unitPrice, '0', 'POINT', 0, 'DEFAULT')} VND|"
+                    style="padding: 12px; border-bottom: 1px solid #eee; text-align: right; vertical-align: top;">
+                    225.000 VND
+                </td>
+                <td th:text="|${#numbers.formatDecimal(ticket.totalPrice, '0', 'POINT', 0, 'DEFAULT')} VND|"
+                    style="padding: 12px; border-bottom: 1px solid #eee; text-align: right; vertical-align: top; font-weight: bold;">
+                    450.000 VND
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+    <!-- Summary & Status -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="flex: 1;">
+            <h2 style="font-size: 14px; text-transform: uppercase; color: #777; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 15px; font-weight: bold;">
+                Payment Status</h2>
+            <div style="font-size: 14px; line-height: 1.6;">
+                <p style="margin: 0;"><strong>Status:</strong>
+                    <span th:text="${payment.vnp_TransactionStatus.equalsIgnoreCase('00') ? 'Success' : 'Fail'}"
+                          th:style="${payment.vnp_TransactionStatus.equalsIgnoreCase('00')} ? 'color: #2e7d32; font-weight: bold;' : 'color: #d32f2f; font-weight: bold;'">
+                            Success
+                        </span>
+                </p>
+                <p style="margin: 0;"><strong>Response Code:</strong> <span
+                        th:text="${payment.gatewayResponse}">00</span></p>
+            </div>
+        </div>
+
+        <div style="width: 300px;">
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px solid #eee;">
+                <span>Subtotal:</span>
+                <span th:text="|${#numbers.formatDecimal(subTotal, '0', 'POINT', 0, 'DEFAULT')} VND|">450.000 VND</span>
+            </div>
+            <div th:if="${discountCode != null}"
+                 style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px solid #eee;">
+                <span th:if="${discountCode.discountType.equalsIgnoreCase('percentage')}"
+                      th:text="|Discount (${#numbers.formatDecimal(discountCode.discountValue, '0', 'POINT', 0, 'DEFAULT')}%) :|">Discount:</span>
+                <span th:if="${discountCode.discountType.equalsIgnoreCase('fixamount')}">Discount:</span>
+                <span th:text="|- ${#numbers.formatDecimal(discountTotal, '0', 'POINT', 0, 'DEFAULT')} VND|">0 VND</span>
+            </div>
+
+            <div th:if="${discountCode == null}"
+                 style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px solid #eee;">
+                <span>Discount:</span>
+                <span> - 0 VND</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 2px solid #333;">
+                <span>Service Fee:</span>
+                <span>0 VND</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 15px 0; font-size: 18px; font-weight: bold; color: #000;">
+                <span>Total Paid:</span>
+                <span th:text="|${#numbers.formatDecimal(payment.amount, '0', 'POINT', 0, 'DEFAULT')} VND|">450.000 VND</span>
+            </div>
+        </div>
+    </div>
+    <!-- NOTE -->
+    <div th:if="${discountCode != null}" style="padding-top: 10px; font-size: 12px;">
+        <span style="color: #000; font-weight: bold;">* NOTE:</span>
+    <span>
+        This discount is valid only for the event:
+    </span>
+        <span style="font-weight: bold; font-style: italic;"
+              th:text="${discountCode.event.title}">
+    </span>
+    </div>
+
+    <!-- Footer -->
+    <footer style="margin-top: 60px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #999; font-size: 12px; line-height: 1.5;">
+        <p style="margin: 0 0 10px 0;">This invoice confirms that the payment was successfully processed via VNPay.
+            Thank you for your purchase.</p>
+        <p style="margin: 0; font-weight: bold; color: #666;">EventGo Co., Ltd.</p>
+    </footer>
+
+</div>
+</body>
+</html>

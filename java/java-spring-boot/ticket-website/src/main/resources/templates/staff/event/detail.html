@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/frag::head('Event Detail')}"></head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white flex overflow-hidden h-screen">
+<div th:replace="~{fragment/frag::loading}"></div>
+<script th:replace="~{fragment/frag::scriptLoading}"></script>
+<aside th:replace="~{fragment/staff/frag::staffSidebar('eventList')}"></aside>
+<div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    <header class="sticky top-0 z-40 flex items-center justify-between border-b border-solid border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-8 py-4">
+        <div class="flex items-center gap-4">
+            <div class="flex flex-wrap gap-2">
+                <a class="text-slate-500 hover:text-primary text-sm font-medium leading-normal transition-colors"
+                   href="#">Home</a>
+                <span class="text-slate-400 text-sm font-medium leading-normal">/</span>
+                <a class="text-slate-500 hover:text-primary text-sm font-medium leading-normal transition-colors"
+                   href="#">Events</a>
+                <span class="text-slate-400 text-sm font-medium leading-normal">/</span>
+                <span th:text="${event.title}"
+                      class="text-slate-900 dark:text-white text-sm font-medium leading-normal">Global Tech Summit 2024</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <a target="_blank" th:href="@{/staff/demo/{id}(id=${event.id})}"
+               class="flex px-4 py-2 items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors text-slate-700 dark:text-slate-300 text-sm font-semibold">
+                <span class="material-symbols-outlined mr-2 text-[20px]">visibility</span> Preview
+            </a>
+            <div class="flex gap-2 justify-content-center align-content-center"
+                 th:if="${!event.eventStatus.equalsIgnoreCase('Completed') && !event.eventStatus.equalsIgnoreCase('Live')}">
+
+                <form th:action="@{/staff/event/{id}/unpublish(id=${event.id})}" method="post">
+                    <button type="submit"
+                            class="flex px-5 py-2 items-center justify-center rounded-lg bg-white border border-slate-200 hover:border-slate-300 dark:bg-slate-800 dark:border-slate-700 transition-colors text-slate-700 dark:text-slate-300 text-sm font-bold">
+                        Unpublish
+                    </button>
+                </form>
+                <form th:action="@{/staff/event/{id}/publish(id=${event.id})}" method="post">
+                    <button type="submit"
+                            class="flex px-5 py-2 items-center justify-center rounded-lg bg-primary hover:bg-blue-600 transition-colors text-white text-sm font-bold shadow-lg shadow-blue-500/30">
+                        Publish
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+    <main class="flex-1">
+        <div class="max-w-[1400px] mx-auto p-8">
+            <div class="relative h-72 w-full rounded-2xl overflow-hidden mb-8 border border-slate-200 dark:border-slate-800 shadow-sm group">
+                <img th:src="@{/upload/event/banner/{id}(id=${event.bannerImageUrl})}" alt="Event Banner"
+                     class="w-full h-full object-cover"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <div class="absolute bottom-6 left-8 right-8 flex items-end justify-between">
+                    <div>
+                        <span th:text="${event.category.name}"
+                              class="inline-flex items-center rounded-full bg-primary/20 backdrop-blur-md px-3 py-1 text-xs font-semibold text-white mb-2 border border-white/20">
+                            TECH CONFERENCE
+                        </span>
+                        <h1 th:text="${event.title}" class="text-3xl font-black text-white tracking-tight">Global Tech
+                            Summit 2024</h1>
+                    </div>
+                    <form th:action="@{/staff/event/{id}/edit/banner(id=${event.id})}"
+                          method="post"
+                          enctype="multipart/form-data">
+                        <input type="file" name="banner" id="bannerInput" hidden
+                               accept="image/jpeg"
+                               onchange="this.form.submit()">
+                        <button type="button"
+                                onclick="document.getElementById('bannerInput').click()"
+                                class="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-lg text-white transition-colors border border-white/20">
+                            <span class="material-symbols-outlined text-[20px]">photo_camera</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-8">
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">info</span>
+                                Core Information
+                            </h3>
+                            <a th:if="${
+                                event.eventStatus.equalsIgnoreCase('Draft') || event.eventStatus.equalsIgnoreCase('PendingApproval') || event.eventStatus.equalsIgnoreCase('Rejected')
+                            }" th:href="@{/staff/event/{id}/edit(id=${event.id})}"
+                               class="text-primary hover:underline text-sm font-medium">Edit</a>
+                        </div>
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Event
+                                        ID</label>
+                                    <p th:text="${event.id}"
+                                       class="text-slate-900 dark:text-white font-mono bg-slate-50 dark:bg-slate-800/50 px-2 py-1 rounded inline-block text-sm">
+                                        EVT-2024-00912</p>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Category</label>
+                                    <p th:text="${event.category.name}"
+                                       class="text-slate-900 dark:text-white font-medium">Technology &amp;
+                                        Innovation</p>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Title</label>
+                                <p th:text="${event.title}"
+                                   class="text-slate-900 dark:text-white font-semibold text-lg">Global Tech Summit 2024:
+                                    The Future of Generative AI</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-900 uppercase tracking-wider mb-1">Short
+                                    Description</label>
+                                <p th:text="${event.shortDescription != null ? event.shortDescription : 'This event does no have short description'}"
+                                   class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed italic">Join 5,000+
+                                    industry leaders for the world's most influential technology event focused on AI and
+                                    robotics.</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-900 uppercase tracking-wider mb-1">Full
+                                    Description</label>
+                                <div class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed space-y-3 italic">
+                                    <p th:style="|white-space: pre-line;|"
+                                       th:text="${event.description != null ? event.description : 'This event does no have full description'}">
+                                        The Global Tech Summit 2024 brings together the brightest minds in tech.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+                        <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                            <h3 class="text-lg font-bold flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">confirmation_number</span>
+                                Ticket Types
+                            </h3>
+                            <a th:href="@{/staff/event/{id}/ticket-types(id=${event.id})}"
+                               class="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-bold hover:bg-primary/20 transition-colors">
+                                <span class="material-symbols-outlined text-[16px]">confirmation_number</span> Manage
+                                Ticket Types
+                            </a>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-slate-50 dark:bg-slate-800/50 text-xs uppercase text-slate-500 font-semibold">
+                                <tr>
+                                    <th class="px-6 py-4">Tier Name</th>
+                                    <th class="px-6 py-4">Price</th>
+                                    <th class="px-6 py-4">Quantity</th>
+                                    <th class="px-6 py-4">Status</th>
+                                    <th class="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                <tr th:each="ticket : ${event.ticketTypes}"
+                                    class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                    <td th:text="${ticket.name}"
+                                        class="px-6 py-4 font-medium text-slate-900 dark:text-white">Early Bird Access
+                                    </td>
+                                    <td th:text="|${#numbers.formatDecimal(ticket.price, 0, 'POINT', 0, 'DEFAULT')} VND|"
+                                        class="px-6 py-4 text-slate-600 dark:text-slate-400">$299.00
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span th:text="${ticket.quantity}" class="text-xs">500</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span th:text="${ticket.isActive ? 'Active' : 'Inactive'}"
+                                              class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase"
+                                              th:classappend="${ticket.isActive == true ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'}">Sold Out</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-slate-400 hover:text-primary"><span
+                                                class="material-symbols-outlined text-[18px]">more_vert</span></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+                        <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                            <h3 class="text-lg font-bold flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">how_to_reg</span>
+                                Event Successful Orders
+                            </h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-slate-50 dark:bg-slate-800/50 text-xs uppercase text-slate-500 font-semibold">
+                                <tr>
+                                    <th class="px-6 py-4">Name</th>
+                                    <th class="px-6 py-4">Email</th>
+                                    <th class="px-6 py-4">Phone</th>
+                                    <th class="px-6 py-4">Status</th>
+                                </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                <tr th:each="re : ${registrations}"
+                                    class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                    <td th:text="${re.fullName}"
+                                        class="px-6 py-4 font-medium text-slate-900 dark:text-white">Early Bird Access
+                                    </td>
+                                    <td th:text="${re.email}" class="px-6 py-4 text-slate-600 dark:text-slate-400">
+                                        $299.00
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span th:text="${re.phone}"
+                                              class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">Sold Out</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <span th:if="${re.isActive}" th:text="Active"
+                                                  class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">Active</span>
+                                            <span th:unless="${re.isActive}" th:text="Inactive"
+                                                  class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300">Active</span>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+
+                        <div class="bg-white rounded-2xl shadow p-6">
+                            <div class="relative inline-block text-left" style="padding-bottom: 20px;">
+                                <select id="viewType"
+                                        class="block w-full pl-3 pr-10 py-2 text-sm border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-md bg-slate-50 text-slate-600 cursor-pointer">
+                                    <option value="day" selected>By Day</option>
+                                    <option value="month">By Month</option>
+                                </select>
+                            </div>
+                            <h2 class="text-xl font-semibold mb-4 text-gray-800">
+                                Event Revenue
+                            </h2>
+                            <canvas id="myChart"></canvas>
+                            <div>
+                                <p class="text-sm text-slate-500 mt-1">
+                                    Total Revenue:
+                                    <span th:text="|${#numbers.formatDecimal(totalAmount, 0, 'POINT', 0, 'COMMA')} VND|"
+                                          class="text-lg font-semibold text-blue-600 ml-1">87,120,000 VND</span>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- ═══════════════════════════════════════════════════════════
+                         MANAGE ATTENDEE — ACCESS CONTROL
+                         Theo RDS: UC-34, Screen #37→#39→#41
+                         ═══════════════════════════════════════════════════════════ -->
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+                        <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                            <h3 class="text-lg font-bold flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">how_to_reg</span>
+                                Manage Attendee
+                            </h3>
+                            <span class="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500 font-medium">
+                                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                                <span th:text="${checkedInCount != null ? checkedInCount : 0}">0</span>
+                                / <span th:text="${totalRegistered != null ? totalRegistered : 0}">0</span> checked in
+                            </span>
+                        </div>
+
+                        <div class="p-6 space-y-4">
+                            <!-- 3 Action Cards -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+                                <!-- ① Scan QR Check-in — PRIMARY -->
+                                <a th:href="@{/staff/checkin(eventId=${event.id})}"
+                                   class="group relative flex items-center gap-3 p-4 rounded-xl bg-primary
+                                          hover:bg-blue-600 active:scale-[0.98] shadow-md shadow-primary/20
+                                          transition-all duration-200 overflow-hidden cursor-pointer">
+                                    <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                                    <div class="shrink-0 w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-white text-[22px]">qr_code_scanner</span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-white font-bold text-sm leading-tight">Scan QR Check-in</p>
+                                        <p class="text-blue-100 text-xs mt-0.5">Open camera to scan</p>
+                                    </div>
+                                    <span class="material-symbols-outlined text-white/60 text-[18px] shrink-0 group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+                                </a>
+
+                                <!-- ② Attendee List -->
+                                <a th:href="@{/staff/attendee/list(eventId=${event.id})}"
+                                   class="group flex items-center gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60
+                                          border border-slate-200 dark:border-slate-700
+                                          hover:border-primary/40 hover:bg-white dark:hover:bg-slate-800
+                                          hover:shadow-md active:scale-[0.98]
+                                          transition-all duration-200 cursor-pointer">
+                                    <div class="shrink-0 w-10 h-10 rounded-lg bg-white dark:bg-slate-700 flex items-center justify-center shadow-sm
+                                                group-hover:bg-primary/10 transition-colors">
+                                        <span class="material-symbols-outlined text-slate-500 dark:text-slate-400 text-[20px] group-hover:text-primary transition-colors">group</span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-slate-900 dark:text-white font-bold text-sm leading-tight">
+                                            Attendee List</p>
+                                        <p class="text-slate-400 text-xs mt-0.5">View &amp; filter</p>
+                                    </div>
+                                    <span class="material-symbols-outlined text-slate-300 dark:text-slate-600 text-[18px] shrink-0 group-hover:text-primary group-hover:translate-x-0.5 transition-all">chevron_right</span>
+                                </a>
+
+                                <!-- ③ Check-in Status -->
+                                <a th:href="@{/staff/attendee/checkInStatus(eventId=${event.id})}"
+                                   class="group flex items-center gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60
+                                          border border-slate-200 dark:border-slate-700
+                                          hover:border-primary/40 hover:bg-white dark:hover:bg-slate-800
+                                          hover:shadow-md active:scale-[0.98]
+                                          transition-all duration-200 cursor-pointer">
+                                    <div class="shrink-0 w-10 h-10 rounded-lg bg-white dark:bg-slate-700 flex items-center justify-center shadow-sm
+                                                group-hover:bg-primary/10 transition-colors">
+                                        <span class="material-symbols-outlined text-slate-500 dark:text-slate-400 text-[20px] group-hover:text-primary transition-colors">fact_check</span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-slate-900 dark:text-white font-bold text-sm leading-tight">
+                                            Check-in Status</p>
+                                        <p class="text-slate-400 text-xs mt-0.5">Monitor progress</p>
+                                    </div>
+                                    <span class="material-symbols-outlined text-slate-300 dark:text-slate-600 text-[18px] shrink-0 group-hover:text-primary group-hover:translate-x-0.5 transition-all">chevron_right</span>
+                                </a>
+
+                            </div>
+
+                            <!-- Progress bar -->
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-2">
+                                <span class="text-xs text-slate-400 font-medium shrink-0 flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-[14px]">monitoring</span>
+                                    Check-in Progress
+                                </span>
+                                <div class="flex-1 w-full h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                                    <div class="h-full bg-primary rounded-full transition-all duration-700"
+                                         th:style="|width: ${(checkedInCount != null && totalRegistered != null && totalRegistered > 0) ? (checkedInCount * 100 / totalRegistered) : 0}%|"
+                                         style="width: 0%"></div>
+                                </div>
+                                <span class="text-xs text-slate-500 shrink-0">
+                                    <span class="text-green-600 font-bold"
+                                          th:text="${checkedInCount != null ? checkedInCount : 0}">0</span>
+                                    / <span th:text="${totalRegistered != null ? totalRegistered : 0}">0</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ═══ END MANAGE ATTENDEE ═══ -->
+
+                </div>
+                <div class="space-y-8">
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-6 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">settings_input_component</span>
+                            Event Metadata
+                        </h3>
+                        <div class="grid grid-cols-1 gap-5">
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-slate-400 text-[20px] mt-0.5">event</span>
+                                <div>
+                                    <p class="text-xs text-slate-500">Event Status</p>
+                                    <p th:text="${event.eventStatus}"
+                                       class="text-sm font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full mt-1 inline-block">
+                                        Published</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-slate-400 text-[20px] mt-0.5">category</span>
+                                <div>
+                                    <p class="text-xs text-slate-500">Event Type</p>
+                                    <p th:text="${event.category.name}" class="text-sm font-semibold">In-Person
+                                        Conference</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-slate-400 text-[20px] mt-0.5">schedule</span>
+                                <div>
+                                    <p class="text-xs text-slate-500">Date &amp; Time</p>
+                                    <p th:text="|${#temporals.format(event.startDateTime, 'HH:mm dd/MM/yyyy')} - ${#temporals.format(event.endDateTime, 'HH:mm dd/MM/yyyy')}|"
+                                       class="text-sm font-semibold">Oct 12, 2024 - Oct 14, 2024</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-slate-400 text-[20px] mt-0.5">timer</span>
+                                <div>
+                                    <p class="text-xs text-slate-500">Registration Deadline</p>
+                                    <p th:text="${#temporals.format(event.registrationDeadline, 'HH:mm dd/MM/yyyy')}"
+                                       class="text-sm font-semibold">Oct 10, 2024, 11:59 PM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-slate-400 text-[20px] mt-0.5">location_on</span>
+                                <div>
+                                    <p class="text-xs text-slate-500">Venue</p>
+                                    <p th:text="${event.venue.name}" class="text-sm font-semibold">Moscone Center
+                                        West</p>
+                                    <a class="text-xs text-primary hover:underline" href="#">View on Map</a>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-slate-400 text-[20px] mt-0.5">group</span>
+                                <div>
+                                    <p class="text-xs text-slate-500">Attendees</p>
+                                    <p th:text="|${event.currentAttendees} / ${event.maxAttendees}|"
+                                       class="text-sm font-semibold">1,838 / 2,750 Max</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-slate-400 text-[20px] mt-0.5">payments</span>
+                                <div>
+                                    <p class="text-xs text-slate-500">Currency</p>
+                                    <p th:text="${event.currency}" class="text-sm font-semibold">USD ($)</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-slate-400 text-[20px] mt-0.5">badge</span>
+                                <div>
+                                    <p class="text-xs text-slate-500">Organizer</p>
+                                    <p th:text="${event.organizer.name}" class="text-sm font-semibold">TechEvents Global
+                                        Ltd.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-6 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">analytics</span>
+                            Live Insights
+                        </h3>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xs text-slate-500">View Count</span>
+                                    <span th:text="${event.viewCount}" class="text-sm font-bold">14,291</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                    <div class="h-full bg-blue-400" th:style="|width:${event.viewCountPercent}%|"></div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                                    <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Created At</p>
+                                    <p th:text="${#temporals.format(event.createdAt, 'dd/MM/yyyy HH:mm')}"
+                                       class="text-xs font-semibold">Aug 15, 2023</p>
+                                </div>
+                                <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                                    <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Last Updated</p>
+                                    <p th:text="${#temporals.format(event.createdAt, 'dd/MM/yyyy HH:mm')}"
+                                       class="text-xs font-semibold">2 hours ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="p-8 pt-0 max-w-[1400px] mx-auto w-full">
+        <div class="border-t border-slate-200 dark:border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 dark:text-slate-400 text-xs">
+            <p>© 2024 EventOS Management System. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+                <a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+                <a class="hover:text-primary transition-colors" href="#">Support</a>
+            </div>
+        </div>
+    </footer>
+</div>
+<div id="popupMessage" th:if="${hasMessage}"
+     class="transition-opacity duration-300 fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white dark:bg-slate-900 w-50 max-w-sm rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all">
+        <div class="p-6 flex flex-col items-center text-center">
+            <div class="size-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-red-600 dark:text-red-500 text-[32px]">warning</span>
+            </div>
+            <h3 th:text="${errorTitle}" class="text-xl font-bold text-slate-900 dark:text-white mb-2">File Too
+                Large</h3>
+            <p th:text="${message}" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                The selected image exceeds the maximum size limit of 5MB. Please choose a smaller file.
+            </p>
+        </div>
+        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 flex justify-center">
+            <button id="closePopup"
+                    class="w-50 py-2.5 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-bold rounded-lg transition-colors shadow-lg shadow-blue-500/20">
+                OK
+            </button>
+        </div>
+
+    </div>
+</div>
+<input id="revenue-data"
+       th:data="${event.id}"
+       type="hidden"
+>
+
+<script>
+    let myChartInstance = null;
+    let ctx = document.getElementById('myChart');
+    const type = document.getElementById('viewType');
+    type.addEventListener('change', function () {
+        updateRevenueChart(this.value);
+    });
+
+    // 1. Hàm lấy dữ liệu từ API
+    async function updateRevenueChart(type) {
+        try {
+            let labels = [];
+            let revenueData;
+
+            console.log("Loại đã chọn:", type); // 'day', 'month' hoặc 'year'
+            if (type === 'day') {
+                const id = document.getElementById('revenue-data').getAttribute('data');
+                const response = await fetch('/api/revenue/' + id + '/d/totalRevenue');
+                revenueData = await response.json();
+                labels = revenueData.map(item => item.day + ', ' + item.month.string);
+            } else {
+                const id = document.getElementById('revenue-data').getAttribute('data');
+                const response = await fetch('/api/revenue/' + id + '/m/totalRevenue');
+                revenueData = await response.json();
+                labels = revenueData.map(item => item.month.string);
+            }
+            // 2. Parse dữ liệu JSON thành 2 mảng riêng biệt cho Chart.js
+
+            const amounts = revenueData.map(item => item.totalRevenue);
+
+            console.log(labels);
+            console.log(amounts);
+
+            // 3. Gọi hàm vẽ biểu đồ với dữ liệu mới
+            renderChart(labels, amounts);
+
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu doanh thu:", error);
+        }
+    }
+
+    // 2. Hàm render biểu đồ
+    function renderChart(labels, dataValues) {
+        if (myChartInstance !== null) {
+            myChartInstance.destroy();
+        }
+
+        myChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Event Revenue (VND)',
+                    data: dataValues,
+
+                    borderColor: '#3b82f6',       // màu đường (blue)
+                    backgroundColor: 'rgba(59,130,246,0.1)', // nền mờ
+
+                    tension: 0,   // làm mượt đường cong
+                    fill: true,     // có nền phía dưới
+
+                    pointBackgroundColor: '#3b82f6',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#374151'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {color: '#6b7280'},
+                        grid: {display: false}
+                    },
+                    y: {
+                        ticks: {color: '#6b7280'},
+                        grid: {color: '#e5e7eb'}
+                    }
+                }
+            }
+        });
+    }
+
+    updateRevenueChart(type.value);
+
+</script>
+
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const popup = document.getElementById("popupMessage");
+        const btnClose = document.getElementById("closePopup");
+        if (popup && btnClose) {
+            btnClose.addEventListener("click", function () {
+                popup.classList.add("opacity-0");
+                setTimeout(() => popup.remove(), 300);
+            });
+        }
+    });
+</script>
+</html>

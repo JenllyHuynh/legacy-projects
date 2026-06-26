@@ -1,0 +1,467 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/staff/frag::head('Staff')}"></head>
+
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════════════ -->
+<header th:fragment="header(title)"
+        class="sticky top-0 z-40 flex items-center justify-between border-b border-solid border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-8 py-4">
+
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-4">
+        <div class="flex flex-wrap gap-2">
+            <a class="text-slate-500 hover:text-primary text-sm font-medium leading-normal transition-colors"
+               th:href="@{/staff}">Staff</a>
+            <span class="text-slate-400 text-sm font-medium leading-normal">/</span>
+            <span th:text="${title}"
+                  class="text-slate-900 dark:text-white text-sm font-medium leading-normal">Page</span>
+        </div>
+    </div>
+
+    <!-- Right actions -->
+    <div class="flex items-center gap-3">
+
+        <!-- ── CHUÔNG THÔNG BÁO STAFF ─────────────────────────────── -->
+        <div class="relative" id="staffNotifWrapper">
+
+            <!-- Nút chuông -->
+            <button id="staffNotifTrigger"
+                    class="relative flex size-10 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors focus:outline-none">
+                <span class="material-symbols-outlined text-[20px]">notifications</span>
+                <!-- Badge số đỏ -->
+                <span id="staffNotifBadge" class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1
+                                         flex items-center justify-center rounded-full
+                                         bg-red-500 text-white text-[9px] font-bold
+                                         border-2 border-white dark:border-slate-900" style="display:none;">0</span>
+            </button>
+
+            <!-- Dropdown popup -->
+            <div id="staffNotifPopup"
+                 class="hidden absolute right-0 top-12 w-80 rounded-xl
+            border border-slate-200 dark:border-slate-700
+            bg-white dark:bg-slate-900
+            shadow-xl z-50 overflow-hidden">
+
+                <div class="flex items-center justify-between px-4 py-3
+                border-b border-slate-100 dark:border-slate-800">
+                    <p class="text-sm font-bold text-slate-800 dark:text-white">Notifications</p>
+                    <button id="staffMarkAllReadBtn"
+                            class="text-xs font-semibold text-primary hover:underline">
+                        Mark all read
+                    </button>
+                </div>
+
+                <div id="staffNotifList"
+                     class="max-h-72 overflow-y-auto divide-y divide-slate-50 dark:divide-slate-800">
+                    <div class="flex items-center justify-center py-8 gap-2 text-slate-400">
+                        <span class="material-symbols-outlined text-[20px]">hourglass_empty</span>
+                        <span class="text-sm">Loading...</span>
+                    </div>
+                </div>
+
+                <a href="/staff/my-notifications"
+                   class="flex items-center justify-center gap-1.5 py-3
+              text-xs font-bold text-primary
+              bg-slate-50 dark:bg-slate-800
+              hover:bg-slate-100 dark:hover:bg-slate-700
+              transition-colors border-t border-slate-100 dark:border-slate-800">
+                    View all notifications
+                    <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Right actions -->
+        <div class="flex items-center gap-3">
+
+
+            <!-- Avatar + Name -->
+            <div class="flex items-center gap-2 cursor-pointer">
+                <!--            <div class="size-10 rounded-full bg-slate-300"></div>-->
+                <span class="text-sm font-semibold text-slate-700 dark:text-white"
+                      th:text="${#authentication.name}">Admin</span>
+            </div>
+
+            <!-- Dropdown -->
+            <div class="flex items-center gap-2 cursor-pointer">
+
+                    <form th:action="@{/auth/logout}" method="post">
+                        <button type="submit"
+                                class="w-full text-left px-4 py-2 text-sm font-medium
+           text-white bg-blue-500
+           hover:bg-red-600
+           rounded-md transition duration-200 ease-in-out
+           shadow-sm">
+                            Logout
+                        </button>
+                    </form>
+
+            </div>
+        </div>
+
+    </div>
+</header>
+
+
+<!-- ══ SIDEBAR ══════════════════════════════════════════════════════════ -->
+<aside th:fragment="staffSidebar(activePage)"
+       class="hidden lg:flex w-72 flex-col border-r border-[#e6eaf4] dark:border-gray-700 bg-surface-light dark:bg-surface-dark h-full">
+    <div class="flex flex-col h-full justify-between p-4">
+        <div class="flex flex-col gap-6">
+
+            <!-- Brand -->
+            <div class="flex items-center gap-3 px-2">
+                <div
+                        class="bg-primary aspect-square rounded-full size-10 flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined text-[24px]">grid_view</span>
+                </div>
+                <div class="flex flex-col">
+                    <h1 class="text-text-main dark:text-white text-base font-bold leading-normal">Staff Dashboard</h1>
+                    <p class="text-text-secondary dark:text-gray-400 text-xs font-normal leading-normal">Management
+                        Console</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex flex-col gap-2">
+                <!--                <a th:href="@{/staff}"-->
+                <!--                   class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-background-light dark:hover:bg-gray-800 transition-colors">-->
+                <!--                    <span class="material-symbols-outlined text-text-secondary dark:text-gray-400 text-[24px]">monitoring</span>-->
+                <!--                    <p class="text-text-main dark:text-gray-200 text-sm font-medium leading-normal">Revenue</p>-->
+                <!--                </a>-->
+                <a th:href="@{/staff/event}">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150"
+                         th:classappend="${activePage == 'eventList'}
+            ? 'bg-primary/10 text-primary font-semibold'
+            : 'text-text-secondary hover:bg-primary/5 hover:text-primary'">
+
+                            <span class="material-symbols-outlined text-[24px]"
+                                  th:classappend="${activePage == 'eventList'} ? 'text-primary' : 'dark:text-gray-400'">
+                                calendar_today
+                            </span>
+
+                        <p class="text-sm leading-normal">Events</p>
+                    </div>
+                </a>
+
+                <a th:href="@{/staff/discount}">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150"
+                         th:classappend="${activePage == 'discount'}
+            ? 'bg-primary/10 text-primary font-semibold'
+            : 'text-text-secondary hover:bg-primary/5 hover:text-primary'">
+
+                            <span class="material-symbols-outlined text-[24px]"
+                                  th:classappend="${activePage == 'discount'} ? 'text-primary' : 'dark:text-gray-400'">
+                                sell
+                            </span>
+
+                        <p class="text-sm leading-normal">Discount Code</p>
+                    </div>
+                </a>
+
+                <a th:href="@{/staff/venue}">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150"
+                         th:classappend="${activePage == 'venue'}
+            ? 'bg-primary/10 text-primary font-semibold'
+            : 'text-text-secondary hover:bg-primary/5 hover:text-primary'">
+
+                            <span class="material-symbols-outlined text-[24px]"
+                                  th:classappend="${activePage == 'venue'} ? 'text-primary' : 'dark:text-gray-400'">
+                                location_on
+                            </span>
+
+                        <p class="text-sm leading-normal">Venues</p>
+                    </div>
+                </a>
+
+                <a th:href="@{/staff/assignEventStaff}">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150"
+                         th:classappend="${activePage == 'assignEventStaff'}
+            ? 'bg-primary/10 text-primary font-semibold'
+            : 'text-text-secondary hover:bg-primary/5 hover:text-primary'">
+
+                            <span class="material-symbols-outlined text-[24px]"
+                                  th:classappend="${activePage == 'assignEventStaff'} ? 'text-primary' : 'dark:text-gray-400'">
+                                groups
+                            </span>
+
+                        <p class="text-sm leading-normal">List Event Staff</p>
+                    </div>
+                </a>
+
+                <!--                <a th:href="@{/staff/staff}">-->
+                <!--                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150"-->
+                <!--                         th:classappend="${activePage == 'staff'}-->
+                <!--            ? 'bg-primary/10 text-primary font-semibold'-->
+                <!--            : 'text-text-secondary hover:bg-primary/5 hover:text-primary'">-->
+
+                <!--                            <span class="material-symbols-outlined text-[24px]"-->
+                <!--                                  th:classappend="${activePage == 'staff'} ? 'text-primary' : 'dark:text-gray-400'">-->
+                <!--                                group-->
+                <!--                            </span>-->
+
+                <!--                        <p class="text-sm leading-normal">Staff</p>-->
+                <!--                    </div>-->
+                <!--                </a>-->
+
+                <a th:href="@{/staff/attendee}">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150"
+                         th:classappend="${activePage == 'attendee'}
+            ? 'bg-primary/10 text-primary font-semibold'
+            : 'text-text-secondary hover:bg-primary/5 hover:text-primary'">
+
+                            <span class="material-symbols-outlined text-[24px]"
+                                  th:classappend="${activePage == 'attendee'} ? 'text-primary' : 'dark:text-gray-400'">
+                                account_circle
+                            </span>
+
+                        <p class="text-sm leading-normal">Attendees</p>
+                    </div>
+                </a>
+
+                <a th:href="@{/staff/notification}">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150"
+                         th:classappend="${activePage == 'notification'}
+            ? 'bg-primary/10 text-primary font-semibold'
+            : 'text-text-secondary hover:bg-primary/5 hover:text-primary'">
+
+                            <span class="material-symbols-outlined text-[24px]"
+                                  th:classappend="${activePage == 'notification'} ? 'text-primary' : 'dark:text-gray-400'">
+                                notifications
+                            </span>
+
+                        <p class="text-sm leading-normal">Notifications</p>
+                    </div>
+                </a>
+
+                <a th:href="@{/staff/comments}">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150"
+                         th:classappend="${activePage == 'comments'}
+            ? 'bg-primary/10 text-primary font-semibold'
+            : 'text-text-secondary hover:bg-primary/5 hover:text-primary'">
+
+                            <span class="material-symbols-outlined text-[24px]"
+                                  th:classappend="${activePage == 'comments'} ? 'text-primary' : 'dark:text-gray-400'">
+                                chat
+                            </span>
+
+                        <p class="text-sm leading-normal">Comments</p>
+                    </div>
+                </a>
+
+            </nav>
+        </div>
+
+        <!-- User Profile -->
+        <!--        <div class="border-t border-[#e6eaf4] dark:border-gray-700 pt-4 px-2">-->
+        <!--            <div class="flex items-center gap-3">-->
+        <!--                <div class="bg-center bg-no-repeat bg-cover rounded-full size-10 ring-2 ring-white dark:ring-gray-600"-->
+        <!--                     style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBxGnBN0wUNMcZfjCvUCV-xgjiOoMV5-CZ-XGHmAS8-29ufKR6vXZHsHftjoTTCHhzeJvkgFEHWTA3mYu0jD3kXIlXW5pMfNbQSjFMhYLF6MjG8Wc8EiWy0g658JhTGZmEkA4q-4EOxExTtI5gOtjGGcUVYJ8epRcvRLZFqRsqDJUHsz4MGlPa08QnhgnR8thgMUyQ0F0Y88iAjuoB6LV0-vueKEM_A0FUCzVXrGOtyd7CXJcNTKlMF8dg62NOyW_6AzbClpcW397xm");'>-->
+        <!--                </div>-->
+        <!--                <div class="flex flex-col">-->
+        <!--                    <p class="text-text-main dark:text-white text-sm font-medium">Staff</p>-->
+        <!--                    <p class="text-text-secondary dark:text-gray-400 text-xs">Management</p>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+    </div>
+</aside>
+
+
+<!-- ══ SCRIPT CHUÔNG — đặt cuối body hoặc include qua fragment ══════════ -->
+<th:block th:fragment="staffBellScript">
+    <script>
+        (function () {
+
+            // ── Helpers ───────────────────────────────────────────────────────
+            function formatTime(isoStr) {
+                if (!isoStr) return '';
+                const diff = Math.floor((Date.now() - new Date(isoStr)) / 1000);
+                if (diff < 60) return 'Just now';
+                if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+                if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+                return Math.floor(diff / 86400) + 'd ago';
+            }
+
+            function esc(str) {
+                return String(str || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
+            function getIconInfo(type) {
+                if (type === 'System') return {
+                    icon: 'info',
+                    bg: 'bg-slate-100 dark:bg-slate-700',
+                    color: 'text-slate-500'
+                };
+                if (type === 'Email') return {
+                    icon: 'mail',
+                    bg: 'bg-amber-100 dark:bg-amber-900/30',
+                    color: 'text-amber-500'
+                };
+                return { icon: 'notifications', bg: 'bg-blue-100 dark:bg-blue-900/30', color: 'text-blue-500' };
+            }
+
+            function renderItem(n) {
+                const { icon, bg, color } = getIconInfo(n.notificationType);
+                const unread = !n.isRead;
+                return `
+            <div class="flex items-start gap-3 px-4 py-3 cursor-pointer
+                        hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors
+                        ${unread ? 'bg-blue-50/60 dark:bg-blue-900/10' : ''}"
+                 data-id="${n.id}"
+                 onclick="staffNotifMarkRead(${n.id}, this)">
+                <div class="flex h-8 w-8 items-center justify-center rounded-full ${bg} shrink-0 mt-0.5">
+                    <span class="material-symbols-outlined ${color} text-[16px]">${icon}</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-start justify-between gap-2">
+                        <p class="text-xs font-bold text-slate-800 dark:text-white truncate">${esc(n.title)}</p>
+                        ${unread ? '<span class="h-2 w-2 rounded-full bg-blue-500 shrink-0 mt-1"></span>' : ''}
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">${esc(n.message)}</p>
+                    <div class="flex items-center gap-1.5 mt-1">
+                        ${n.eventTitle ? `<span class="text-[10px] font-medium text-primary">${esc(n.eventTitle)}</span><span class="text-slate-300">·</span>` : ''}
+                        <span class="text-[10px] text-slate-400">${formatTime(n.sentAt)}</span>
+                    </div>
+                </div>
+            </div>`;
+            }
+
+            function renderEmpty() {
+                return `<div class="flex flex-col items-center justify-center py-8 text-slate-400">
+                    <span class="material-symbols-outlined text-[32px] mb-2">notifications_none</span>
+                    <p class="text-xs">No notifications yet</p>
+                </div>`;
+            }
+
+            // ── Load badge khi trang load ─────────────────────────────────────
+            async function loadBadge() {
+                try {
+                    const res = await fetch('/api/staff/notifications/unread-count');
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    const count = data.count || 0;
+                    const badge = document.getElementById('staffNotifBadge');
+                    if (!badge) return;
+                    if (count > 0) {
+                        badge.textContent = count > 99 ? '99+' : count;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                } catch (_) {
+                }
+            }
+
+            // ── Load danh sách popup ──────────────────────────────────────────
+            async function loadNotifications() {
+                const list = document.getElementById('staffNotifList');
+                if (!list) return;
+                list.innerHTML = `<div class="flex items-center justify-center py-8 gap-2 text-slate-400">
+                              <span class="material-symbols-outlined text-[20px]">hourglass_empty</span>
+                              <span class="text-sm">Loading...</span>
+                          </div>`;
+                try {
+                    const res = await fetch('/api/staff/notifications/recent');
+                    if (!res.ok) throw new Error();
+                    const data = await res.json();
+                    list.innerHTML = data.length > 0
+                        ? data.map(renderItem).join('')
+                        : renderEmpty();
+                } catch (_) {
+                    list.innerHTML = `<p class="text-xs text-center text-slate-400 py-8">Unable to load.</p>`;
+                }
+            }
+
+            // ── Đánh dấu 1 đã đọc khi click ──────────────────────────────────
+            window.staffNotifMarkRead = async function (id, el) {
+                if (!el.classList.contains('bg-blue-50/60') && !el.classList.contains('dark:bg-blue-900/10')) return;
+                try {
+                    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+                    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (csrfToken && csrfHeader) headers[csrfHeader] = csrfToken;
+
+                    await fetch(`/api/staff/notifications/${id}/read`, { method: 'PUT', headers });
+
+                    // Xóa nền xanh + dot
+                    el.classList.remove('bg-blue-50/60', 'dark:bg-blue-900/10');
+                    el.querySelector('.h-2.w-2.bg-blue-500')?.remove();
+
+                    // Giảm badge
+                    const badge = document.getElementById('staffNotifBadge');
+                    if (badge && badge.style.display !== 'none') {
+                        const cur = parseInt(badge.textContent) || 1;
+                        if (cur <= 1) {
+                            badge.style.display = 'none';
+                        } else {
+                            badge.textContent = cur - 1;
+                        }
+                    }
+                } catch (_) {
+                }
+            };
+
+            // ── Mark all read ─────────────────────────────────────────────────
+            document.getElementById('staffMarkAllReadBtn')?.addEventListener('click', async function () {
+                try {
+                    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+                    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+                    const headers = {};
+                    if (csrfToken && csrfHeader) headers[csrfHeader] = csrfToken;
+
+                    await fetch('/api/staff/notifications/read-all', { method: 'PUT', headers });
+
+                    document.querySelectorAll('#staffNotifList [data-id]').forEach(el => {
+                        el.classList.remove('bg-blue-50/60', 'dark:bg-blue-900/10');
+                        el.querySelector('.h-2.w-2.bg-blue-500')?.remove();
+                    });
+                    const badge = document.getElementById('staffNotifBadge');
+                    if (badge) badge.style.display = 'none';
+                } catch (_) {
+                }
+            });
+
+            // ── Toggle popup ──────────────────────────────────────────────────
+            const trigger = document.getElementById('staffNotifTrigger');
+            const popup = document.getElementById('staffNotifPopup');
+            const wrapper = document.getElementById('staffNotifWrapper');
+            let loaded = false;
+
+            trigger?.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const isOpen = popup.classList.toggle('hidden');
+                // isOpen = true nghĩa là vừa ẩn đi, false = vừa mở ra
+                if (!isOpen && !loaded) {
+                    loaded = true;
+                    loadNotifications();
+                }
+            });
+
+            // Đóng khi click ra ngoài
+            document.addEventListener('click', function (e) {
+                if (!wrapper?.contains(e.target)) {
+                    popup?.classList.add('hidden');
+                }
+            });
+
+            // Đóng khi nhấn Escape
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') popup?.classList.add('hidden');
+            });
+
+            // Load badge ngay khi trang load
+            loadBadge();
+
+        })();
+    </script>
+</th:block>
+
+</body>
+
+</html>

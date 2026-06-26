@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment/frag :: head('Thông báo - Event Go')"></head>
+
+<body class="min-h-screen text-neutral-800">
+<div class="relative flex min-h-screen w-full flex-col bg-background-light">
+    <header th:replace="fragment/customer/frag :: header"></header>
+    <div class="flex flex-1 min-h-0">
+        <aside th:replace="~{fragment/customer/frag::sidebar('notification')}"></aside>
+        <main class="flex flex-1 min-h-0 justify-center overflow-y-auto px-4 md:px-10 py-10">
+            <div class="w-full max-w-3xl flex flex-col gap-6"><!-- Heading -->
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-extrabold tracking-tight dark:text-white">Notifications</h1>
+                        <p class="text-sm text-text-secondary dark:text-slate-400 mt-1">
+                            All your notifications
+                        </p>
+                    </div>
+                    <button id="pageMarkAllBtn"
+                            class="flex items-center gap-2 text-sm font-semibold text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 px-4 py-2 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">done_all</span>
+                        Mark all as read
+                    </button>
+                </div>
+
+                <!-- Danh sách thông báo -->
+                <div class="bg-white dark:bg-surface-dark rounded-2xl border border-border-light dark:border-border-dark shadow-sm overflow-hidden">
+
+                    <!-- Không có thông báo -->
+                    <div th:if="${notifications.isEmpty()}"
+                         class="flex flex-col items-center justify-center py-20 gap-3 text-slate-400">
+                        <span class="material-symbols-outlined text-[48px]">notifications_off</span>
+                        <p class="text-base font-medium">No notifications yet</p>
+                    </div>
+
+                    <!-- Danh sách -->
+                    <div th:if="${!notifications.isEmpty()}" id="pageNotifList">
+                        <div th:each="n : ${notifications}"
+                             th:id="'notif-' + ${n.id}"
+                             th:attr="data-title=${n.title}, data-type=${n.notificationType}"
+                             th:classappend="${!#bools.isTrue(n.isRead)} ? 'unread' : ''"
+                             class="notif-page-item flex gap-4 px-6 py-5 cursor-pointer
+                                            hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors
+                                            border-b border-slate-100 dark:border-slate-800 last:border-b-0"
+                             th:onclick="|markReadOnPage(${n.id}, this)|">
+
+                            <!-- Icon -->
+                            <div th:id="'icon-' + ${n.id}"
+                                 class="size-11 rounded-full flex items-center justify-center shrink-0 bg-purple-100 text-purple-600">
+                                <span class="material-symbols-outlined icon-filled text-[22px]">notifications</span>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="flex flex-col gap-1 flex-1 min-w-0">
+                                <div class="flex items-start justify-between gap-2">
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white leading-snug"
+                                       th:text="${n.title}">Tiêu đề thông báo</p>
+                                    <!-- Dot chưa đọc -->
+                                    <span th:if="${!#bools.isTrue(n.isRead)}"
+                                          th:id="'dot-' + ${n.id}"
+                                          class="size-2 bg-primary rounded-full shrink-0 mt-1.5"></span>
+                                </div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed"
+                                   th:text="${n.message}">Nội dung thông báo</p>
+                                <p class="text-[11px] text-slate-400 uppercase font-bold tracking-wider mt-1"
+                                   th:text="${n.sentAtFormatted}">
+                                    10:30 - 01/01/2026
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<!-- ── STYLES ── -->
+<style>
+    .notif-page-item.unread {
+        background: #eff6ff;
+    }
+
+    .dark .notif-page-item.unread {
+        background: rgba(30, 58, 95, 0.2);
+    }
+
+    .notif-icon-BOOKING {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .notif-icon-PAYMENT {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .notif-icon-EVENT_UPDATE {
+        background: #fef9c3;
+        color: #ca8a04;
+    }
+
+    .notif-icon-CANCELLATION {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .notif-icon-DEFAULT {
+        background: #f3e8ff;
+        color: #9333ea;
+    }
+</style>
+
+<!-- ── SCRIPTS ── -->
+<script>
+    function getIconInfo(title, type) {
+        const t = (title || '').toLowerCase();
+
+        if (t.includes('booking') || t.includes('ticket'))
+            return {icon: 'confirmation_number', cls: 'notif-icon-BOOKING'};
+
+        if (t.includes('payment') || t.includes('refund'))
+            return {icon: 'payments', cls: 'notif-icon-PAYMENT'};
+
+        if (t.includes('cancel'))
+            return {icon: 'cancel', cls: 'notif-icon-CANCELLATION'};
+
+        if (t.includes('update') || t.includes('reminder') || t.includes('schedule'))
+            return {icon: 'campaign', cls: 'notif-icon-EVENT_UPDATE'};
+
+        if (t.includes('welcome'))
+            return {icon: 'waving_hand', cls: 'notif-icon-BOOKING'};
+
+        if (type === 'Email') return {icon: 'mail', cls: 'notif-icon-DEFAULT'};
+        if (type === 'SMS') return {icon: 'sms', cls: 'notif-icon-DEFAULT'};
+        return {icon: 'notifications', cls: 'notif-icon-DEFAULT'};
+    }
+
+    document.querySelectorAll('#pageNotifList > div[data-title]').forEach(function (item) {
+        const title = item.dataset.title || '';
+        const type = item.dataset.type || '';
+        const iconEl = document.getElementById('icon-' + item.id.replace('notif-', ''));
+        if (!iconEl) return;
+
+        const {icon, cls} = getIconInfo(title, type);
+        iconEl.className = 'size-11 rounded-full flex items-center justify-center shrink-0 ' + cls;
+        iconEl.querySelector('span').textContent = icon;
+    });
+
+    async function markReadOnPage(id, el) {
+        if (!el.classList.contains('unread')) return;
+        try {
+            await fetch('/api/notifications/' + id + '/read', {method: 'PUT'});
+            el.classList.remove('unread');
+            document.getElementById('dot-' + id)?.remove();
+
+            // ← Thêm: cập nhật badge chuông realtime
+            const badge = document.getElementById('notifBadge');
+            if (badge && badge.style.display !== 'none') {
+                const cur = parseInt(badge.textContent) || 1;
+                if (cur <= 1) {
+                    badge.style.display = 'none';
+                } else {
+                    badge.textContent = cur - 1;
+                }
+            }
+        } catch { /* bỏ qua */
+        }
+    }
+
+    document.getElementById('pageMarkAllBtn')?.addEventListener('click', async function () {
+        try {
+            await fetch('/api/notifications/read-all', {method: 'PUT'});
+            document.querySelectorAll('.notif-page-item.unread').forEach(function (el) {
+                el.classList.remove('unread');
+            });
+            document.querySelectorAll('[id^="dot-"]').forEach(function (el) {
+                el.remove();
+            });
+
+            // ← Thêm: ẩn badge chuông realtime
+            const badge = document.getElementById('notifBadge');
+            if (badge) {
+                badge.style.display = 'none';
+                badge.textContent = '0';
+            }
+        } catch { /* bỏ qua */
+        }
+    });
+</script>
+
+<th:block th:replace="fragment/customer/frag :: headerScripts"></th:block>
+<footer th:replace="~{fragment/frag::footer}"></footer>
+
+</body>
+</html>

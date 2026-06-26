@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/frag::head('Event Management')}"></head>
+
+<body
+        class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white flex overflow-hidden h-screen">
+<div th:replace="~{fragment/frag::loading}"></div>
+<script th:replace="~{fragment/frag::scriptLoading}"></script>
+<aside th:replace="~{fragment/staff/frag::staffSidebar('eventList')}"></aside>
+<div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    <header th:replace="~{fragment/staff/frag::header('Event Management')}"></header>
+    <main class="flex-1">
+        <div class="max-w-[1400px] mx-auto p-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div class="flex flex-col gap-1">
+                    <h1
+                            class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">
+                        Event Lifecycle</h1>
+                    <p class="text-slate-500 dark:text-slate-400 text-base font-normal leading-normal">Manage,
+                        track,
+                        and edit your upcoming events across all platforms.</p>
+                </div>
+                <a th:href="@{/staff/event/create}"
+                   class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-6 bg-primary hover:bg-blue-600 transition-colors text-white text-sm font-bold leading-normal tracking-[0.015em] shadow-lg shadow-blue-500/30">
+                    <span class="material-symbols-outlined mr-2 text-[20px]">add</span>
+                    <span class="truncate">Create New Event</span>
+                </a>
+            </div>
+            <div class="mb-6 grid gap-4 lg:grid-cols-[1fr_auto]">
+                <label class="flex flex-col h-11 w-full">
+                    <div
+                            class="flex w-full flex-1 items-stretch rounded-lg h-full bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden focus-within:ring-2 focus-within:ring-primary/50 transition-shadow">
+                        <div class="text-slate-400 flex items-center justify-center pl-4 pr-2">
+                            <span class="material-symbols-outlined text-[20px]">search</span>
+                        </div>
+                        <input
+                                class="flex w-full min-w-0 flex-1 resize-none bg-transparent text-slate-900 dark:text-white focus:outline-0 placeholder:text-slate-400 px-2 text-sm font-normal leading-normal border-none focus:ring-0"
+                                placeholder="Search events by name, ID, or venue..."/>
+                    </div>
+                </label>
+                <div class="flex gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
+                    <div class="h-8 w-[1px] bg-slate-300 dark:bg-slate-700 self-center mx-1 hidden lg:block"></div>
+                    <div class="flex gap-2">
+
+                        <!-- All -->
+                        <a th:href="@{/staff/event(page=1)}"
+                           th:classappend="${currentStatus == null} ?
+    'bg-primary/10 border-primary/20 text-primary font-semibold' :
+    'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'"
+                           class="flex h-9 items-center justify-center px-3 text-sm rounded-md border hover:bg-primary/20 transition">
+                            All Statuses
+                        </a>
+
+                        <!-- Draft -->
+                        <a th:href="@{/staff/event(status='Draft', page=1)}"
+                           th:classappend="${currentStatus == 'Draft'} ?
+    'bg-primary/10 border-primary/20 text-primary font-semibold' :
+    'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'"
+                           class="flex h-9 items-center justify-center px-3 text-sm rounded-md border hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+                            Draft
+                        </a>
+
+                        <!-- Published -->
+                        <a th:href="@{/staff/event(status='Published', page=1)}"
+                           th:classappend="${currentStatus == 'Published'} ?
+    'bg-primary/10 border-primary/20 text-primary font-semibold' :
+    'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'"
+                           class="flex h-9 items-center justify-center px-3 text-sm rounded-md border transition">
+                            Published
+                        </a>
+                        <!-- Live -->
+                        <a th:href="@{/staff/event(status='Live', page=1)}"
+                           th:classappend="${currentStatus == 'Live'} ?
+    'bg-primary/10 border-primary/20 text-primary font-semibold' :
+    'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'"
+                           class="flex h-9 items-center justify-center px-3 text-sm rounded-md border transition">
+                            Live
+                        </a>
+                        <!-- Complete -->
+                        <a th:href="@{/staff/event(status='Completed', page=1)}"
+                           th:classappend="${currentStatus == 'Completed'} ?
+    'bg-primary/10 border-primary/20 text-primary font-semibold' :
+    'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'"
+                           class="flex h-9 items-center justify-center px-3 text-sm rounded-md border transition">
+                            Completed
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <div
+                    class="w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600 dark:text-slate-400">
+                        <thead
+                                class="bg-slate-50 dark:bg-slate-800/50 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
+                        <tr>
+                            <th class="px-6 py-4" scope="col">Event Name</th>
+                            <th class="px-6 py-4" scope="col">Date &amp; Time</th>
+                            <th class="px-6 py-4" scope="col">Location</th>
+                            <th class="px-6 py-4" scope="col">Tickets Sold</th>
+                            <th class="px-6 py-4" scope="col">Status</th>
+                            <th class="px-6 py-4 text-right" scope="col">Revenue</th>
+                            <th class="px-6 py-4 text-right" scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        <tr th:each="event : ${pageEvents}"
+                            class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div th:style="|background-image: url('@{/upload/event/thumbnail/{id}(id=${event.thumbnailUrl})}')|"
+                                         class="h-10 w-10 flex-shrink-0 rounded-lg bg-cover bg-center"></div>
+                                    <div th:text="${event.title}"
+                                         class="font-medium text-slate-900 dark:text-white">
+                                        Tech Summit 2024
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col">
+                                            <span th:text="${event.startDateString}"
+                                                  class="text-slate-900 dark:text-white">Oct 12, 2024</span>
+                                    <span th:text="${event.startTimeString}"
+                                          class="text-xs text-slate-500">09:00 AM EST</span>
+                                </div>
+                            </td>
+                            <td th:text="${event.venue.name}" class="px-6 py-4">Convention Center</td>
+                            <td class="px-6 py-4">
+                                <div th:if="${event.ticketTypes.size() != null && event.ticketTypes.size() != 0}"
+                                     class="flex items-center gap-2">
+                                    <div
+                                            class="w-16 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                                        <div class="h-full bg-primary"
+                                             th:style="|width:${event.ticketSoldPercent}%|"></div>
+                                    </div>
+                                    <span th:text="|${#numbers.formatDecimal(event.ticketSoldPercent, 1, 1)}%|"
+                                          class="text-xs font-medium">85%</span>
+                                </div>
+                                <div th:if="${event.ticketTypes.size() == null || event.ticketTypes.size() == 0}"
+                                     class="flex items-center gap-2">
+                                            <span
+                                                    class="material-symbols-outlined text-red-600 text-xs font-medium">error</span>
+                                    <span class="text-red-600">Have no data!</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex justify-center">
+                                            <span class="px-3 py-1 rounded-full text-xs font-bold"
+                                                  th:classappend="${statusClassMap[event.eventStatus]}"
+                                                  th:text="${event.eventStatus}">
+                                            </span>
+                                </div>
+
+                            </td>
+                            <td th:text="|${event.revenue != null ? #numbers.formatDecimal(event.revenue, 1, 'POINT', 0, 'DEFAULT') : 0} ${event.currency}|"
+                                class="px-6 py-4 text-right font-medium text-slate-900 dark:text-white"></td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <form th:action="@{/staff/event/{id}/notification/send(id=${event.id})}"
+                                          method="get">
+                                        <button type="submit"
+                                                class="p-1 text-slate-400 hover:text-primary transition-colors"
+                                                title="Send Notification">
+                                            <span class="material-symbols-outlined text-[20px]">campaign</span>
+                                        </button>
+                                    </form>
+
+                                    <form th:action="@{/staff/event/{id}(id=${event.id})}" method="get">
+                                        <button type="submit"
+                                                class="p-1 text-slate-400 hover:text-primary transition-colors"
+                                                title="View Detail">
+                                            <span class="material-symbols-outlined text-[20px]">info</span>
+                                        </button>
+                                    </form>
+                                    <form th:action="@{/staff/event/{id}/edit(id=${event.id})}" method="get">
+                                        <button type="submit"
+                                                th:disabled="${!(event.eventStatus.equalsIgnoreCase('Rejected') || event.eventStatus.equalsIgnoreCase('PendingApproval') || event.eventStatus.equalsIgnoreCase('Draft'))}"
+                                                class="p-1 text-slate-400 hover:text-primary transition-colors"
+                                                th:classappend="${!(event.eventStatus.equalsIgnoreCase('Rejected') || event.eventStatus.equalsIgnoreCase('PendingApproval') || event.eventStatus.equalsIgnoreCase('Draft'))} ? 'cursor-not-allowed' : ''"
+                                                th:title="${!(event.eventStatus.equalsIgnoreCase('Rejected') || event.eventStatus.equalsIgnoreCase('PendingApproval') || event.eventStatus.equalsIgnoreCase('Draft'))} ? 'Cannot edit' : 'Edit event'"
+                                                title="Edit Event">
+                                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        </button>
+                                    </form>
+                                </div>
+                                <!--                                    <button class="p-1 text-slate-400 hover:text-red-500 transition-colors"-->
+                                <!--                                            title="Delete">-->
+                                <!--                                        <span class="material-symbols-outlined text-[20px]">delete</span>-->
+                                <!--                                    </button>-->
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                        class="flex flex-col sm:flex-row items-center justify-between border-t border-slate-200 dark:border-slate-800 px-6 py-4 bg-slate-50 dark:bg-slate-900 gap-4">
+                    <p class="text-sm text-slate-500 dark:text-slate-400">
+
+                        <!-- 0 results -->
+                        <span th:if="${pageEvents.totalElements == 0}">
+        No results found
+    </span>
+
+                        <!-- 1 result -->
+                        <span th:if="${pageEvents.totalElements == 1}">
+        Show 1 result
+    </span>
+
+                        <!-- >1 results -->
+                        <span th:if="${pageEvents.totalElements > 1}">
+        Showing
+        <span th:text="${pageEvents.number * pageEvents.size + 1}"
+              class="font-medium text-slate-900 dark:text-white"></span>
+        to
+        <span th:text="${pageEvents.number * pageEvents.size + pageEvents.numberOfElements}"
+              class="font-medium text-slate-900 dark:text-white"></span>
+        of
+        <span th:text="${pageEvents.totalElements}"
+              class="font-medium text-slate-900 dark:text-white"></span>
+        results
+    </span>
+
+                    </p>
+                    <!--Total pages <= 4 -->
+                    <nav th:if="${!pageEvents.content.empty}" aria-label="Pagination"
+                         class="flex items-center gap-2 mt-6">
+
+                        <!-- Prev -->
+                        <a th:if="${pageEvents.number > 0}"
+                           th:href="@{/staff/event(page=${pageEvents.number}, status=${currentStatus})}"
+                           class="size-10 flex items-center justify-center rounded-lg border border-gray-200
+       dark:border-gray-800 text-text-secondary dark:text-gray-400 hover:bg-gray-50
+       dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all">
+                            <span class="material-symbols-outlined !text-[20px]">chevron_left</span>
+                        </a>
+
+                        <span th:if="${pageEvents.number == 0}"
+                              class="size-10 flex items-center justify-center rounded-lg border border-gray-200 opacity-50 cursor-not-allowed">
+                                <span class="material-symbols-outlined !text-[20px]">chevron_left</span>
+                            </span>
+
+                        <!-- Page Numbers -->
+                        <div class="flex items-center gap-2" th:with="
+            currentPage=${pageEvents.number},
+            totalPages=${pageEvents.totalPages},
+            start=${T(java.lang.Math).max(currentPage - 2, 0)},
+            end=${T(java.lang.Math).min(currentPage + 2, totalPages - 1)}
+         ">
+
+                            <!-- First -->
+                            <a th:if="${currentPage > 2}" th:href="@{/staff/event(page=1)}" class="size-10 flex items-center justify-center rounded-lg border border-gray-200
+           dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                                1
+                            </a>
+
+                            <span th:if="${start > 1}"
+                                  class="size-10 flex items-center justify-center text-gray-400">...</span>
+
+                            <!-- Middle -->
+                            <a th:each="i : ${#numbers.sequence(start, end)}"
+                               th:href="@{/staff/event(page=${i + 1}, status=${currentStatus})}"
+                               th:class="${i == currentPage}
+                ? 'size-10 flex items-center justify-center rounded-lg bg-primary text-white font-bold shadow-md'
+                : 'size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800'">
+
+                                <span th:text="${i + 1}"></span>
+                            </a>
+
+                            <span th:if="${end < totalPages - 2}"
+                                  class="size-10 flex items-center justify-center text-gray-400">...</span>
+
+                            <!-- Last -->
+                            <a th:if="${currentPage + 2 < totalPages - 1}"
+                               th:href="@{/staff/event(page=${totalPages})}" class="size-10 flex items-center justify-center rounded-lg border border-gray-200
+           dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+
+                                <span th:text="${totalPages}"></span>
+                            </a>
+
+                        </div>
+
+                        <!-- Next -->
+                        <a th:if="${pageEvents.number + 1 < pageEvents.totalPages}"
+                           th:href="@{/staff/event(page=${pageEvents.number + 2}, status=${currentStatus})}" class="size-10 flex items-center justify-center rounded-lg border border-gray-200
+       dark:border-gray-800 text-text-secondary dark:text-gray-400 hover:bg-gray-50
+       dark:hover:bg-gray-800 hover:border-primary/30 hover:text-primary transition-all">
+                            <span class="material-symbols-outlined !text-[20px]">chevron_right</span>
+                        </a>
+
+                        <span th:if="${pageEvents.number + 1 >= pageEvents.totalPages}"
+                              class="size-10 flex items-center justify-center rounded-lg border border-gray-200 opacity-50 cursor-not-allowed">
+                                <span class="material-symbols-outlined !text-[20px]">chevron_right</span>
+                            </span>
+
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="p-8 pt-0 max-w-[1400px] mx-auto w-full">
+        <div
+                class="border-t border-slate-200 dark:border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 dark:text-slate-400 text-xs">
+            <p>© 2024 EventOS Management System. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+                <a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+                <a class="hover:text-primary transition-colors" href="#">Support</a>
+            </div>
+        </div>
+    </footer>
+</div>
+<th:block th:replace="~{fragment/staff/frag::staffBellScript}"></th:block>
+</body>
+
+</html>
