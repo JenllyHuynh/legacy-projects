@@ -1,0 +1,112 @@
+.recent-blog {
+    padding: 2rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    height: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.recent-blog::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #00B894;
+}
+
+.recent-blog h2 {
+    color: var(--dark);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.recent-blog h2::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: #00cec9;
+    border-radius: 2px;
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.blog-post {
+    background: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+}
+
+.blog-post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    border-color: var(--primary-light);
+}
+
+.blog-post .blog-image {
+    width: 100%;
+    height: 160px;
+    background: linear-gradient(135deg, #E8F2FF, #D4E7FF);
+    margin-bottom: 0;
+    position: relative;
+}
+
+.category-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--primary);
+    color: var(--white);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(58, 123, 200, 0.3);
+}
+
+.blog-post .blog-content {
+    padding: 1.5rem;
+}
+
+.blog-post h3 {
+    margin: 0.5rem 0;
+    color: var(--dark);
+    font-size: 1.2rem;
+}
+
+.blog-post h3 a {
+    color: inherit;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.blog-post h3 a:hover {
+    color: var(--primary);
+}
+
+.blog-post p {
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.blog-post .blog-meta {
+    font-size: 0.8rem;
+    color: var(--gray);
+}

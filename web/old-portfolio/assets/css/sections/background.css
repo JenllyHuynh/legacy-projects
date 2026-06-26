@@ -1,0 +1,63 @@
+.background {
+  padding: 2.5rem;
+  background: linear-gradient(135deg, var(--white) 0%, #f8fbff 100%);
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+
+.background:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+.background-card {
+  position: relative;
+  z-index: 1;
+  padding: 1.5rem 2rem;
+}
+
+.background h2 {
+  color: var(--dark);
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.background h2::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 55px;
+  height: 3px;
+  background: var(--secondary);
+  border-radius: 2px;
+}
+
+.background p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.background p:last-of-type {
+  margin-bottom: 0;
+  font-style: italic;
+  color: var(--gray);
+}

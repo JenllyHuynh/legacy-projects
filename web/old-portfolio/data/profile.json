@@ -1,0 +1,23 @@
+{
+    "name": "Jenlly Huỳnh",
+    "title": "Full-Stack Developer & Designer",
+    "bio": "Passionate developer creating amazing web experiences",
+    "avatar": "assets/images/profile/avatar.jpg",
+    "socialLinks": [
+        {
+            "platform": "github",
+            "url": "https://github.com/JenllyHuynh",
+            "icon": "fab fa-github"
+        },
+        {
+            "platform": "linkedin",
+            "url": "#",
+            "icon": "fab fa-linkedin"
+        },
+        {
+            "platform": "twitter",
+            "url": "#",
+            "icon": "fab fa-twitter"
+        }
+    ]
+}

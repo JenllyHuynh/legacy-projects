@@ -1,0 +1,846 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* BIẾN CSS - Định nghĩa các màu sắc và giá trị dùng chung */
+:root {
+    /* Màu sắc chính */
+    --primary: #2563eb;           /* Màu xanh chính */
+    --primary-dark: #1d4ed8;      /* Màu xanh đậm */
+    --primary-light: #dbeafe;     /* Màu xanh nhạt */
+    --secondary: #3b82f6;         /* Màu phụ */
+    --accent: #f59e0b;            /* Màu nhấn (vàng) */
+    --accent-light: #fef3c7;      /* Màu nhấn nhạt */
+    
+    /* Màu nền và text */
+    --light: #f8fafc;             /* Màu nền sáng */
+    --dark: #1e293b;              /* Màu text tối */
+    --gray: #475569;              /* Màu xám */
+    --gray-light: #e2e8f0;        /* Màu xám nhạt */
+    --white: #ffffff;             /* Màu trắng */
+    
+    /* Màu trạng thái */
+    --success: #10b981;           /* Màu thành công (xanh lá) */
+    --success-light: #d1fae5;     /* Màu thành công nhạt */
+    --success-dark: #065f46;      /* Màu thành công đậm */
+    --warning: #f59e0b;           /* Màu cảnh báo (vàng) */
+    --warning-light: #fef3c7;     /* Màu cảnh báo nhạt */
+    --warning-dark: #92400e;      /* Màu cảnh báo đậm */
+    --error: #ef4444;             /* Màu lỗi (đỏ) */
+
+    /* Bóng đổ */
+    --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.1);      /* Bóng nhỏ */
+    --shadow: 0 8px 24px rgba(16, 24, 40, 0.1);        /* Bóng vừa */
+    --shadow-lg: 0 10px 30px rgba(11, 20, 40, 0.15);   /* Bóng lớn */
+    --card-shadow: 0 6px 18px rgba(11, 20, 40, 0.1);   /* Bóng card */
+
+    /* Hiệu ứng chuyển động */
+    --transition: all 0.28s cubic-bezier(.2, .9, .2, 1);     /* Chuyển động mượt */
+    --transition-fast: all 0.15s ease;                       /* Chuyển động nhanh */
+    --transition-slow: all 0.4s cubic-bezier(.2, .9, .2, 1); /* Chuyển động chậm */
+
+    /* Kích thước */
+    --max-width: 1100px;          /* Chiều rộng tối đa của container */
+    --border-radius: 12px;        /* Bo góc lớn */
+    --border-radius-sm: 8px;      /* Bo góc nhỏ */
+
+    /* Kích thước font */
+    --font-size-xs: 0.75rem;      /* Font rất nhỏ */
+    --font-size-sm: 0.875rem;     /* Font nhỏ */
+    --font-size-base: 1rem;       /* Font cơ bản */
+    --font-size-lg: 1.125rem;     /* Font lớn */
+    --font-size-xl: 1.25rem;      /* Font rất lớn */
+    --font-size-2xl: 1.5rem;      /* Font cực lớn */
+    --font-size-3xl: 1.875rem;    /* Font siêu lớn */
+    --font-size-4xl: 2.25rem;     /* Font khổng lồ */
+}
+
+/* ---------- THIẾT LẬP CƠ BẢN ---------- */
+html,
+body {
+    font-family: 'Open Sans', sans-serif;  /* Font chữ chính */
+    background: var(--light);              /* Màu nền */
+    color: var(--dark);                    /* Màu chữ */
+    -webkit-font-smoothing: antialiased;   /* Làm mượt font trên WebKit */
+    -moz-osx-font-smoothing: grayscale;    /* Làm mượt font trên Firefox */
+    line-height: 1.6;                      /* Khoảng cách dòng */
+    scroll-behavior: smooth;               /* Cuộn mượt */
+}
+
+/* Kiểu focus cho accessibility - Hỗ trợ người khuyết tật */
+*:focus {
+    outline: 2px solid var(--primary);     /* Viền khi focus */
+    outline-offset: 2px;                   /* Khoảng cách viền */
+}
+
+/* ---------- HEADER - THANH ĐIỀU HƯỚNG ---------- */
+header {
+    background: linear-gradient(135deg, #004AAD 0%, #00C8C8 100%); /* Gradient xanh */
+    position: fixed;                       /* Cố định ở đầu trang */
+    width: 100%;                          /* Chiều rộng 100% */
+    top: 0;                               /* Vị trí trên cùng */
+    z-index: 1000;                        /* Lớp cao nhất */
+    color: var(--white);                  /* Màu chữ trắng */
+    box-shadow: var(--shadow-lg);         /* Bóng đổ */
+    backdrop-filter: blur(10px);          /* Hiệu ứng mờ nền */
+}
+
+/* Container chứa logo và menu */
+.nav-container {
+    max-width: var(--max-width);          /* Chiều rộng tối đa */
+    margin: 0 auto;                       /* Căn giữa */
+    padding: 1rem 1.25rem;                /* Padding trong */
+    display: flex;                        /* Flexbox layout */
+    align-items: center;                  /* Căn giữa theo chiều dọc */
+    justify-content: space-between;       /* Căn đều 2 đầu */
+    gap: 1rem;                           /* Khoảng cách giữa các phần tử */
+}
+
+/* Logo của website */
+.logo a {
+    color: var(--white);                  /* Màu chữ trắng */
+    text-decoration: none;                /* Bỏ gạch chân */
+    font-weight: 700;                     /* Chữ đậm */
+    font-size: 1.35rem;                   /* Kích thước chữ */
+    display: flex;                        /* Flexbox */
+    align-items: center;                  /* Căn giữa */
+    gap: 0.5rem;                         /* Khoảng cách icon và text */
+}
+
+/* Menu điều hướng */
+.nav-menu {
+    display: flex;                        /* Flexbox ngang */
+    gap: 1.25rem;                        /* Khoảng cách giữa các item */
+    list-style: none;                    /* Bỏ bullet point */
+    align-items: center;                 /* Căn giữa */
+}
+
+/* Link trong menu */
+.nav-menu a {
+    color: var(--white);                 /* Màu chữ trắng */
+    text-decoration: none;               /* Bỏ gạch chân */
+    font-weight: 600;                    /* Chữ hơi đậm */
+    font-size: 0.95rem;                  /* Kích thước chữ */
+    display: inline-flex;                /* Inline flexbox */
+    align-items: center;                 /* Căn giữa icon và text */
+    gap: 0.6rem;                        /* Khoảng cách icon và text */
+    padding: 8px 12px;                   /* Padding */
+    border-radius: var(--border-radius-sm); /* Bo góc */
+    transition: var(--transition);       /* Hiệu ứng chuyển động */
+    position: relative;                  /* Để tạo pseudo element */
+    overflow: hidden;                    /* Ẩn phần tràn */
+}
+
+/* Hiệu ứng gạch chân khi hover */
+.nav-menu a::after {
+    content: '';                         /* Nội dung rỗng */
+    position: absolute;                  /* Vị trí tuyệt đối */
+    bottom: 0;                          /* Ở dưới cùng */
+    left: 0;                            /* Bắt đầu từ trái */
+    width: 0;                           /* Chiều rộng ban đầu = 0 */
+    height: 2px;                        /* Chiều cao gạch chân */
+    background: var(--white);           /* Màu trắng */
+    transition: var(--transition);      /* Hiệu ứng chuyển động */
+}
+
+/* Hiệu ứng khi hover - gạch chân mở rộng */
+.nav-menu a:hover::after {
+    width: 100%;                        /* Gạch chân mở rộng 100% */
+}
+
+/* Hiệu ứng khi hover - nền và di chuyển */
+.nav-menu a:hover {
+    background: rgba(255, 255, 255, 0.15); /* Nền trắng trong suốt */
+    transform: translateY(-2px);           /* Di chuyển lên 2px */
+}
+
+/* ---------- CONTAINER CHÍNH ---------- */
+.blog-container {
+    max-width: var(--max-width);          /* Chiều rộng tối đa */
+    margin: 7.2rem auto 3rem;             /* Margin trên, dưới (7.2rem để tránh header cố định) */
+    padding: 0 1.25rem;                   /* Padding trái phải */
+    animation: fadeIn 0.5s ease;          /* Hiệu ứng fade in khi load */
+}
+
+/* Animation fade in cho trang */
+@keyframes fadeIn {
+    from {
+        opacity: 0;                       /* Bắt đầu trong suốt */
+        transform: translateY(10px);      /* Di chuyển từ dưới lên */
+    }
+    to {
+        opacity: 1;                       /* Kết thúc hiện rõ */
+        transform: translateY(0);         /* Về vị trí ban đầu */
+    }
+}
+
+/* ---------- HERO SECTION - PHẦN GIỚI THIỆU CHÍNH ---------- */
+.hero-section {
+    width: 100%;                          /* Chiều rộng 100% */
+    min-height: 330px;                    /* Chiều cao tối thiểu */
+    border-radius: 20px;                  /* Bo góc */
+    padding: 40px;                        /* Padding */
+    display: flex;                        /* Flexbox layout */
+    align-items: center;                  /* Căn giữa theo chiều dọc */
+    gap: 50px;                           /* Khoảng cách giữa 2 phần */
+    color: white;                        /* Màu chữ trắng */
+    background: linear-gradient(135deg, #004AAD, #00C8C8); /* Gradient xanh */
+    box-shadow: 0px 12px 40px rgba(0,0,0,0.15); /* Bóng đổ */
+}
+
+/* Phần bên trái - chứa icon */
+.hero-left {
+    display: flex;                        /* Flexbox */
+    align-items: center;                  /* Căn giữa */
+    justify-content: center;              /* Căn giữa */
+}
+
+/* Icon dự án */
+.hero-icon {
+    width: 85px;                         /* Chiều rộng */
+    height: 85px;                        /* Chiều cao */
+    border-radius: 50%;                  /* Hình tròn */
+    border: 3px solid rgba(255,255,255,0.4); /* Viền trắng trong suốt */
+    background: rgba(255,255,255,0.15);  /* Nền trắng trong suốt */
+    display: flex;                       /* Flexbox */
+    align-items: center;                 /* Căn giữa */
+    justify-content: center;             /* Căn giữa */
+}
+
+/* Icon bên trong */
+.hero-icon i {
+    font-size: 40px;                     /* Kích thước icon */
+    color: white;                        /* Màu trắng */
+}
+
+.hero-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.hero-badge {
+    background: rgba(255,255,255,0.2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    width: fit-content;
+}
+
+.hero-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.hero-desc {
+    font-size: 16px;
+    opacity: 0.95;
+}
+
+.hero-meta {
+    margin-top: 10px;
+    display: flex;
+    gap: 25px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.hero-meta i {
+    margin-right: 6px;
+}
+
+/* ---------- Project Info Grid ---------- */
+.project-info {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+}
+
+.info-box {
+    background: var(--white);
+    padding: 1.8rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition);
+    border: 1px solid var(--gray-light);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.info-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #004AAD, #00C8C8);
+    transform: scaleY(0);
+    transition: var(--transition);
+}
+
+.info-box:hover::before {
+    transform: scaleY(1);
+}
+
+.info-box:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.info-icon {
+    color: #004AAD;
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+    display: inline-block;
+}
+
+.info-box h3 {
+    color: #004AAD;
+    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.info-box p {
+    color: var(--gray);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+}
+
+.compact-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.compact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.compact-list li::before {
+    content: '•';
+    color: #004AAD;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* ---------- Content Sections ---------- */
+.content-section {
+    margin: 2.4rem 0;
+    background: var(--white);
+    padding: 2.2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--gray-light);
+    transition: var(--transition);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.content-section:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+}
+
+.content-section h2 {
+    color: #004AAD;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid var(--primary-light);
+    font-weight: 700;
+}
+
+.content-section h3 {
+    color: #00C8C8;
+    font-size: 1.3rem;
+    margin: 1.8rem 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.content-section p {
+    font-size: 1.05rem;
+    margin-bottom: 1.3rem;
+    line-height: 1.6;
+    color: var(--gray);
+}
+
+.content-section ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.content-section li {
+    margin: 0.5rem 0;
+    line-height: 1.6;
+    color: var(--gray);
+}
+
+/* ---------- Features Grid ---------- */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.8rem;
+    margin: 2rem 0;
+}
+
+.feature-card {
+    background: var(--white);
+    padding: 1.8rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    border-left: 4px solid #004AAD;
+    transition: var(--transition);
+    border: 1px solid var(--gray-light);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-left-color: #00C8C8;
+}
+
+.feature-card h4 {
+    color: #004AAD;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+}
+
+.feature-card i {
+    color: #004AAD;
+    font-size: 1.3rem;
+}
+
+.feature-card ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.feature-card li {
+    margin: 0.8rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: var(--gray);
+    font-size: 0.95rem;
+}
+
+.feature-card li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #00C8C8;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* ---------- Architecture Cards ---------- */
+.architecture-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.arch-card {
+    background: var(--white);
+    padding: 1.8rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    text-align: left;
+    transition: var(--transition);
+    border: 1px solid var(--gray-light);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.arch-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #004AAD, #00C8C8);
+}
+
+.arch-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.arch-card h4 {
+    color: #004AAD;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+}
+
+.arch-card ul {
+    padding-left: 1rem;
+    color: var(--gray);
+    margin: 0;
+}
+
+.arch-card li {
+    margin: 0.6rem 0;
+    position: relative;
+}
+
+.arch-card li::before {
+    content: '•';
+    color: #00C8C8;
+    font-weight: bold;
+    position: absolute;
+    left: -0.8rem;
+    font-size: 1.2rem;
+}
+
+/* ---------- Tech Stack ---------- */
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin: 1.5rem 0;
+}
+
+.tech-item {
+    background: linear-gradient(135deg, #004AAD, #00C8C8);
+    color: var(--white);
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid rgba(74, 159, 208, 0.2);
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+
+.tech-item:hover {
+    background: linear-gradient(135deg, #00C8C8, #004AAD);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+}
+
+/* ---------- Project Footer ---------- */
+.project-footer {
+    text-align: center;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, #004AAD, #00C8C8);
+    border-radius: var(--border-radius);
+    margin: 2rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--white);
+}
+
+.project-footer p {
+    font-size: 1.2rem;
+    color: var(--white);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    opacity: 0.95;
+}
+
+.tags {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.tag {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.tag:hover {
+    background: var(--white);
+    color: #004AAD;
+    transform: translateY(-3px);
+}
+
+/* ---------- Back to Home Button ---------- */
+.back-to-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #004AAD;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--border-radius-sm);
+    background: var(--white);
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+    border: 2px solid #004AAD;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.back-to-home::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 74, 173, 0.1), transparent);
+    transition: var(--transition-slow);
+}
+
+.back-to-home:hover::before {
+    left: 100%;
+}
+
+.back-to-home:hover {
+    background: #004AAD;
+    color: var(--white);
+    transform: translateX(-5px);
+    border-color: #004AAD;
+}
+
+/* ---------- Responsive Design ---------- */
+@media (max-width: 1024px) {
+    .project-info {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+    }
+
+    .blog-container {
+        margin-top: 6.2rem;
+        padding: 0 1rem;
+    }
+
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+        padding: 30px 20px;
+        min-height: 280px;
+    }
+
+    .hero-left {
+        justify-content: center;
+    }
+
+    .hero-right {
+        align-items: center;
+        text-align: center;
+    }
+
+    .hero-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .project-info {
+        grid-template-columns: 1fr;
+    }
+
+    .features-grid,
+    .architecture-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .content-section {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 20px 15px;
+        min-height: 250px;
+    }
+
+    .hero-title {
+        font-size: 24px;
+    }
+
+    .hero-desc {
+        font-size: 14px;
+    }
+
+    .hero-badge {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+
+    .content-section {
+        padding: 1.2rem;
+    }
+
+    .feature-card,
+    .arch-card {
+        padding: 1.2rem;
+    }
+
+    .project-footer {
+        padding: 1.5rem;
+    }
+
+    .tags {
+        justify-content: flex-start;
+    }
+}
+
+/* ---------- Site Footer ---------- */
+.wow-footer {
+    background: linear-gradient(90deg, #004AAD 0%, #00C8C8 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 2.5rem 0;
+    margin-top: 3rem;
+    box-shadow: 0 -8px 30px rgba(37, 63, 116, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.wow-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+    background-size: cover;
+}
+
+.footer-content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.footer-content p {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Pulse animation for heart icon */
+.pulse {
+    animation: pulse 2s infinite;
+    color: red;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+}
+/* 
+==
+======================================
+TỔNG KẾT CẤU TRÚC CSS
+========================================
+
+1. BIẾN CSS (:root):
+   - Định nghĩa màu sắc, kích thước, hiệu ứng dùng chung
+   - Dễ dàng thay đổi theme và maintain code
+
+2. RESET & BASE:
+   - Reset margin/padding mặc định
+   - Thiết lập font, màu nền cơ bản
+   - Focus styles cho accessibility
+
+3. HEADER:
+   - Fixed position để luôn hiển thị
+   - Gradient background
+   - Responsive navigation menu
+   - Hover effects cho links
+
+4. HERO SECTION:
+   - Flexbox layout với 2 cột
+   - Gradient background matching header
+   - Icon tròn với hiệu ứng
+   - Typography hierarchy rõ ràng
+
+5. CONTENT SECTIONS:
+   - Card-based design với shadows
+   - Consistent spacing và typography
+   - Grid layouts cho responsive
+   - Hover animations
+
+6. RESPONSIVE DESIGN:
+   - Mobile-first approach
+   - Breakpoints: 480px, 768px, 1024px
+   - Flexible layouts với Grid và Flexbox
+   - Typography scaling
+
+7. ANIMATIONS:
+   - CSS transitions cho smooth interactions
+   - Keyframe animations cho special effects
+   - Transform effects cho hover states
+   - Scroll-triggered animations (via JS)
+
+========================================
+BEST PRACTICES ÁP DỤNG:
+- BEM methodology cho class naming
+- CSS Custom Properties cho maintainability  
+- Mobile-first responsive design
+- Semantic HTML structure
+- Accessibility considerations
+- Performance optimizations
+========================================
+*/

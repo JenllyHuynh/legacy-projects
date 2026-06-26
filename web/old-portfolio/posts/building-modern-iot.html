@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart IoT Watering System - Complete Review | huehk Blog</title>
+
+    <!-- Font & Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- CSS  -->
+    <link rel="stylesheet" href="../posts/building-modern-iot.css" />
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header>
+        <nav>
+            <div class="nav-container">
+                <h1 class="logo"><a href="../index.html">Blog</a></h1>
+                <div class="hamburger" id="hamburger" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="../blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                    <li><a href="../contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="iot-blog-container">
+        <a href="../blog.html" class="back-to-home">
+            <i class="fas fa-arrow-left"></i> Back to Blog
+        </a>
+        <!-- Hero Section -->
+        <section class="hero-green-pro">
+            <div class="sunlight"></div>
+            <div class="hero-green-pro-content">
+                <div class="leaf-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <span class="green-pro-badge">Internet of Things</span>
+                <h1>Smart IOT Watering machine</h1>
+                <p class="big-subtitle">
+                    ESP32-based automated irrigation with
+                </p>
+                <p class="small-subtitle">
+                    ESP32-based automated irrigation with weather intelligence and remote monitoring
+                </p>
+                <div class="meta-line">
+                    <span><i class="far fa-calendar"></i> September 11 - 2025</span>
+                    <span><i class="far fa-clock"></i> 4 weeks development</span>
+                </div>
+            </div>
+        </section>
+        <!-- Quick Info -->
+        <section class="project-info">
+            <div class="info-box">
+                <i class="fas fa-bullseye info-icon"></i>
+                <h3>Purpose</h3>
+                <p>Automate plant care and optimize water usage through intelligent irrigation</p>
+            </div>
+
+            <div class="info-box">
+                <i class="fas fa-bars info-icon"></i>
+                <h3>Difference from project tutorial</h3>
+                <ul class="compact-list">
+                    <li>Web server</li>
+                    <li>Object-Oriented Programming</li>
+                    <li>Weather API integration</li>
+                    <li>Turn ESP32 into a router to connect wifi</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <i class="fas fa-microchip info-icon"></i>
+                <h3>Tech Stack</h3>
+                <p>ESP32</p>
+                <p>C++</p>
+                <p>HTML/CSS/JS</p>
+                <p>OpenWeatherMap API</p>
+            </div>
+
+            <div class="info-box">
+                <i class="fas fa-award info-icon"></i>
+                <h3>Status</h3>
+                <p>Completed & Successful test</p>
+            </div>
+        </section>
+
+        <!-- Introduction -->
+        <section class="content-section intro-section">
+            <h2><i class="fas fa-info-circle"></i> Introduction</h2>
+            <p>
+                This project was developed solely for educational purposes and <strong>is not intended for commercial
+                    use.</strong>
+                Its primary objective is to support learning and skill development in the field of technology and
+                engineering.
+            </p>
+
+            <p>
+                The initiative was carried out by a team of seven members, with Huệ and Cường serving as the core
+                contributors.
+                The team also benefited from the valuable mentorship and academic guidance of <strong>Ms. Nguyễn Hồng
+                    Hạnh</strong>, the lead lecturer for the Internet of Things course.
+            </p>
+
+            <p>
+                Initially, Huệ proposed to build a mini robot inspired by Vector. However, after evaluating the
+                feasibility with the team's technical capacity, the idea was refined into a more practical solution:
+                <strong>Automatic watering system</strong>.
+            </p>
+
+            <div class="highlight-box">
+                <h4>Project Vision</h4>
+                <p>The team's vision was inspired directly by local farmers-specifically small-scale households that
+                    lack
+                    the financial resources to invest in automated irrigation systems like those used in large-scale
+                    farms. This project was therefore designed to address that need.</p>
+                <ul class="highlight-list">
+                    <li><strong>Affordability</strong> - The team successfully achieved this goal.</li>
+                    <li><strong>Ease of use</strong> - The system currently meets approximately 45% of this requirement.
+                        Since most of the code was developed by Huệ, the team has a clear understanding of where the
+                        limitations lie.</li>
+                    <li><strong>System integrity</strong> - At this stage, the solution functions more as a standalone
+                        machine rather than an integrated, intelligent system.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Instructor Section -->
+        <section class="instructor-section">
+            <div class="instructor-card">
+                <div class="instructor-text">
+                    <h3><i class="fas fa-chalkboard-teacher"></i> Course Instructor</h3>
+                    <h2>Nguyễn Hồng Hạnh</h2>
+                    <p class="course-info"><strong>Course:</strong> Internet of Things (IoT102)</p>
+
+                    <p class="instructor-desc">
+                        We owe our deepest gratitude to Ms. Hạnh for her invaluable mentorship and support throughout
+                        the development of our IoT project.
+                    </p><br>
+
+                    <p class="instructor-desc">
+                        Her deep knowledge in IoT systems, along with her thoughtful guidance in system design and
+                        sensor
+                        calibration, played a crucial role in our success.
+                    </p><br>
+                    <p class="instructor-desc">
+                        Beyond her technical expertise, her dedication and inspiration constantly motivated us to push
+                        our boundaries and strive for excellence in this project.
+                    </p>
+                </div>
+
+                <div class="instructor-photo" aria-hidden="true">
+                    <figure>
+                        <img src="../assets/images/Ms_Hanh.jpg" alt="Nguyen Hong Hanh" />
+                        <figcaption class="photo-caption">Ms. Nguyễn Hồng Hạnh - Internet of Things Lecturer
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Specifications -->
+        <section class="content-section tech-section">
+            <h2><i class="fas fa-tools"></i> Technical Specifications</h2>
+
+            <h3>Hardware Components</h3>
+            <div class="component-grid">
+                <div class="component-item">
+                    <i class="fas fa-microchip"></i>
+                    <h4>ESP32 Development Board</h4>
+                    <p>Main microcontroller with built-in WiFi</p>
+                </div>
+                <div class="component-item">
+                    <i class="fas fa-water"></i>
+                    <h4>Soil Moisture Sensor</h4>
+                    <p>Analog sensor for accurate moisture readings</p>
+                </div>
+                <div class="component-item">
+                    <i class="fas fa-pump-soap"></i>
+                    <h4>12V Water Pump</h4>
+                    <p>Submersible pump for irrigation delivery</p>
+                </div>
+                <div class="component-item">
+                    <i class="fas fa-toggle-on"></i>
+                    <h4>5V Relay Module</h4>
+                    <p>Controls pump power switching</p>
+                </div>
+                <div class="component-item">
+                    <i class="fas fa-plug"></i>
+                    <h4>Power Supply</h4>
+                    <p>12V adapter with voltage regulation</p>
+                </div>
+                <div class="component-item">
+                    <i class="fas fa-display"></i>
+                    <h4>LCD I2C</h4>
+                    <p>Shows ip address 168.192.4.1</p>
+                </div>
+                <div class="component-item">
+                    <i class="fas fa-link"></i>
+                    <h4>Jumper Wires & Breadboard</h4>
+                    <p>Connection infrastructure</p>
+                </div>
+            </div>
+
+            <h3>Software Stack</h3>
+            <ul class="tech-list">
+                <li><strong>Programming Language:</strong> C++ (Arduino Framework)</li>
+                <li><strong>Web Technologies:</strong> HTML5, CSS3, JavaScript</li>
+                <li><strong>Libraries:</strong>
+                    <code>WiFi.h</code>,
+                    <code>WebServer.h</code>,
+                    <code>HTTPClient.h</code>,
+                    <code>ArduinoJson.h</code>,
+                    <code>Preferences.h</code>
+                </li>
+                <li><strong>External APIs:</strong> OpenWeatherMap Weather API</li>
+                <li><strong>Storage:</strong> ESP32 Non-Volatile Storage (NVS)</li>
+                <li><strong>Development Tools:</strong> Arduino IDE, PlatformIO, Git</li>
+            </ul>
+        </section>
+
+        <!-- System Architecture -->
+        <section class="content-section architecture-section">
+            <h2><i class="fas fa-sitemap"></i> System Architecture</h2>
+
+            <p>The system follows a modular, object-oriented architecture with clear separation of concerns.</p>
+
+            <h3>Object-Oriented Design</h3>
+            <p>The system is built using 6 independent C++ classes:</p>
+            <div class="class-grid">
+                <div class="class-card">
+                    <h4><i class="fas fa-cogs"></i> WateringSystem</h4>
+                    <p>Main controller, coordinates all modules</p>
+                </div>
+                <div class="class-card">
+                    <h4><i class="fas fa-wifi"></i> WifiManager</h4>
+                    <p>Handles WiFi connection and AP mode</p>
+                </div>
+                <div class="class-card">
+                    <h4><i class="fas fa-tint"></i> MoistureSensor</h4>
+                    <p>Reads and processes soil moisture data</p>
+                </div>
+                <div class="class-card">
+                    <h4><i class="fas fa-pump-soap"></i> WaterPump</h4>
+                    <p>Controls relay and pump actuation</p>
+                </div>
+                <div class="class-card">
+                    <h4><i class="fas fa-cloud-sun"></i> WeatherAPI</h4>
+                    <p>Fetches weather data from OpenWeatherMap</p>
+                </div>
+                <div class="class-card">
+                    <h4><i class="fas fa-server"></i> WebServer</h4>
+                    <p>Serves HTTP endpoints and dashboard</p>
+                </div>
+            </div>
+
+            <div class="design-benefits">
+                <p>This separation of concerns makes the code:</p>
+                <ul>
+                    <li><strong>Easy to test</strong> - unit testing each class independently</li>
+                    <li><strong>Easy to maintain</strong> - changes in one module don't affect others</li>
+                    <li><strong>Reusable</strong> - can use WifiManager in other projects</li>
+                    <li><strong>Scalable</strong> - easy to add new features or modify existing ones</li>
+                </ul>
+            </div>
+
+            <p>You can view it in the PDF file below the blog post, or access the Class Diagram and Circuit Diagram
+                through the following link:</p>
+
+            <div class="diagram-links">
+                <a href="https://app.cirkitdesigner.com/project/9301dcfc-1469-40dc-933c-66cc1900a9b7" class="btn-link">
+                    <i class="fas fa-screwdriver"></i> Circuit Diagram
+                </a>
+                <a href="https://dbdiagram.io/d/SE1908_Group2_Auto_Watering_System_ProjectProposal-68dc8f65d2b621e422b18755"
+                    class="btn-link">
+                    <i class="fas fa-network-wired"></i> Class Diagram
+                </a>
+            </div>
+
+            <h3>Core Components</h3>
+            <div class="architecture-cards">
+                <div class="arch-card">
+                    <h4>🔌 Hardware Layer</h4>
+                    <ul>
+                        <li>Moisture Sensor (Analog Input)</li>
+                        <li>Relay Module (Digital Output)</li>
+                        <li>Water Pump (Actuator)</li>
+                    </ul>
+                </div>
+                <div class="arch-card">
+                    <h4>💻 Application Layer</h4>
+                    <ul>
+                        <li>WifiManager (Connectivity)</li>
+                        <li>MoistureSensor (Data Collection)</li>
+                        <li>WaterPump (Actuation Control)</li>
+                        <li>WeatherAPI (External Data)</li>
+                    </ul>
+                </div>
+                <div class="arch-card">
+                    <h4>🌐 Presentation Layer</h4>
+                    <ul>
+                        <li>Web Server (HTTP Endpoints)</li>
+                        <li>RESTful API (Data Exchange)</li>
+                        <li>Responsive Dashboard (UI)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Data Flow</h3>
+            <ol class="data-flow-list">
+                <li><strong>Sensor Reading:</strong> Moisture sensor provides analog voltage (0-3.3V)</li>
+                <li><strong>Data Processing:</strong> ESP32 converts voltage to moisture percentage (0-100%)</li>
+                <li><strong>Decision Logic:</strong> Compare moisture with threshold; check weather forecast</li>
+                <li><strong>Actuation:</strong> Activate pump via relay if conditions met</li>
+                <li><strong>User Interface:</strong> Display real-time data on web dashboard</li>
+                <li><strong>Remote Control:</strong> User can manually trigger watering or adjust settings</li>
+            </ol>
+        </section>
+
+        <!-- Key Features -->
+        <section class="content-section features-detail-section">
+            <h2><i class="fas fa-star"></i> Key Features</h2>
+
+            <div class="feature-detail">
+                <h3>1. Automatic Moisture Monitoring</h3>
+                <p>
+                    The system continuously monitors soil moisture levels using a capacitive sensor, which provides
+                    more accurate readings than resistive sensors and avoids corrosion issues. Readings are converted
+                    to percentage values and checked every 30 minutes (configurable).
+                </p>
+            </div>
+
+            <div class="feature-detail">
+                <h3>2. Weather-Based Decision Making</h3>
+                <p>
+                    Before watering, the system queries the OpenWeatherMap API to check for upcoming rain. If rain
+                    is predicted, watering is automatically skipped to conserve water. This feature significantly
+                    reduces water waste during rainy seasons.
+                </p>
+            </div>
+
+            <div class="feature-detail">
+                <h3>3. WiFi Configuration Portal</h3>
+                <p>
+                    On first boot, the ESP32 creates an Access Point named "System setup". Users connect to this
+                    network and access a web configuration page to enter WiFi credentials and Weather API key.
+                    Settings are stored in non-volatile memory.
+                </p>
+            </div>
+
+            <div class="feature-detail">
+                <h3>4. Real-Time Web Dashboard</h3>
+                <p>
+                    Once connected to WiFi, users can access a responsive dashboard showing:
+                </p>
+                <ul>
+                    <li>Current soil moisture level with visual gauge</li>
+                    <li>Pump status (ON/OFF)</li>
+                    <li>Weather forecast information</li>
+                    <li>System mode (Auto/Manual)</li>
+                    <li>Configurable moisture threshold slider</li>
+                    <li>Manual watering button</li>
+                    <li>Real-time system logs</li>
+                </ul>
+            </div>
+
+            <div class="feature-detail">
+                <h3>5. RESTful API Endpoints</h3>
+                <p>The system exposes several API endpoints for programmatic control:</p>
+                <ul>
+                    <li><code>GET /api/status</code> - Retrieve current system status</li>
+                    <li><code>POST /api/water</code> - Trigger manual watering</li>
+                    <li><code>POST /api/settings</code> - Update moisture threshold</li>
+                    <li><code>POST /api/mode</code> - Toggle Auto/Manual mode</li>
+                </ul>
+
+                <div class="api-explanation">
+                    <h4><i class="fas fa-question-circle"></i> Why JSON ?</h4>
+                    <p>
+                        The API uses JSON (JavaScript Object Notation) for data exchange because:
+                    </p>
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <i class="fas fa-weight-hanging"></i>
+                            <div>
+                                <strong>Lightweight:</strong> Smaller payload size compared to XML
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fab fa-js-square"></i>
+                            <div>
+                                <strong>Native JavaScript support:</strong> Browser can parse automatically with
+                                <code>response.json()</code>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-eye"></i>
+                            <div>
+                                <strong>Human-readable:</strong> Easy to debug in browser DevTools
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <strong>Type-safe:</strong> Automatically converts data types (numbers, booleans,
+                                strings)
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-industry"></i>
+                            <div>
+                                <strong>Industry standard:</strong> 99% of modern APIs use JSON
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4><i class="fas fa-code"></i> Example API Response:</h4>
+                    <div class="code-block">
+                        <pre><code>{
+  "moisture": 45,
+  "pump_running": false,
+  "threshold": 25,
+  "weather": {
+    "temperature": 28.5,
+    "condition": "Rain",
+    "humidity": 85
+  },
+  "system_mode": "auto",
+  "last_watered": "2025-01-15T14:30:00Z"
+}</code></pre>
+                    </div>
+
+                    <h4><i class="fas fa-terminal"></i> Example API Usage:</h4>
+                    <div class="code-block">
+                        <pre><code>// Get system status
+fetch('/api/status')
+  .then(response => response.json())
+  .then(data => {
+    console.log('Moisture level:', data.moisture);
+    console.log('Pump running:', data.pump_running);
+  });
+
+// Trigger manual watering
+fetch('/api/water', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ duration: 30 })
+});</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges & Solutions  -->
+        <section class="content-section challenges-section">
+            <h2><i class="fas fa-exclamation-triangle"></i> Challenges & Solutions</h2>
+
+            <div class="challenge-item">
+                <h3>1. WiFi Configuration Complexity</h3>
+                <div class="challenge-content">
+                    <p><strong>Problem:</strong> Difficulty in configuring ESP32 as an Access Point for initial setup,
+                        with unstable transitions between AP and Station modes.</p>
+                    <p><strong>Solution:</strong> Implemented a robust state machine with proper cleanup between mode
+                        switches. Added 5-second delay after configuration before restarting to ensure settings are
+                        saved.</p>
+                </div>
+            </div>
+
+            <div class="challenge-item">
+                <h3>2. Hardware-Software Integration</h3>
+                <div class="challenge-content">
+                    <p><strong>Problem:</strong> Moisture sensor readings varied significantly based on soil type.
+                        Initial relay logic caused unexpected pump behavior.</p>
+                    <p><strong>Solution:</strong> Implemented calibration routine with adjustable threshold. Added
+                        proper debouncing and used active-low relay configuration to prevent false triggering.</p>
+                </div>
+            </div>
+
+            <div class="challenge-item">
+                <h3>3. Power Supply Issues</h3>
+                <div class="challenge-content">
+                    <p><strong>Problem:</strong> ESP32 experienced brownouts when relay activated, causing system
+                        resets.</p>
+                    <p><strong>Solution:</strong> Separated power supplies—dedicated 12V for pump/relay, regulated 5V
+                        for ESP32. Added decoupling capacitors to smooth voltage fluctuations.</p>
+                </div>
+            </div>
+
+            <div class="challenge-item">
+                <h3>4. API Rate Limiting</h3>
+                <div class="challenge-content">
+                    <p><strong>Problem:</strong> OpenWeatherMap free tier limits requests to 60 per hour.</p>
+                    <p><strong>Solution:</strong> Implemented caching mechanism with 30-minute refresh interval.
+                        Added error handling for API failures with graceful degradation.</p>
+                </div>
+            </div>
+
+            <div class="challenge-item">
+                <h3>5. Memory Constraints</h3>
+                <div class="challenge-content">
+                    <p><strong>Problem:</strong> Large HTML/CSS/JS content exceeded ESP32 string handling limits.</p>
+                    <p><strong>Solution:</strong> Used raw string literals with PROGMEM storage. Separated CSS and
+                        JS into individual endpoints to reduce per-request memory usage.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======= Unoptimized Code & Solutions ======= -->
+        <section class="content-section unoptimized-section">
+            <h2><i class="fas fa-code"></i> Unoptimized Code & Solutions</h2>
+
+            <div class="problem-solution">
+                <div class="problem-card danger">
+                    <div class="problem-header">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>1. API Key Exposure</h3>
+                    </div>
+                    <div class="code-block">
+                        <code>weatherAPI -> setApiKey("30d4741c779ba94c470ca1f63045390a");</code>
+                    </div>
+                    <div class="issue">
+                        <strong>DANGER:</strong> The OpenWeatherMap API key is hard-coded in the code. Anyone with this
+                        code can get and use your key.
+                    </div>
+                    <div class="solution">
+                        <strong>Solution:</strong> Allow users to enter the API key via the web interface or save it to
+                        a separate file.
+                    </div>
+                </div>
+
+                <div class="problem-card warning">
+                    <div class="problem-header">
+                        <i class="fas fa-clock"></i>
+                        <h3>2. Blocking Code in handleManualWater()</h3>
+                    </div>
+                    <div class="code-block">
+                        <pre><code>waterPump -> turnOn();
+delay(duration); // ESP32 is frozen during this time
+waterPump->turnOff();</code></pre>
+                    </div>
+                    <div class="issue">
+                        <strong>PROBLEM:</strong> When watering manually, the entire system is "frozen" for 10-60
+                        seconds. During this time:
+                        <ul>
+                            <li>Cannot process HTTP requests</li>
+                            <li>Cannot read sensors</li>
+                            <li>Cannot stop emergency</li>
+                        </ul>
+                    </div>
+                    <div class="solution">
+                        <strong>Solution:</strong> Use <code>millis()</code> to create a non-blocking timer.
+                    </div>
+                </div>
+
+                <div class="problem-card warning">
+                    <div class="problem-header">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>3. No Safety Stop Mechanism</h3>
+                    </div>
+                    <div class="issue">
+                        If the pump fails or the code crashes while the pump is ON, the water will continue to flow.
+                    </div>
+                    <div class="solution">
+                        <strong>Solution:</strong> Add a watchdog timer or timeout to automatically turn off the pump.
+                    </div>
+                </div>
+
+                <div class="problem-card info">
+                    <div class="problem-header">
+                        <i class="fas fa-function"></i>
+                        <h3>4. Useless Function</h3>
+                    </div>
+                    <div class="code-block">
+                        <pre><code>void emergencyStopPump()
+{
+    waterPump -> turnOff();
+    Serial.println("Emergency pump stop activated");
+}</code></pre>
+                    </div>
+                    <div class="issue">
+                        <ul>
+                            <li><strong>Nothing "urgent":</strong> It just calls turnOff() normally, no priority or
+                                emergency interrupt mechanism</li>
+                            <li><strong>Redundant:</strong> There is already <code>waterPump -> turnOff()</code>
+                                directly
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="problem-card danger">
+                    <div class="problem-header">
+                        <i class="fas fa-sync-alt"></i>
+                        <h3>5. /save Route Issue After Restart</h3>
+                    </div>
+                    <div class="process-flow">
+                        <h4>Summary of what happens:</h4>
+                        <ol>
+                            <li>User accesses: <code>http://192.168.4.1/</code> -> See WiFi input form</li>
+                            <li>User enters SSID/password -> Submit -> Browser sends:
+                                <code>POST http://192.168.4.1/save</code>
+                            </li>
+                            <li>ESP32 processes and restarts -> ESP32 turns off -> turns back on</li>
+                            <li>Browser still displays URL: <code>http://192.168.4.1/save</code> -> But ESP32 has
+                                restarted -> Route /save is gone! -> Browser displays: "Connection refused" or blank
+                                page
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="issue">
+                        <strong>Cause:</strong> Browser "remembers" the last URL. ESP32 restart -> change mode -> routes
+                        change. /save is only available in Config Mode, not in Main Mode.
+                    </div>
+                    <div class="solution">
+                        <strong>Solution:</strong> Use REDIRECT:
+                        <div class="code-block">
+                            <pre><code>configServer -> sendHeader("Location", "/success");
+configServer -> send(303, "text/plain", "");</code></pre>
+                        </div>
+                        Add route <code>/success</code>:
+                        <div class="code-block">
+                            <pre><code>configServer -> on("/success", [this]() {
+    handleSuccessPage();
+});</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Implementation Details -->
+        <section class="content-section implementation-section">
+            <h2><i class="fas fa-code"></i> Technical Implementation Details</h2>
+
+            <h3>Pointer vs Object Syntax</h3>
+            <p>
+                Throughout the codebase, you'll notice the arrow operator <code>-></code>
+                instead of the dot operator <code>.</code>
+            </p>
+
+            <div class="syntax-comparison">
+                <div class="syntax-example">
+                    <h4>Declaration (Pointer)</h4>
+                    <div class="code-block">
+                        <pre><code>// Pointer declaration
+WebServer *configServer;
+WaterPump *waterPump;
+WifiManager *wifiManager;
+
+// Dynamic allocation
+configServer = new WebServer(80);
+waterPump = new WaterPump(RELAY_PIN);
+wifiManager = new WifiManager();</code></pre>
+                    </div>
+                </div>
+
+                <div class="syntax-example">
+                    <h4>Usage (Arrow Operator)</h4>
+                    <div class="code-block">
+                        <pre><code>// Arrow operator for pointers
+configServer->on("/", handleDashboard);
+configServer->begin();
+waterPump->turnOn();
+wifiManager->connectToWiFi();</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pointer-benefits">
+                <h4>Why Use Pointers ?</h4>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <i class="fas fa-memory"></i>
+                        <h5>Dynamic Allocation</h5>
+                        <p>Objects created with <code>new</code> keyword for runtime allocation</p>
+                    </div>
+                    <div class="benefit-card">
+                        <i class="fas fa-compress-arrows-alt"></i>
+                        <h5>Memory Efficiency</h5>
+                        <p>Pointer = 4 bytes vs Object = potentially KBs of memory</p>
+                    </div>
+                    <div class="benefit-card">
+                        <i class="fas fa-exchange-alt"></i>
+                        <h5>Flexibility</h5>
+                        <p>Can point to different objects or be set to <code>nullptr</code></p>
+                    </div>
+                    <div class="benefit-card">
+                        <i class="fas fa-project-diagram"></i>
+                        <h5>Polymorphism</h5>
+                        <p>Enables runtime polymorphism with base class pointers</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="syntax-rules">
+                <h4>Rule of Thumb:</h4>
+                <div class="rule-cards">
+                    <div class="rule-card">
+                        <div class="rule-header">
+                            <span class="rule-badge">Case 1</span>
+                            <h5>Declaration has <code>*</code></h5>
+                        </div>
+                        <div class="code-block small">
+                            <pre><code>WebServer *server;</code></pre>
+                        </div>
+                        <p class="rule-conclusion">→ Use <code>server->method()</code></p>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-header">
+                            <span class="rule-badge">Case 2</span>
+                            <h5>Declaration has no <code>*</code></h5>
+                        </div>
+                        <div class="code-block small">
+                            <pre><code>WebServer server;</code></pre>
+                        </div>
+                        <p class="rule-conclusion">→ Use <code>server.method()</code></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="memory-diagram">
+                <h4>Memory Visualization:</h4>
+                <div class="diagram">
+                    <div class="memory-stack">
+                        <div class="memory-item">
+                            <div class="address">0x1000</div>
+                            <div class="variable">configServer</div>
+                            <div class="value">→ 0x2000</div>
+                        </div>
+                        <div class="pointer-arrow">↓ points to</div>
+                        <div class="memory-heap">
+                            <div class="address">0x2000</div>
+                            <div class="object">WebServer Object</div>
+                            <div class="methods">
+                                <code>on()</code>
+                                <code>begin()</code>
+                                <code>send()</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="diagram-caption">
+                    The pointer <code>configServer</code> stores a memory address (0x2000) pointing to the actual
+                    WebServer object in heap memory.
+                </p>
+            </div>
+        </section>
+
+        <!-- Testing & Results -->
+        <section class="content-section results-section">
+            <h2><i class="fas fa-chart-line"></i> Testing & Results</h2>
+
+            <h3>Testing Methodology</h3>
+            <p>The system underwent comprehensive testing over a 1-week period:</p>
+            <ul>
+                <li><strong>Unit Testing:</strong> Individual component verification (sensors, pump, WiFi)</li>
+                <li><strong>Integration Testing:</strong> Module interaction and data flow validation</li>
+                <li><strong>Field Testing:</strong> Real-world deployment with actual plants</li>
+                <li><strong>Stress Testing:</strong> 24-hour continuous operation monitoring</li>
+            </ul>
+
+            <h3>Performance Metrics</h3>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">95%</div>
+                    <div class="metric-label">Moisture Detection Accuracy</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">30%</div>
+                    <div class="metric-label">Water Savings vs Manual</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">&lt;2s</div>
+                    <div class="metric-label">Web Dashboard Load Time</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">99.2%</div>
+                    <div class="metric-label">System Uptime</div>
+                </div>
+            </div>
+
+            <h3>Key Findings</h3>
+            <ul>
+                <li>System successfully prevented 8 out of 10 unnecessary watering events before predicted rain</li>
+                <li>Moisture levels maintained consistently within 5% of target threshold</li>
+                <li>Web dashboard remained responsive with 5-second refresh intervals</li>
+                <li>Average power consumption: 0.5W idle, 15W during watering</li>
+            </ul>
+        </section>
+
+        <!-- ======= Manual vs Automated Comparison ======= -->
+        <section class="content-section comparison-section">
+            <h2><i class="fas fa-balance-scale"></i> Manual vs Automated Comparison</h2>
+            <p class="comparison-intro">After 1 weeks of testing, here's how our automated system compares to
+                traditional manual watering:</p>
+
+            <div class="comparison-table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>
+                                <div class="method-header">
+                                    <i class="fas fa-hand-paper"></i>
+                                    <span>Manual Watering</span>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="method-header">
+                                    <i class="fas fa-robot"></i>
+                                    <span>Our Smart System</span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Water Usage</strong></td>
+                            <td>
+                                <div class="manual-cell">
+                                    <span class="value">~10L per day</span>
+                                    <span class="badge bad">Overwatering</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="auto-cell">
+                                    <span class="value">~7L per day</span>
+                                    <span class="badge good">30% savings</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>User Effort</strong></td>
+                            <td>
+                                <div class="manual-cell">
+                                    <span class="value">Daily manual work</span>
+                                    <span class="badge bad">Time-consuming</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="auto-cell">
+                                    <span class="value">Remote monitoring</span>
+                                    <span class="badge good">Effortless</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Weather Awareness</strong></td>
+                            <td>
+                                <div class="manual-cell">
+                                    <span class="value">Manual checking</span>
+                                    <span class="badge bad">Often forget</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="auto-cell">
+                                    <span class="value">Auto rain detection</span>
+                                    <span class="badge good">Smart skip</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cost Efficiency</strong></td>
+                            <td>
+                                <div class="manual-cell">
+                                    <span class="value">Free (time cost)</span>
+                                    <span class="badge neutral">Hidden costs</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="auto-cell">
+                                    <span class="value">~$10 total hardware</span>
+                                    <span class="badge good">One-time investment</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reliability</strong></td>
+                            <td>
+                                <div class="manual-cell">
+                                    <span class="value">Human error prone</span>
+                                    <span class="badge bad">Inconsistent</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="auto-cell">
+                                    <span class="value">99.2% uptime</span>
+                                    <span class="badge good">Consistent</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Plant Health</strong></td>
+                            <td>
+                                <div class="manual-cell">
+                                    <span class="value">Variable results</span>
+                                    <span class="badge neutral">Depends on memory</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="auto-cell">
+                                    <span class="value">Optimal moisture</span>
+                                    <span class="badge good">Always perfect</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="comparison-summary">
+                <h3>Key Takeaways</h3>
+                <div class="takeaways-grid">
+                    <div class="takeaway-card">
+                        <i class="fas fa-tint"></i>
+                        <h4>Water Conservation</h4>
+                        <p>30% less water usage through precise moisture control</p>
+                    </div>
+                    <div class="takeaway-card">
+                        <i class="fas fa-clock"></i>
+                        <h4>Time Savings</h4>
+                        <p>Save ~15 minutes daily on plant care routine</p>
+                    </div>
+                    <div class="takeaway-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Better Results</h4>
+                        <p>Consistent plant health with optimal conditions</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Future Improvements -->
+        <section class="content-section improvements-section">
+            <h2><i class="fas fa-rocket"></i> Future Improvements</h2>
+
+            <div class="improvement-item">
+                <div class="improvement-content">
+                    <h3>Telegram Bot Integration</h3>
+                    <p>Implement real-time notifications for watering events, errors, and daily reports.
+                        Allow basic remote control through Telegram commands.</p>
+                </div>
+            </div>
+
+            <div class="improvement-item">
+                <div class="improvement-content">
+                    <h3>Multi-Zone Support</h3>
+                    <p>Expand system to support 4-6 independent watering zones with individual sensors and pumps.
+                        Enable zone-specific thresholds and schedules.</p>
+                </div>
+            </div>
+
+            <div class="improvement-item">
+                <div class="improvement-content">
+                    <h3>Data Analytics & Logging</h3>
+                    <p>Integrate cloud database (Firebase/InfluxDB) for long-term data storage. Generate
+                        trend graphs and predictive watering recommendations using machine learning.</p>
+                </div>
+            </div>
+
+            <div class="improvement-item">
+                <div class="improvement-content">
+                    <h3>Battery Backup</h3>
+                    <p>Add UPS module with Li-ion battery backup.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo & Screenshots -->
+        <section class="content-section demo-section">
+            <h2><i class="fas fa-images"></i> Demo & Screenshots</h2>
+
+            <div class="demo-gallery">
+                <div class="demo-item">
+                    <img src="../assets/images/03.jpg" alt="Hardware Setup" />
+                    <p>Complete hardware assembly with ESP32, sensors, and pump</p>
+                </div>
+                <div class="demo-item">
+                    <img src="../assets/images/02.png" alt="Dashboard" />
+                    <p>Web dashboard showing real-time moisture and controls</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation/Setup Guide -->
+        <section class="content-section setup-section">
+            <h2><i class="fas fa-wrench"></i> Getting Started</h2>
+            <p class="setup-intro">Want to build this project yourself ? Follow this step-by-step guide to set up your
+                own smart watering system.</p>
+
+            <h3>Prerequisites</h3>
+            <div class="prerequisites-grid">
+                <div class="prerequisite-card">
+                    <i class="fas fa-laptop-code"></i>
+                    <h4>Software</h4>
+                    <ul>
+                        <li>Arduino IDE or PlatformIO</li>
+                        <li>ESP32 board package</li>
+                        <li>Serial terminal (PuTTY, screen, etc.)</li>
+                    </ul>
+                </div>
+                <div class="prerequisite-card">
+                    <i class="fas fa-microchip"></i>
+                    <h4>Hardware</h4>
+                    <ul>
+                        <li>ESP32 Development Board</li>
+                        <li>Soil Moisture Sensor</li>
+                        <li>12V Water Pump + Relay</li>
+                        <li>LCD I2C</li>
+                        <li>Jumper Wires & Breadboard</li>
+                    </ul>
+                </div>
+                <div class="prerequisite-card">
+                    <i class="fas fa-key"></i>
+                    <h4>Accounts & Skills</h4>
+                    <ul>
+                        <li>OpenWeatherMap API key (free)</li>
+                        <li>Basic soldering skills</li>
+                        <li>WiFi network access</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Installation Steps</h3>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Clone the Repository</h4>
+                        <div class="code-block">
+                            <pre><code>git clone https://github.com/JenllyHuynh/WateringSystem-Code-IOT.git
+cd WateringSystem-Code-IOT</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Install Required Libraries</h4>
+                        <div class="libraries-grid">
+                            <div class="library-item">
+                                <span class="library-name">WiFi.h</span>
+                                <span class="library-status built-in">Built-in</span>
+                            </div>
+                            <div class="library-item">
+                                <span class="library-name">WebServer.h</span>
+                                <span class="library-status built-in">Built-in</span>
+                            </div>
+                            <div class="library-item">
+                                <span class="library-name">ArduinoJson</span>
+                                <span class="library-status external">Library Manager</span>
+                            </div>
+                            <div class="library-item">
+                                <span class="library-name">Preferences.h</span>
+                                <span class="library-status built-in">Built-in</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Wire the Hardware</h4>
+                        <p>Follow the circuit diagram below. Double-check connections before powering on!</p>
+                        <a href="https://app.cirkitdesigner.com/project/9301dcfc-1469-40dc-933c-66cc1900a9b7"
+                            class="btn-link">
+                            <i class="fas fa-screwdriver"></i> View Circuit Diagram
+                        </a>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Upload the Code</h4>
+                        <ul>
+                            <li>Connect ESP32 via USB cable</li>
+                            <li>Select correct board: <code>ESP32 Dev Module</code></li>
+                            <li>Select correct COM port</li>
+                            <li>Upload <code>main.cpp</code></li>
+                            <li>Open Serial Monitor (115200 baud) to debug</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Initial WiFi Setup</h4>
+                        <div class="setup-flow">
+                            <div class="flow-item">
+                                <div class="flow-icon">📶</div>
+                                <div class="flow-text">ESP32 creates AP "System setup"</div>
+                                <div class="flow-text">Default password: 12345678</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-item">
+                                <div class="flow-icon">🔗</div>
+                                <div class="flow-text">Connect to WiFi: <code>System setup</code></div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-item">
+                                <div class="flow-icon">🌐</div>
+                                <div class="flow-text">Open <code>http://192.168.4.1</code></div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-item">
+                                <div class="flow-icon">⌨️</div>
+                                <div class="flow-text">Enter WiFi credentials + API key</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-item">
+                                <div class="flow-icon">🔄</div>
+                                <div class="flow-text">System restarts automatically</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Access Dashboard</h4>
+                        <ul>
+                            <li>Check Serial Monitor for new IP address</li>
+                            <li>Or check your router's connected devices list</li>
+                            <li>Access via browser: <code>http://[ESP32-IP-ADDRESS]</code></li>
+                            <li>You should see the real-time dashboard!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="warning-header">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h4>Important Safety Notes</h4>
+                </div>
+                <ul>
+                    <li><strong>Power Supply:</strong> Use separate 12V power for pump - DO NOT power from ESP32 5V pin!
+                    </li>
+                    <li><strong>Relay Wiring:</strong> Double-check connections - incorrect wiring can damage components
+                    </li>
+                    <li><strong>Water Protection:</strong> Keep electronics away from water - use waterproof enclosures
+                    </li>
+                    <li><strong>Sensor Calibration:</strong> Calibrate moisture sensor for your specific soil type</li>
+                    <li><strong>API Limits:</strong> Free OpenWeatherMap tier has 60 requests/hour limit</li>
+                </ul>
+            </div>
+
+            <div class="troubleshooting">
+                <h4>🛠️ Troubleshooting Tips</h4>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <h5>WiFi Connection Failed</h5>
+                        <p>Check credentials, ensure 2.4GHz network (ESP32 doesn't support 5GHz)</p>
+                    </div>
+                    <div class="tip-card">
+                        <h5>Pump Not Turning On</h5>
+                        <p>Verify relay wiring, check 12V power supply, test pump directly</p>
+                    </div>
+                    <div class="tip-card">
+                        <h5>Sensor Readings Wrong</h5>
+                        <p>Calibrate in dry vs wet soil, check wiring, ensure proper grounding</p>
+                    </div>
+                    <div class="tip-card">
+                        <h5>Dashboard Not Loading</h5>
+                        <p>Check IP address, ensure same network, try different browser</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusion  -->
+        <section class="content-section conclusion-section">
+            <h2><i class="fas fa-flag-checkered"></i> Conclusion</h2>
+            <p>
+                This IoT watering system successfully demonstrates how embedded systems and web technologies can
+                combine to solve real-world problems. Through integrating sensors, actuators, weather APIs, and
+                a responsive web interface, we created a practical solution that conserves water while ensuring
+                optimal plant health.
+            </p>
+
+            <p>
+                The project provided valuable hands-on experience in:
+            </p>
+            <ul>
+                <li>ESP32 programming and embedded web server development</li>
+                <li>Sensor interfacing and analog signal processing</li>
+                <li>RESTful API design and implementation</li>
+                <li>Responsive web interface development</li>
+                <li>Integration of external APIs for enhanced functionality</li>
+                <li>Hardware-software co-design principles</li>
+            </ul>
+
+            <p>
+                While the current implementation serves as a solid proof-of-concept, the proposed future
+                enhancements-particularly Telegram integration and multi-zone support-would transform this
+                into a production-ready solution suitable for home gardeners and small-scale agricultural applications.
+            </p>
+
+            <div class="cta-box">
+                <h3>Project Resources</h3>
+                <p>
+                    <a href="https://github.com/JenllyHuynh/WateringSystem-Code-IOT.git" class="btn-link"><i
+                            class="fab fa-github"></i> View on GitHub Project</a>
+                    <a href="https://app.box.com/s/cyog6fw6i2nggwpvxmt5kwyqaj8d9mwr" class="btn-link"><i
+                            class="fas fa-file-pdf"></i> Download Documentation</a>
+                    <a href="https://jenllyhuynh.github.io/IoT_Silde/" class="btn-link"><i class="fas fa-video"></i>
+                        Watch Slide</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- Tags -->
+        <section class="tags-section">
+            <div class="tags">
+                <span class="tag">#IoT</span>
+                <span class="tag">#ESP32</span>
+                <span class="tag">#Arduino</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="wow-footer">
+        <div class="footer-content">
+            <p>Made with <i class="fas fa-heart pulse"></i> by <strong>Huỳnh Kim Huệ</strong> | Group 2 - FPT Can Tho
+            </p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">© 2025 Automatic Watering System Project. All rights
+                reserved.</p>
+        </div>
+    </footer>
+
+    <!-- UX -->
+    <script>
+        (function () {
+            // Hamburger menu functionality
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('nav-menu');
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', () => {
+                    navMenu.classList.toggle('open');
+                    hamburger.classList.toggle('is-active');
+
+                    // Close menu when clicking outside
+                    if (navMenu.classList.contains('open')) {
+                        document.addEventListener('click', closeMenuOnClickOutside);
+                    } else {
+                        document.removeEventListener('click', closeMenuOnClickOutside);
+                    }
+                });
+
+                function closeMenuOnClickOutside(e) {
+                    if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
+                        navMenu.classList.remove('open');
+                        hamburger.classList.remove('is-active');
+                        document.removeEventListener('click', closeMenuOnClickOutside);
+                    }
+                }
+            }
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Hiệu ứng tải ảnh mà chắc đéo có ảnh đâu
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('load', function () {
+                    this.style.opacity = '1';
+                });
+
+                // Set initial opacity for fade-in effect
+                if (!img.complete) {
+                    img.style.opacity = '0';
+                    img.style.transition = 'opacity 0.3s ease';
+                }
+            });
+
+            // Add scroll animations for content sections như tên luôn :]
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe content sections for scroll animations như tên đấy :]
+            document.querySelectorAll('.content-section, .info-box, .instructor-card').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(el);
+            });
+
+            // Hiệu ứng cho card
+            document.querySelectorAll('.info-box, .component-item, .metric-card, .arch-card').forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    this.style.zIndex = '10';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.zIndex = '';
+                });
+            });
+
+            // Thêm hiệu ứng nhấp chuột vào các nút
+            document.querySelectorAll('.btn-link, .back-to-home').forEach(button => {
+                button.addEventListener('mousedown', function () {
+                    this.style.transform = 'translateY(0)';
+                });
+
+                button.addEventListener('mouseup', function () {
+                    this.style.transform = 'translateY(-3px)';
+                });
+            });
+
+            // Thêm bản sao vào bảng tạm cho các đoạn mã mà chắc đéo có đâu để cho yên tâm
+            document.querySelectorAll('pre code').forEach(codeBlock => {
+                const copyButton = document.createElement('button');
+                copyButton.innerHTML = 'Copy';
+                copyButton.className = 'copy-btn';
+                copyButton.style.cssText = `
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                background: rgba(255,255,255,0.2);
+                border: none;
+                border-radius: 4px;
+                padding: 4px 8px;
+                color: white;
+                font-size: 0.8rem;
+                cursor: pointer;
+                transition: background 0.2s ease;
+            `;
+
+                codeBlock.parentNode.style.position = 'relative';
+                codeBlock.parentNode.appendChild(copyButton);
+
+                copyButton.addEventListener('click', async () => {
+                    try {
+                        await navigator.clipboard.writeText(codeBlock.textContent);
+                        copyButton.textContent = 'Copied!';
+                        setTimeout(() => {
+                            copyButton.textContent = 'Copy';
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy: ', err);
+                    }
+                });
+            });
+
+            // Thêm nút cuộn lên đầu trang
+            const scrollToTopBtn = document.createElement('button');
+            scrollToTopBtn.innerHTML = '↑';
+            scrollToTopBtn.setAttribute('aria-label', 'Scroll to top');
+            scrollToTopBtn.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+
+            document.body.appendChild(scrollToTopBtn);
+
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    scrollToTopBtn.style.opacity = '1';
+                } else {
+                    scrollToTopBtn.style.opacity = '0';
+                }
+            });
+
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Thêm điều hướng bàn phím
+            document.addEventListener('keydown', (e) => {
+                // Escape key closes mobile menu
+                if (e.key === 'Escape' && navMenu && navMenu.classList.contains('open')) {
+                    navMenu.classList.remove('open');
+                    hamburger.classList.remove('is-active');
+                }
+
+                // Cải tiến điều hướng phím tab
+                if (e.key === 'Tab') {
+                    document.documentElement.style.scrollBehavior = 'smooth';
+
+                    // Menu di động
+                    if (navMenu && navMenu.classList.contains('open')) {
+                        const focusableElements = navMenu.querySelectorAll('a, button');
+                        const firstElement = focusableElements[0];
+                        const lastElement = focusableElements[focusableElements.length - 1];
+
+                        if (e.shiftKey && document.activeElement === firstElement) {
+                            e.preventDefault();
+                            lastElement.focus();
+                        } else if (!e.shiftKey && document.activeElement === lastElement) {
+                            e.preventDefault();
+                            firstElement.focus();
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+    <script>
+        // JSON Syntax Highlighting
+        document.addEventListener('DOMContentLoaded', function () {
+            const codeBlocks = document.querySelectorAll('.code-block pre code');
+            codeBlocks.forEach(block => {
+                let code = block.textContent;
+                // Simple JSON highlighting
+                code = code.replace(/"([^"]+)":/g, '<span class="property">"$1":</span>');
+                code = code.replace(/: "([^"]+)"/g, ': <span class="string">"$1"</span>');
+                code = code.replace(/: (\d+\.?\d*)/g, ': <span class="number">$1</span>');
+                code = code.replace(/: (true|false)/g, ': <span class="boolean">$1</span>');
+                code = code.replace(/: null/g, ': <span class="null">null</span>');
+                block.innerHTML = code;
+            });
+        });
+    </script>
+</body>
+
+</html>

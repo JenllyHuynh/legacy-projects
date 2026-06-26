@@ -1,0 +1,32 @@
+{
+  "featuredPost": {
+    "id": "building-modern-iot",
+    "title": "Building Modern Internet of Things",
+    "excerpt": "Smart plant watering system using ESP32 and IoT technology. Automatically monitors soil moisture, checks weather forecasts, and waters plants when needed.",
+    "contentFile": "posts/building-modern-iot.html",
+    "readTime": 45,
+    "publishDate": "2025-11-11",
+    "category": "IoT",
+    "image": "assets/images/posts/featured.jpg"
+  },
+  "recentPosts": [
+    {
+      "id": "future-projects",
+      "title": "Future Projects",
+      "excerpt": "Upcoming projects including Fish Selling Management Website, University Java Specialization, Psychology Discord Bot, and Indie Game.",
+      "contentFile": "posts/future-projects.html",
+      "readTime": 25,
+      "publishDate": "2025-11-15",
+      "category": "Future"
+    },
+    {
+      "id": "recent-posts",
+      "title": "Recent Posts Collection",
+      "excerpt": "Browse all recent blog posts and updates.",
+      "contentFile": "posts/recent-posts.html",
+      "readTime": 5,
+      "publishDate": "2025-11-15",
+      "category": "Collection"
+    }
+  ]
+}

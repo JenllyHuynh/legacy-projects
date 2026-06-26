@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Lab</title>
+    <!-- Font & Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../posts/java-lab.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <h1 class="logo"><a href="../index.html">Blog</a></h1>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="../blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                    <li><a href="../contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="blog-listing-main">
+        <div class="blog-listing-container">
+            <h1 class="page-title">Java Lab</h1>
+            
+            <!-- Java Lab Section -->
+            <section class="projects-section">
+                <h2 class="section-title"><i class="fab fa-java"></i> Java Laboratory</h2>
+                <div class="blog-grid">
+                    
+                    <!-- Java Lab Project -->
+                    <article class="blog-card project-card java-lab">
+                        <div class="project-badge">
+                            <i class="fas fa-flask"></i> Lab Project
+                        </div>
+                        <div class="project-icon">
+                            <i class="fab fa-java"></i>
+                        </div>
+                        <h2>Java Programming Laboratory</h2>
+                        <p class="project-description">A comprehensive collection of Java programming exercises, algorithms, and projects developed during university coursework. This repository contains various Java implementations and learning materials.</p>
+                        
+                        <div class="project-details">
+                            <div class="tech-stack">
+                                <span class="tech-tag">Java</span>
+                                <span class="tech-tag">OOP</span>
+                                <span class="tech-tag">Algorithms</span>
+                                <span class="tech-tag">Data Structures</span>
+                            </div>
+                            <div class="timeline">
+                                <span><i class="far fa-clock"></i> University Course</span>
+                                <span><i class="fas fa-graduation-cap"></i> Academic Project</span>
+                            </div>
+                        </div>
+
+                        <div class="github-section">
+                            <div class="github-info">
+                                <h3><i class="fab fa-github"></i> Repository Access</h3>
+                                <p class="github-description">Just check it out, go in and download it</p>
+                                <a href="https://github.com/JenllyHuynh/OOP_With_Java.git" class="github-link" target="_blank" rel="noopener noreferrer">
+                                    <i class="fab fa-github"></i>
+                                    <span>View on GitHub</span>
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <div class="download-options">
+                                    <button class="clone-btn" onclick="copyCloneCommand()">
+                                        <i class="fas fa-clone"></i>
+                                        Clone Repository
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="project-status">
+                            <div class="status-bar">
+                                <div class="status-progress" style="width: 100%"></div>
+                            </div>
+                            <span class="status-text">Completed</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Project Features Section -->
+            <section class="projects-section">
+                <h2 class="section-title"><i class="fas fa-code"></i> What's Inside</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3>Core Java Concepts</h3>
+                        <p>Object-oriented programming principles, inheritance, polymorphism, and encapsulation examples.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <h3>Data Structures</h3>
+                        <p>Implementation of various data structures including arrays, linked lists, stacks, and queues.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Algorithms</h3>
+                        <p>Sorting algorithms, searching techniques, and problem-solving approaches with Java.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3>Lab Exercises</h3>
+                        <p>Practical exercises and assignments completed during university Java programming course.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="wow-footer">
+        <div class="footer-content">
+            <p>Made with <i class="fas fa-heart pulse"></i> by <strong>Huỳnh Kim Huệ</strong></p>
+        </div>
+    </footer>
+
+    <!-- Clone Command Modal -->
+    <div id="cloneModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3><i class="fab fa-git-alt"></i> Clone Repository</h3>
+            <p>Copy the command below to clone the repository:</p>
+            <div class="command-box">
+                <code id="cloneCommand">git clone https://github.com/JenllyHuynh/OOP_With_Java.git</code>
+                <button class="copy-btn" onclick="copyToClipboard()">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('open');
+                hamburger.classList.toggle('is-active');
+
+                if (navMenu.classList.contains('open')) {
+                    document.addEventListener('click', closeMenuOnClickOutside);
+                } else {
+                    document.removeEventListener('click', closeMenuOnClickOutside);
+                }
+            });
+
+            function closeMenuOnClickOutside(e) {
+                if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
+                    navMenu.classList.remove('open');
+                    hamburger.classList.remove('is-active');
+                    document.removeEventListener('click', closeMenuOnClickOutside);
+                }
+            }
+        }
+
+        // Clone command functionality
+        function copyCloneCommand() {
+            const modal = document.getElementById('cloneModal');
+            modal.style.display = 'block';
+        }
+
+        function copyToClipboard() {
+            const command = document.getElementById('cloneCommand').textContent;
+            navigator.clipboard.writeText(command).then(() => {
+                const copyBtn = document.querySelector('.copy-btn');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        // Modal functionality
+        const modal = document.getElementById('cloneModal');
+        const closeBtn = document.querySelector('.close');
+
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Image loading effect
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('load', function () {
+                this.style.opacity = '1';
+            });
+
+            if (!img.complete) {
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.3s ease';
+            }
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.project-card, .section-title, .feature-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(el);
+        });
+
+        // Hover effects for cards
+        document.querySelectorAll('.project-card, .feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-5px)';
+                this.style.zIndex = '10';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+                this.style.zIndex = '';
+            });
+        });
+
+        // Add scroll to top button
+        const scrollToTopBtn = document.createElement('button');
+        scrollToTopBtn.innerHTML = '↑';
+        scrollToTopBtn.setAttribute('aria-label', 'Scroll to top');
+        scrollToTopBtn.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+
+        document.body.appendChild(scrollToTopBtn);
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.style.opacity = '1';
+            } else {
+                scrollToTopBtn.style.opacity = '0';
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+
+</html>

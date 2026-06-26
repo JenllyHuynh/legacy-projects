@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>huehk.github.io Blog</title>
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/sections/profile.css">
+    <link rel="stylesheet" href="assets/css/sections/background.css">
+    <link rel="stylesheet" href="assets/css/sections/featured-blog.css">
+    <link rel="stylesheet" href="assets/css/sections/recent-blog.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+</head>
+</head>
+<style>
+    .blog-content h3 a {
+        color: inherit;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+</style>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <h1 class="logo">Blog</h1>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                    <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Profile Section -->
+        <section class="profile">
+            <div class="profile-card">
+                <div class="profile-image">
+                    <img src="assets/images/avatar.jpg" alt="Huỳnh Kim Huệ Profile Picture">
+
+                    <!-- Nếu chưa có ảnh, giữ lại placeholder này -->
+                    <!-- <div class="image-placeholder">
+                <i class="fas fa-code"></i>
+            </div> -->
+                </div>
+                <h2>Huỳnh Kim Huệ</h2>
+                <p class="tagline">Java Developer • Automation Tester</p>
+                <!-- Full Skills in Profile -->
+                <div class="profile-skills">
+                    <!-- Core Stack -->
+                    <div class="skill-category">
+                        <h4>Core Development</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">Spring Boot</span>
+                            <span class="skill-tag">Spring Data JPA</span>
+                            <span class="skill-tag">REST API</span>
+                            <span class="skill-tag">MySQL</span>
+                        </div>
+                    </div>
+
+                    <!-- Automation -->
+                    <div class="skill-category">
+                        <h4>Automation & Testing</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Selenium</span>
+                            <span class="skill-tag">TestNG</span>
+                            <span class="skill-tag">JUnit</span>
+                            <span class="skill-tag">Postman</span>
+                            <span class="skill-tag">Maven</span>
+                        </div>
+                    </div>
+
+                    <!-- Web UI -->
+                    <div class="skill-category">
+                        <h4>Frontend</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">HTML</span>
+                            <span class="skill-tag">CSS</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">React</span>
+                        </div>
+                    </div>
+
+                    <!-- Other Tech -->
+                    <div class="skill-category">
+                        <h4>Other Skills</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Git</span>
+                            <span class="skill-tag">Docker</span>
+                            <span class="skill-tag">Unity (C#)</span>
+                            <span class="skill-tag">Python (Bot Discord/Telegram)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="https://github.com/JenllyHuynh"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+            </div>
+        </section>
+
+        <!-- Background Section -->
+        <section class="background">
+            <div class="background-card">
+                <h2>About Me</h2>
+                <p>Hi, I'm Huỳnh Kim Huệ but you might know me as Jenlly, J.J, or Lily-et...depends on who caught me
+                    first.</p>
+                <p>I build stuff with Java and break stuff with tests sometimes both at the same time. When i not
+                    coding, i probably online somewhere (Discord, games, or both).</p>
+                <p>I believe clean code is like good coffee, simple, strong, and makes your day better.</p>
+            </div>
+        </section>
+
+        <!-- Featured Blog Section -->
+        <section class="featured-blog">
+            <!-- Firs Blog -->
+            <div class="featured-header">
+                <h2>Featured Post</h2>
+                <div class="featured-badge">
+                    <i class="fas fa-star"></i> Read
+                </div>
+            </div>
+            <div class="blog-card featured-card" data-post-id="building-modern-web-apps">
+                <div class="blog-image">
+                    <div class="image-overlay">
+                    </div>
+                </div>
+                <div class="blog-content">
+                    <h3><a href="posts/building-modern-iot.html">Building Modern Internet of Things</a></h3>
+                    <p>Smart plant watering system using ESP32 and IoT technology.
+                        Automatically monitors soil moisture, checks weather forecasts, and waters plants when needed
+                        all controllable through a web interface from anywhere.</p>
+                    <div class="blog-meta">
+                        <span><i class="far fa-clock"></i> 45 min read</span>
+                        <span><i class="far fa-calendar"></i> Nov 11, 2025</span>
+                        <span><i class="fas fa-tag"></i> Development</span>
+                        <span><i class="fas fa-tag"></i> IoT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Blog -->
+            <div class="blog-card featured-card" data-post-id="building-modern-web-apps">
+                <div class="blog-image">
+                    <div class="image-overlay">
+                    </div>
+                </div>
+                <div class="blog-content">
+                    <h3><a href="posts/java-web-project.html">Java Web Project</a></h3>
+                    <p>Live fresh fish e-commerce system built with Java Servlet/JSP and Google Gemini AI.
+                        Features intelligent product search, secure payment processing, and AI-powered customer
+                        consultation
+                        with real-time inventory management and order tracking through a modern web interface.</p>
+                    <div class="blog-meta">
+                        <span><i class="far fa-clock"></i> 60 min read</span>
+                        <span><i class="far fa-calendar"></i> November 9, 2025</span>
+                        <span><i class="fas fa-tag"></i> MVC Pattern</span>
+                        <span><i class="fas fa-tag"></i>Google Gemini AI API</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Blog Section -->
+        <section class="recent-blog">
+            <div class="recent-header">
+                <h2>Recent Posts</h2>
+                <a href="posts/recent-posts.html" class="view-all-btn">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="blog-grid" id="recent-posts-container">
+                <!-- Future Post -->
+                <article class="blog-post" data-post-id="web-development-insights">
+                    <div class="blog-image">
+                        <div class="category-tag">Future</div>
+                    </div>
+                    <div class="blog-content">
+                        <h3><a href="posts/future-projects.html">Future</a></h3>
+                        <p>Some project i'll do in the furture</p>
+                        <div class="blog-meta">
+                            <span><i class="far fa-clock"></i> Unknown</span>
+                            <span><i class="far fa-calendar"></i>Unknown</span>
+                        </div>
+                    </div>
+                </article>
+                <!-- Recent Post 1 -->
+                <article class="blog-post" data-post-id="responsive-design">
+                    <div class="blog-image">
+                        <div class="category-tag">Code</div>
+                    </div>
+                    <div class="blog-content">
+                        <h3><a href="posts/java-lab.html">OOP with Java Lab</a></h3>
+                        <p>Ya. Just check it out, go in and download it.</p>
+                        <div class="blog-meta">
+                            <span><i class="far fa-clock"></i> 1 min read</span>
+                            <span><i class="far fa-calendar"></i> Apr, 2025</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Recent Post 2 -->
+                <!--      <article class="blog-post" data-post-id="css-grid-vs-flexbox">
+                    <div class="blog-image">
+                        <div class="category-tag">Tips</div>
+                    </div>
+                    <div class="blog-content">
+                        <h3>CSS Grid vs Flexbox</h3>
+                        <p>When to use which layout technique for optimal results in your web projects.</p>
+                        <div class="blog-meta">
+                            <span><i class="far fa-clock"></i> 5 min read</span>
+                            <span><i class="far fa-calendar"></i> Oct 10, 2025</span>
+                        </div>
+                    </div>
+                </article> -->
+
+                <!-- Recent Post 3 -->
+                <!--     <article class="blog-post" data-post-id="web-trends-2025">
+                    <div class="blog-image">
+                        <div class="category-tag">News</div>
+                    </div>
+                    <div class="blog-content">
+                        <h3>Web Development Trends 2025</h3>
+                        <p>Stay ahead with these emerging technologies and practices shaping the web industry.</p>
+                        <div class="blog-meta">
+                            <span><i class="far fa-clock"></i> 8 min read</span>
+                            <span><i class="far fa-calendar"></i> Oct 5, 2025</span>
+                        </div>
+                    </div>
+                </article> -->
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="wow-footer">
+        <div class="footer-content">
+            <p>
+                Made with <i class="fas fa-heart pulse"></i> by <strong>Huỳnh Kim Huệ</strong>
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/services/DataService.js"></script>
+    <script src="assets/js/services/PostService.js"></script>
+    <script src="assets/js/renderers/FeaturedRenderer.js"></script>
+    <script src="assets/js/renderers/RecentRenderer.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <!-- UX -->
+    <script>
+        (function () {
+            // Hamburger menu functionality
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('nav-menu');
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                    hamburger.classList.toggle('active');
+
+                    // Close menu when clicking outside
+                    if (navMenu.classList.contains('active')) {
+                        document.addEventListener('click', closeMenuOnClickOutside);
+                    } else {
+                        document.removeEventListener('click', closeMenuOnClickOutside);
+                    }
+                });
+
+                function closeMenuOnClickOutside(e) {
+                    if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
+                        navMenu.classList.remove('active');
+                        hamburger.classList.remove('active');
+                        document.removeEventListener('click', closeMenuOnClickOutside);
+                    }
+                }
+            }
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Image loading effects
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('load', function () {
+                    this.style.opacity = '1';
+                });
+
+                // Set initial opacity for fade-in effect
+                if (!img.complete) {
+                    img.style.opacity = '0';
+                    img.style.transition = 'opacity 0.3s ease';
+                }
+            });
+
+            // Scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe content sections
+            document.querySelectorAll('.profile, .background, .featured-blog, .recent-blog').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(el);
+            });
+
+            // Card hover effects
+            document.querySelectorAll('.profile-card, .background-card, .blog-card, .blog-post').forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-5px)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Button click effects
+            document.querySelectorAll('.read-btn, .view-all-btn, .back-to-home').forEach(button => {
+                button.addEventListener('mousedown', function () {
+                    this.style.transform = 'scale(0.95)';
+                });
+
+                button.addEventListener('mouseup', function () {
+                    this.style.transform = 'scale(1)';
+                });
+
+                button.addEventListener('mouseleave', function () {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // Scroll to top button
+            const scrollToTopBtn = document.createElement('button');
+            scrollToTopBtn.innerHTML = '↑';
+            scrollToTopBtn.setAttribute('aria-label', 'Scroll to top');
+            scrollToTopBtn.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color, #007bff);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+
+            document.body.appendChild(scrollToTopBtn);
+
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    scrollToTopBtn.style.opacity = '1';
+                } else {
+                    scrollToTopBtn.style.opacity = '0';
+                }
+            });
+
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                // Escape key closes mobile menu
+                if (e.key === 'Escape' && navMenu && navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    hamburger.classList.remove('active');
+                }
+            });
+
+        })();
+    </script>
+</body>
+
+</html>

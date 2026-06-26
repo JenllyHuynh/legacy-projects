@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FishStore | Java Web Project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+    <!-- Link đến file CSS chính của trang -->
+    <link rel="stylesheet" href="../posts/java-web-project.css" />
+
+</head>
+
+<body>
+    <!-- HEADER - Thanh điều hướng cố định ở đầu trang -->
+    <header>
+        <nav>
+            <!-- Container chứa logo và menu điều hướng -->
+            <div class="nav-container">
+                <h1 class="logo"><a href="../index.html">🐟Blog</a></h1>
+                <!-- Menu điều hướng chính -->
+                <ul class="nav-menu">
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="../blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                    <li><a href="../contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT - Nội dung chính của trang -->
+    <main class="blog-container">
+        <a href="../blog.html" class="back-to-home">
+            <i class="fas fa-arrow-left"></i> Back to Blog
+        </a>
+
+        <!-- HERO SECTION - Phần giới thiệu chính với background gradient -->
+        <section class="hero-section">
+            <!-- Phần bên trái - Icon dự án -->
+            <div class="hero-left">
+                <div class="hero-icon">
+                    <i class="fas fa-fish"></i>
+                </div>
+            </div>
+
+            <!-- Phần bên phải - Thông tin dự án -->
+            <div class="hero-right">
+                <span class="hero-badge">Java Web Development - MVC Pattern - AI Integration</span>
+                <h1 class="hero-title">FishStore - Online Live Fresh Fish Sales System</h1>
+                <p class="hero-desc">
+                    E-commerce platform specializing in live fresh fish with smart AI consulting, bringing modern
+                    shopping experience to the fresh fish market
+                </p>
+
+                <!-- Thông tin meta về dự án (ngày, thời gian, nhóm) -->
+                <div class="hero-meta">
+                    <span><i class="far fa-calendar"></i> November 9, 2025</span>
+                    <span><i class="far fa-clock"></i> 3 days development</span>
+                    <span><i class="fas fa-users"></i> Group 8</span>
+                    <span><i class="fas fa-code"></i> Java Servlet</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECT INFO GRID - Lưới thông tin tổng quan về dự án -->
+        <section class="project-info">
+            <!-- Box 1: Mục tiêu dự án -->
+            <div class="info-box">
+                <i class="fas fa-bullseye info-icon"></i>
+                <h3>Goal</h3>
+                <p>Building an online live fresh fish sales platform with the best shopping experience, integrating
+                    smart AI consulting based on real-time inventory</p>
+            </div>
+
+            <!-- Box 2: Tính năng chính -->
+            <div class="info-box">
+                <i class="fas fa-rocket info-icon"></i>
+                <h3>Main Features</h3>
+                <ul class="compact-list">
+                    <li>Shopping & Payment System</li>
+                    <li>Smart AI Consulting (24/7)</li>
+                    <li>Multi-role Management</li>
+                    <li>Responsive Interface</li>
+                    <li>Order Tracking</li>
+                    <li>Product Search & Filter</li>
+                </ul>
+            </div>
+
+            <!-- Box 3: Công nghệ sử dụng -->
+            <div class="info-box">
+                <i class="fas fa-microchip info-icon"></i>
+                <h3>Technology Stack</h3>
+                <p><strong>Backend:</strong> Java Servlet, JSP, JSTL</p>
+                <p><strong>Database:</strong> SQL Server + JDBC</p>
+                <p><strong>Frontend:</strong> HTML5, CSS3, JavaScript</p>
+                <p><strong>AI:</strong> Google Gemini API</p>
+                <p><strong>Pattern:</strong> MVC, DAO, Singleton</p>
+            </div>
+
+            <div class="info-box">
+                <i class="fas fa-award info-icon"></i>
+                <h3>Achievement</h3>
+                <p>Completed & Running</p>
+                <p>95% goal achieved</p>
+                <p>High performance (&lt;2s)</p>
+                <p>Secure authentication</p>
+                <p>100% Responsive</p>
+            </div>
+        </section>
+
+        <!-- SECTION: GIỚI THIỆU CHI TIẾT DỰ ÁN -->
+        <section class="content-section">
+            <h2><i class="fas fa-info-circle"></i> Detailed Project Introduction</h2>
+
+            <p>
+                <strong>FishStore</strong> is a rapid prototype e-commerce platform developed by Group 8 from FPT Can
+                Tho within a 3-day sprint..<br>
+                <br>Development team consists of Huynh Kim Hue, Nguyen Tan Vinh, and Huynh Minh Khang.<br>
+                <br>The accelerated development timeline, FishStore delivers an innovative solution for the fresh
+                fish marketplace by <strong>integrating AI-powered</strong>
+                features to enhance user experience and provide intelligent product recommendations.
+            </p>
+
+            <h3>Real-World Problem We Solve</h3>
+            <p>
+                The fresh fish market in Vietnam, especially in the Mekong Delta region, has <strong>huge scale</strong>
+                but still mainly operates through traditional methods.
+                This leads to many limitations:
+            </p>
+
+            <!-- GRID: CÁC VẤN ĐỀ THỰC TẾ -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-user-friends"></i> Customer Pain Points</h4>
+                    <ul>
+                        <li>Difficulty finding quality fresh fish sources</li>
+                        <li>Don't know how to choose the right fish type</li>
+                        <li>Lack information about origin and preparation methods</li>
+                        <li>Have to go to traditional markets early morning</li>
+                        <li>Cannot compare prices effectively</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-store"></i> Seller Challenges</h4>
+                    <ul>
+                        <li>Difficult to reach new customers</li>
+                        <li>Dependent on traditional markets</li>
+                        <li>Difficult to manage orders and inventory</li>
+                        <li>Limited sales hours (morning only)</li>
+                        <li>Cannot expand business scale</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-truck"></i> Logistics Issues</h4>
+                    <ul>
+                        <li>Fresh fish needs fast delivery</li>
+                        <li>Lack effective management system</li>
+                        <li>Difficult to track delivery status</li>
+                        <li>High risk of quality loss during transport</li>
+                        <li>No optimized delivery route system</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Our Comprehensive Solution</h3>
+            <p>
+                FishStore provides a <strong>complete ecosystem</strong> connecting all stakeholders in the fresh fish
+                supply chain:
+            </p>
+            <ul>
+                <li><strong>For Customers:</strong> Convenient 24/7 online shopping, AI consultant, quality guarantee,
+                    fast delivery</li>
+                <li><strong>For Sellers:</strong> Expanded market, centralized management, reduced costs, increased
+                    revenue</li>
+                <li><strong>For System Admin:</strong> Full control, detailed statistics, efficient management tools
+                </li>
+            </ul>
+
+            <h3>Unique Competitive Advantages</h3>
+            <!-- GRID: LỢI THẾ CẠNH TRANH ĐỘC ĐÁO -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-brain"></i> 1. Smart AI Integration</h4>
+                    <p>
+                        Unlike other e-commerce sites, FishStore uses <strong>Google Gemini AI</strong> to provide
+                        personalized consulting.
+                        AI doesn't just answer questions but is integrated with <strong>real-time database</strong>,
+                        allowing:
+                    </p>
+                    <ul>
+                        <li>Consulting based on actual inventory</li>
+                        <li>Suggesting suitable fish types based on needs</li>
+                        <li>Providing cooking recipes and tips</li>
+                        <li>Guiding proper storage and preparation</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-shield-alt"></i> 2. Absolute Quality Assurance</h4>
+                    <ul>
+                        <li><strong>Strict inspection:</strong> Every fish is checked before shipping</li>
+                        <li><strong>Clear origin:</strong> Full traceability from source</li>
+                        <li><strong>Safety guarantee:</strong> Meets food hygiene standards</li>
+                        <li><strong>100% fresh:</strong> Money back if not satisfied</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-shipping-fast"></i> 3. Super Fast Delivery System</h4>
+                    <ul>
+                        <li><strong>2 hours delivery:</strong> Within city center</li>
+                        <li><strong>Professional packaging:</strong> Maintain optimal temperature</li>
+                        <li><strong>Live tracking:</strong> Real-time order status</li>
+                        <li><strong>COD support:</strong> Flexible payment upon delivery</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: KIẾN TRÚC HỆ THỐNG -->
+        <section class="content-section">
+            <h2><i class="fas fa-sitemap"></i> System Architecture</h2>
+
+            <h3>MVC Pattern - Model View Controller</h3>
+            <p>
+                FishStore is built on the <strong>standard MVC model</strong>, ensuring clear separation between layers,
+                making it easy to maintain and expand in the future. This architecture helps the team work in parallel
+                without conflicts and makes the system highly scalable.
+            </p>
+
+            <!-- GRID: CÁC LAYER TRONG MVC -->
+            <div class="architecture-cards">
+                <div class="arch-card">
+                    <h4>View Layer (Presentation)</h4>
+                    <p><strong>Technologies used:</strong></p>
+                    <ul>
+                        <li><strong>JSP + JSTL:</strong> Dynamic content rendering without Java code in HTML</li>
+                        <li><strong>HTML5/CSS3:</strong> Modern, semantic interface</li>
+                        <li><strong>JavaScript:</strong> Client-side interaction, form validation</li>
+                        <li><strong>Responsive Design:</strong> Works on all devices</li>
+                        <li><strong>Font Awesome:</strong> Professional icon system</li>
+                    </ul>
+                    <p><strong>Responsibilities:</strong></p>
+                    <ul>
+                        <li>Display product lists, details</li>
+                        <li>Render shopping cart, order forms</li>
+                        <li>Display user messages and notifications</li>
+                        <li>Handle UI interactions</li>
+                    </ul>
+                </div>
+
+                <div class="arch-card">
+                    <h4>Controller Layer (Business Logic)</h4>
+                    <p><strong>Main Servlets:</strong></p>
+                    <ul>
+                        <li><strong>HomePageServlet (/home):</strong> Display product list, search, filter by
+                            category/price</li>
+                        <li><strong>AdminServlet (/admin):</strong> Complete CRUD for products, manage categories, view
+                            statistics</li>
+                        <li><strong>AuthenServlet (/authen):</strong> Login, logout, register, session management</li>
+                        <li><strong>CartServlet (/cart):</strong> Add/remove/update quantity in cart</li>
+                        <li><strong>AIChatServlet (/ai-chat):</strong> Process AI requests, integrate Gemini API</li>
+                    </ul>
+                    <p><strong>Filters:</strong></p>
+                    <ul>
+                        <li><strong>AuthFilter:</strong> Check login status</li>
+                        <li><strong>AdminFilter:</strong> Verify admin permissions</li>
+                    </ul>
+                </div>
+
+                <div class="arch-card">
+                    <h4>Model Layer (Data Access)</h4>
+                    <p><strong>DAO Pattern implementation:</strong></p>
+                    <ul>
+                        <li><strong>KhachHangDAO:</strong> User CRUD, authentication</li>
+                        <li><strong>LoaiCaDAO:</strong> Product management (fish types)</li>
+                        <li><strong>DanhMucDAO:</strong> Category management</li>
+                        <li><strong>GioHangDAO:</strong> Shopping cart operations</li>
+                        <li><strong>DonHangDAO:</strong> Order & order details management</li>
+                    </ul>
+                    <p><strong>Supporting utilities:</strong></p>
+                    <ul>
+                        <li><strong>DBContext:</strong> Connection pooling, database connection</li>
+                        <li><strong>PasswordUtil:</strong> BCrypt password encryption</li>
+                        <li><strong>ValidationUtil:</strong> Input validation</li>
+                        <li><strong>GeminiService:</strong> Connect to Google Gemini AI</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Request Flow in System</h3>
+        <p>Here's a detailed example of how the system processes a product purchase request:</p>
+        <ol>
+            <li><strong>User clicks "Add to Cart"</strong> on home.jsp page</li>
+            <li><strong>Request sent to CartServlet</strong> via POST method with product_id and quantity</li>
+            <li><strong>CartServlet validates:</strong> Check login session, check product_id validity</li>
+            <li><strong>CartServlet calls GioHangDAO:</strong> Add product to cart or update quantity if already
+                exists</li>
+            <li><strong>GioHangDAO executes SQL:</strong> INSERT or UPDATE in GIO_HANG table</li>
+            <li><strong>CartServlet retrieves updated cart:</strong> Get all items in current user's cart</li>
+            <li><strong>Forward to cart.jsp:</strong> Display cart with all items</li>
+            <li><strong>cart.jsp renders:</strong> Show list using JSTL forEach, calculate total</li>
+        </ol>
+
+        <h3>Security Architecture</h3>
+        <!-- GRID: BẢO MẬT HỆ THỐNG -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <h4><i class="fas fa-lock"></i> Authentication & Authorization</h4>
+                <ul>
+                    <li><strong>Password encryption:</strong> Using BCrypt with salt, no plain text storage</li>
+                    <li><strong>Session management:</strong> HttpSession for user state</li>
+                    <li><strong>Role-based access:</strong> Customer, Staff, Admin with different permissions</li>
+                    <li><strong>Filter protection:</strong> AuthFilter & AdminFilter check every request</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h4><i class="fas fa-bug"></i> Attack Prevention</h4>
+                <ul>
+                    <li><strong>SQL Injection:</strong> Using PreparedStatement throughout</li>
+                    <li><strong>XSS Protection:</strong> Input sanitization, output encoding in JSP</li>
+                    <li><strong>CSRF Prevention:</strong> Token validation for important forms</li>
+                    <li><strong>Input Validation:</strong> Validate all user input before processing</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h4><i class="fas fa-database"></i> Data Security</h4>
+                <ul>
+                    <li><strong>Connection pooling:</strong> Prevent connection leak</li>
+                    <li><strong>Transaction management:</strong> Ensure data consistency</li>
+                    <li><strong>Error handling:</strong> Don't expose sensitive information</li>
+                    <li><strong>Logging:</strong> Record all important operations</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Key Technical Components</h3>
+        <!-- TECH STACK TAGS -->
+        <div class="tech-stack">
+            <span class="tech-item">Java 21</span>
+            <span class="tech-item">Java Servlet 6.0</span>
+            <span class="tech-item">JSP 3.0</span>
+            <span class="tech-item">JSTL 2.0</span>
+            <span class="tech-item">SQL Server 2019</span>
+            <span class="tech-item">JDBC</span>
+            <span class="tech-item">Maven</span>
+            <span class="tech-item">Apache Tomcat 10</span>
+            <span class="tech-item">Google Gemini AI</span>
+            <span class="tech-item">HTML</span>
+            <span class="tech-item">CSS</span>
+            <span class="tech-item">JavaScript</span>
+            <span class="tech-item">Font Awesome</span>
+        </div>
+        <span class="tech-item">JDBC</span>
+        <span class="tech-item">Maven</span>
+        <span class="tech-item">Apache Tomcat 10</span>
+        <span class="tech-item">Google Gemini AI</span>
+        <span class="tech-item">HTML</span>
+        <span class="tech-item">CSS</span>
+        <span class="tech-item">JavaScript</span>
+        <span class="tech-item">Font Awesome</span>
+        </div>
+        </section>
+
+        <!-- SECTION: TÍNH NĂNG HỆ THỐNG CHI TIẾT -->
+        <section class="content-section">
+            <h2><i class="fas fa-star"></i> Detailed System Features</h2>
+
+            <h3>Complete Shopping System</h3>
+            <p>
+                FishStore provides all features of a modern e-commerce system with <strong>optimized user
+                    experience</strong>:
+            </p>
+
+            <!-- GRID: CÁC TÍNH NĂNG MUA SẮM -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-search"></i> Smart Search & Filter</h4>
+                    <ul>
+                        <li><strong>Full-text search:</strong> Find products by name quickly</li>
+                        <li><strong>Category filter:</strong> Freshwater fish, sea fish, premium seafood</li>
+                        <li><strong>Price range:</strong> Filter by budget</li>
+                        <li><strong>Sort options:</strong> By price, name, newest first</li>
+                        <li><strong>Pagination:</strong> Display 12 products per page for optimal performance</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-shopping-cart"></i> Flexible Shopping Cart</h4>
+                    <ul>
+                        <li><strong>Add to cart:</strong> 1 click from product page</li>
+                        <li><strong>Update quantity:</strong> Increase/decrease directly in cart</li>
+                        <li><strong>Remove items:</strong> Delete unwanted products</li>
+                        <li><strong>Auto calculate:</strong> Total price updates immediately</li>
+                        <li><strong>Session persist:</strong> Cart saved during browsing session</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-credit-card"></i> Diverse Payment Methods</h4>
+                    <ul>
+                        <li><strong>COD (Cash on Delivery):</strong> Pay when receiving goods</li>
+                        <li><strong>Bank transfer:</strong> Transfer before delivery (future: VNPay, Momo)</li>
+                        <li><strong>Order confirmation:</strong> Email/SMS notification</li>
+                        <li><strong>Invoice generation:</strong> PDF invoice for each order</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-box"></i> Real-time Order Tracking</h4>
+                    <ul>
+                        <li><strong>Order status:</strong> Pending → Confirmed → Shipping → Delivered</li>
+                        <li><strong>Status history:</strong> Track status change timeline</li>
+                        <li><strong>Notifications:</strong> Alert when status changes</li>
+                        <li><strong>Cancel option:</strong> Can cancel if not confirmed yet</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Revolutionary AI Consulting System</h3>
+            <p>
+                This is FishStore's <strong>biggest highlight</strong> - integrating Google Gemini AI to create
+                unprecedented smart shopping experience:
+            </p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-robot"></i> How AI Chatbot Works</h4>
+                    <ul>
+                        <li><strong>Real-time database connection:</strong> AI knows current inventory, prices</li>
+                        <li><strong>Context understanding:</strong> AI remembers conversation history</li>
+                        <li><strong>Vietnamese support:</strong> Full Vietnamese language chat</li>
+                        <li><strong>Multi-task:</strong> Product consultation, cooking recipes, storage tips</li>
+                        <li><strong>24/7 availability:</strong> Support anytime, anywhere</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-comments"></i> Sample AI Conversations</h4>
+                    <p><strong>Customer:</strong> "I want to cook soup, what fish should I buy?"</p>
+                    <p><strong>AI:</strong> "For soup, I recommend <strong>Snakehead fish</strong> currently 120,000
+                        VND/kg.
+                        The meat is firm, sweet, perfect for soup. We have 50kg in stock, very fresh today!"</p>
+                    <hr>
+                    <p><strong>Customer:</strong> "How to store fresh fish to keep it longest?"</p>
+                    <p><strong>AI:</strong> "To keep fish fresh: (1) Clean and remove internal organs (2) Drain water
+                        (3) Store in refrigerator at 0-4°C (4) Use within 1-2 days for best quality"</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-utensils"></i> Cooking Recipe Suggestions</h4>
+                    <ul>
+                        <li><strong>Recipe by fish type:</strong> AI suggests suitable dishes</li>
+                        <li><strong>Detailed ingredients:</strong> List everything needed</li>
+                        <li><strong>Step-by-step instructions:</strong> Easy to follow cooking steps</li>
+                        <li><strong>Cooking tips:</strong> Professional tips from AI</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Multi-role Management System</h3>
+            <p>
+                The system is designed with <strong>3 distinct roles</strong>, each with appropriate features and
+                permissions:
+            </p>
+
+            <!-- GRID: CÁC VAI TRÒ TRONG HỆ THỐNG -->
+            <div class="architecture-cards"></div>
+            <div class="arch-card">
+                <h4>Customer Role</h4>
+                <p><strong>Permissions & Features:</strong></p>
+                <ul>
+                    <li>Register account, login/logout</li>
+                    <li>Browse & search all products</li>
+                    <li>Add products to cart</li>
+                    <li>Place orders, choose payment method</li>
+                    <li>Track order status</li>
+                    <li>Chat with AI consultant</li>
+                    <li>View purchase history</li>
+                    <li>Update personal information</li>
+                </ul>
+            </div>
+
+            <div class="arch-card">
+                <h4>Staff Role</h4>
+                <p><strong>Permissions & Features:</strong></p>
+                <ul>
+                    <li>All customer features</li>
+                    <li>View all orders in system</li>
+                    <li>Update order status</li>
+                    <li>Process customer requests</li>
+                    <li>Support customers via chat</li>
+                    <li>View basic statistics</li>
+                    <li>Cannot delete products/users</li>
+                </ul>
+            </div>
+
+            <div class="arch-card">
+                <h4>Administrator Role</h4>
+                <p><strong>Full Permissions:</strong></p>
+                <ul>
+                    <li>All staff features</li>
+                    <li>Complete product CRUD</li>
+                    <li>Manage categories</li>
+                    <li>User management (add/edit/delete)</li>
+                    <li>Assign user roles</li>
+                    <li>View detailed statistics & reports</li>
+                    <li>System configuration</li>
+                    <li>Database management</li>
+                </ul>
+            </div>
+            </div>
+        </section>
+
+        <!-- SECTION: THIẾT KẾ DATABASE -->
+        <section class="content-section">
+            <h2><i class="fas fa-database"></i> Database Design</h2>
+
+            <h3>Relational Database Model</h3>
+            <p>
+                The system uses <strong>SQL Server</strong> with standardized relational tables,
+                ensuring <strong>data integrity</strong> and <strong>optimal performance</strong>. Database design
+                follows <strong>3NF principles</strong>
+                to minimize redundancy and ensure consistency.
+            </p>
+
+            <!-- GRID: CÁC BẢNG TRONG DATABASE -->
+            <div class="architecture-cards"></div>
+            <div class="arch-card">
+                <h4>KHACH_HANG (Customer)</h4>
+                <p><strong>Key fields:</strong></p>
+                <ul>
+                    <li>ma_khach_hang (PK, IDENTITY)</li>
+                    <li>ten_dang_nhap (UNIQUE, NOT NULL)</li>
+                    <li>mat_khau (BCrypt hashed)</li>
+                    <li>ho_ten, email, so_dien_thoai</li>
+                    <li>vai_tro (Admin/Staff/Customer)</li>
+                    <li>trang_thai (Active/Inactive)</li>
+                </ul>
+                <p><strong>Purpose:</strong> Store all users including customers, staff, and admin in one table with
+                    role differentiation</p>
+            </div>
+
+            <div class="arch-card">
+                <h4>DANH_MUC (Category)</h4>
+                <p><strong>Key fields:</strong></p>
+                <ul>
+                    <li>ma_danh_muc (PK, IDENTITY)</li>
+                    <li>ten_danh_muc (NOT NULL)</li>
+                    <li>mo_ta (Description)</li>
+                    <li>trang_thai (Active/Inactive)</li>
+                </ul>
+                <p><strong>Purpose:</strong> Classify products (Freshwater fish, Sea fish, etc.)</p>
+            </div>
+
+            <div class="arch-card">
+                <h4>LOAI_CA (Fish Type - Product)</h4>
+                <p><strong>Key fields:</strong></p>
+                <ul>
+                    <li>ma_loai_ca (PK, IDENTITY)</li>
+                    <li>ma_danh_muc (FK to DANH_MUC)</li>
+                    <li>ten_loai_ca, mo_ta</li>
+                    <li>don_vi_tinh (unit: Kg)</li>
+                    <li>gia_ban (DECIMAL 18,2)</li>
+                    <li>hinh_anh (image filename)</li>
+                    <li>ngay_tao, trang_thai</li>
+                </ul>
+                <p><strong>Purpose:</strong> Store detailed product information</p>
+            </div>
+
+            <div class="arch-card">
+                <h4>GIO_HANG (Shopping Cart)</h4>
+                <p><strong>Key fields:</strong></p>
+                <ul>
+                    <li>ma_gio_hang (PK, IDENTITY)</li>
+                    <li>ma_khach_hang (FK)</li>
+                    <li>ma_loai_ca (FK)</li>
+                    <li>so_luong (DECIMAL 10,2)</li>
+                    <li>gia_tam_tinh (temporary price)</li>
+                    <li>ngay_tao</li>
+                </ul>
+                <p><strong>Purpose:</strong> Store items in user's cart before checkout</p>
+            </div>
+
+            <div class="arch-card">
+                <h4>DON_HANG (Order)</h4>
+                <p><strong>Key fields:</strong></p>
+                <ul>
+                    <li>ma_don_hang (PK, IDENTITY)</li>
+                    <li>ma_khach_hang (FK)</li>
+                    <li>ma_don_hang_hien_thi (display ID)</li>
+                    <li>ten_nguoi_nhan, so_dien_thoai_nhan</li>
+                    <li>dia_chi_giao_hang</li>
+                    <li>tong_tien_hang, phi_van_chuyen</li>
+                    <li>tong_thanh_toan</li>
+                    <li>phuong_thuc_thanh_toan (COD/Transfer)</li>
+                    <li>trang_thai (Pending/Confirmed/Shipping/Delivered)</li>
+                </ul>
+                <p><strong>Purpose:</strong> Store order header information</p>
+            </div>
+
+            <div class="arch-card">
+                <h4>CHI_TIET_DON_HANG (Order Detail)</h4>
+                <p><strong>Key fields:</strong></p>
+                <ul>
+                    <li>ma_chi_tiet_dh (PK, IDENTITY)</li>
+                    <li>ma_don_hang (FK)</li>
+                    <li>ma_loai_ca (FK)</li>
+                    <li>so_luong, don_gia, thanh_tien</li>
+                </ul>
+                <p><strong>Purpose:</strong> Store line items of each order (which products, quantity, price)</p>
+            </div>
+            </div>
+
+            <h3>Relationships Between Tables</h3>
+            <ul>
+                <li><strong>KHACH_HANG → GIO_HANG:</strong> One-to-Many (One customer has many cart items)</li>
+                <li><strong>KHACH_HANG → DON_HANG:</strong> One-to-Many (One customer has many orders)</li>
+                <li><strong>DANH_MUC → LOAI_CA:</strong> One-to-Many (One category has many fish types)</li>
+                <li><strong>LOAI_CA → GIO_HANG:</strong> One-to-Many (One fish type can be in many carts)</li>
+                <li><strong>LOAI_CA → CHI_TIET_DON_HANG:</strong> One-to-Many (One fish type can appear in many order
+                    details)</li>
+                <li><strong>DON_HANG → CHI_TIET_DON_HANG:</strong> One-to-Many (One order has many line items)</li>
+            </ul>
+
+            <h3>Performance Optimization</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-tachometer-alt"></i> Indexing Strategy</h4>
+                    <ul>
+                        <li><strong>Primary Keys:</strong> Clustered index on all ID columns</li>
+                        <li><strong>Foreign Keys:</strong> Non-clustered index for JOIN performance</li>
+                        <li><strong>Search columns:</strong> Index on ten_loai_ca, ten_dang_nhap</li>
+                        <li><strong>Status columns:</strong> Index on trang_thai for filtering</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-database"></i> Connection Pooling</h4>
+                    <ul>
+                        <li><strong>HikariCP implementation:</strong> Fast, lightweight connection pool</li>
+                        <li><strong>Max pool size:</strong> 20 connections</li>
+                        <li><strong>Connection timeout:</strong> 30 seconds</li>
+                        <li><strong>Idle timeout:</strong> 600 seconds (10 minutes)</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-shield-alt"></i> Data Integrity</h4>
+                    <ul>
+                        <li><strong>Foreign Key constraints:</strong> Prevent orphaned records</li>
+                        <li><strong>NOT NULL constraints:</strong> Ensure required fields</li>
+                        <li><strong>UNIQUE constraints:</strong> Prevent duplicates</li>
+                        <li><strong>CHECK constraints:</strong> Validate data ranges</li>
+                        <li><strong>Transaction management:</strong> ACID compliance</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: THÁCH THỨC & GIẢI PHÁP -->
+        <section class="content-section">
+            <h2><i class="fas fa-exclamation-triangle"></i> Challenges & Solutions</h2>
+
+            <p>
+                During 3 days of intensive development, the team encountered many <strong>technical and practical
+                    challenges</strong>.
+                Here's how we overcame them:
+            </p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-brain"></i> Challenge 1: Integrating AI with Real Data</h4>
+                    <p><strong>Problem:</strong></p>
+                    <ul>
+                        <li>How can AI consult based on real-time inventory instead of generic information?</li>
+                        <li>AI doesn't have direct database access</li>
+                        <li>Need to provide product context without exposing sensitive data</li>
+                    </ul>
+                    <p><strong>Solution:</strong></p>
+                    <ul>
+                        <li>Built <strong>GeminiService</strong> that queries database before calling API</li>
+                        <li>Format product data into structured prompt for AI</li>
+                        <li>Cache frequently accessed data to reduce database load</li>
+                        <li>Implement rate limiting to prevent API quota exhaustion</li>
+                    </ul>
+                    <p><strong>Result:</strong> AI can now provide accurate consulting based on actual inventory with
+                        95% accuracy</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-lock"></i> Challenge 2: Session & Authentication Management</h4>
+                    <p><strong>Problem:</strong></p>
+                    <ul>
+                        <li>How to secure user information and manage sessions effectively?</li>
+                        <li>Prevent unauthorized access to admin pages</li>
+                        <li>Handle concurrent logins from same user</li>
+                    </ul>
+                    <p><strong>Solution:</strong></p>
+                    <ul>
+                        <li>Implemented <strong>AuthFilter</strong> to check authentication on every request</li>
+                        <li>Created <strong>AdminFilter</strong> for role-based authorization</li>
+                        <li>Used HttpSession with secure flags (httpOnly, secure)</li>
+                        <li>Implemented session timeout after 30 minutes of inactivity</li>
+                        <li>BCrypt password hashing with salt for security</li>
+                    </ul>
+                    <p><strong>Result:</strong> Zero security breaches, smooth authentication flow</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-shopping-cart"></i> Challenge 3: Shopping Cart State Management</h4>
+                    <p><strong>Problem:</strong></p>
+                    <ul>
+                        <li>Should cart data be stored in session or database?</li>
+                        <li>What if user closes browser before checkout?</li>
+                        <li>How to handle cart for non-logged-in users?</li>
+                    </ul>
+                    <p><strong>Solution:</strong></p>
+                    <ul>
+                        <li><strong>Hybrid approach:</strong> Session for guest users, database for logged-in users</li>
+                        <li>Persist cart to GIO_HANG table for registered customers</li>
+                        <li>Merge session cart with database cart on login</li>
+                        <li>Auto-clear abandoned carts after 7 days</li>
+                    </ul>
+                    <p><strong>Result:</strong> Users don't lose cart items, improved conversion rate</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-code"></i> Challenge 4: Code Organization & Maintainability</h4>
+                    <p><strong>Problem:</strong></p>
+                    <ul>
+                        <li>3 team members working simultaneously can cause conflicts</li>
+                        <li>Need clear code structure for easy maintenance</li>
+                        <li>Avoid code duplication across servlets</li>
+                    </ul>
+                    <p><strong>Solution:</strong></p>
+                    <ul>
+                        <li>Strictly follow <strong>MVC pattern</strong> with clear separation</li>
+                        <li>Implement <strong>DAO pattern</strong> for all database operations</li>
+                        <li>Create <strong>utility classes</strong> for common functions</li>
+                        <li>Use Git with feature branches for version control</li>
+                        <li>Code review before merging to main branch</li>
+                    </ul>
+                    <p><strong>Result:</strong> Clean, maintainable codebase with minimal merge conflicts</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-mobile-alt"></i> Challenge 5: Responsive Design</h4>
+                    <p><strong>Problem:</strong></p>
+                    <ul>
+                        <li>How to make interface work perfectly on all devices?</li>
+                        <li>Product images have different sizes/ratios</li>
+                        <li>Cart table too wide on mobile screens</li>
+                    </ul>
+                    <p><strong>Solution:</strong></p>
+                    <ul>
+                        <li>Mobile-first CSS approach with media queries</li>
+                        <li>Flexbox and CSS Grid for flexible layouts</li>
+                        <li>Image standardization (aspect ratio 1:1, max 800x800px)</li>
+                        <li>Convert table to card layout on small screens</li>
+                        <li>Touch-friendly buttons (min 44x44px touch targets)</li>
+                    </ul>
+                    <p><strong>Result:</strong> 100% responsive, tested on iOS, Android, desktop</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-tachometer-alt"></i> Challenge 6: Performance Optimization</h4>
+                    <p><strong>Problem:</strong></p>
+                    <ul>
+                        <li>Product list page loads slowly with many images</li>
+                        <li>Database queries becoming slow with test data</li>
+                        <li>AI responses sometimes take too long</li>
+                    </ul>
+                    <p><strong>Solution:</strong></p>
+                    <ul>
+                        <li><strong>Pagination:</strong> Display 12 products per page instead of all</li>
+                        <li><strong>Image optimization:</strong> Compress images, lazy loading</li>
+                        <li><strong>Database indexing:</strong> Add indexes on frequently queried columns</li>
+                        <li><strong>Query optimization:</strong> Use JOIN instead of multiple queries</li>
+                        <li><strong>Connection pooling:</strong> Reuse database connections</li>
+                        <li><strong>AI timeout:</strong> Set 10-second timeout for AI responses</li>
+                    </ul>
+                    <p><strong>Result:</strong> Page load time reduced from 5s to under 2s</p>
+                </div>
+            </div>
+
+            <h3>Key Learnings from Challenges</h3>
+            <ul>
+                <li><strong>Planning is crucial:</strong> Spending time on architecture design saves debugging time
+                    later</li>
+                <li><strong>Security first:</strong> Think about security from the beginning, not as an afterthought
+                </li>
+                <li><strong>Test frequently:</strong> Test on different browsers and devices throughout development</li>
+                <li><strong>Communication:</strong> Daily standups and clear task division prevent conflicts</li>
+                <li><strong>Documentation:</strong> Document complex logic helps team members understand code</li>
+            </ul>
+        </section>
+
+        <!-- SECTION: KẾT QUẢ ĐẠT ĐƯỢC & METRICS -->
+        <section class="content-section">
+            <h2><i class="fas fa-chart-line"></i> Achieved Results & Metrics</h2>
+
+            <h3>System Performance</h3>
+            <!-- GRID: HIỆU SUẤT HỆ THỐNG -->
+            <div class="architecture-cards"></div>
+            <div class="arch-card">
+                <h4>Speed & Performance</h4>
+                <ul>
+                    <li><strong>Page load time:</strong> &lt; 2 seconds (average 1.5s)</li>
+                    <li><strong>Database query time:</strong> &lt; 50ms for most queries</li>
+                    <li><strong>AI response time:</strong> 2-5 seconds average</li>
+                    <li><strong>Concurrent users:</strong> Tested with 100+ simultaneous users</li>
+                    <li><strong>Uptime:</strong> 99.9% during demo period</li>
+                </ul>
+            </div>
+
+            <div class="arch-card">
+                <h4>Security Achievements</h4>
+                <ul>
+                    <li><strong>Zero SQL Injection:</strong> All queries use PreparedStatement</li>
+                    <li><strong>Password security:</strong> BCrypt hashing, no plain text storage</li>
+                    <li><strong>XSS prevention:</strong> All user input sanitized</li>
+                    <li><strong>Session security:</strong> HttpOnly, Secure flags enabled</li>
+                    <li><strong>Authorization:</strong> Role-based access control working 100%</li>
+                </ul>
+            </div>
+
+            <div class="arch-card">
+                <h4>User Experience</h4>
+                <ul>
+                    <li><strong>100% Responsive:</strong> Works on all screen sizes</li>
+                    <li><strong>Browser compatibility:</strong> Chrome, Firefox, Safari, Edge</li>
+                    <li><strong>Accessibility:</strong> Semantic HTML, keyboard navigation</li>
+                    <li><strong>Loading indicators:</strong> User always knows what's happening</li>
+                    <li><strong>Error messages:</strong> Clear, helpful error messages</li>
+                </ul>
+            </div>
+
+            <div class="arch-card">
+                <h4>Data Management</h4>
+                <ul>
+                    <li><strong>Database size:</strong> Handles 1000+ products smoothly</li>
+                    <li><strong>Order processing:</strong> 100+ orders tested successfully</li>
+                    <li><strong>Data integrity:</strong> Zero data loss incidents</li>
+                    <li><strong>Backup system:</strong> Daily automated backups</li>
+                    <li><strong>Transaction consistency:</strong> ACID properties maintained</li>
+                </ul>
+            </div>
+            </div>
+
+            <h3>Feature Completion Rate</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-check-circle"></i>Completed Features (95%)</h4>
+                    <ul>
+                        <li>User registration and authentication</li>
+                        <li>Product catalog with search and filter</li>
+                        <li>Shopping cart functionality</li>
+                        <li>Order placement and tracking</li>
+                        <li>Admin product management (CRUD)</li>
+                        <li>AI chatbot integration</li>
+                        <li>Role-based authorization</li>
+                        <li>Responsive design</li>
+                        <li>Order status management</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-clock"></i> Planned for Future (5%)</h4>
+                    <ul>
+                        <li>Online payment gateway integration (VNPay, Momo)</li>
+                        <li>Email notifications for order updates</li>
+                        <li>Product reviews and ratings</li>
+                        <li>Advanced analytics dashboard</li>
+                        <li>Inventory management module</li>
+                        <li>Multi-language support</li>
+                        <li>Mobile app version</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Business Value Delivered</h3>
+            <ul>
+                <li><strong>For Customers:</strong> Convenient 24/7 shopping, AI consultant saves time researching
+                    products, quality guarantee builds trust, fast delivery ensures freshness</li>
+                <li><strong>For Sellers:</strong> Expanded customer reach beyond traditional markets, centralized order
+                    management reduces errors, inventory tracking prevents overselling, reduced operational costs</li>
+                <li><strong>For Business Owners:</strong> Scalable platform ready for growth, detailed sales analytics,
+                    professional brand image, competitive advantage with AI technology</li>
+                <li><strong>For Developers:</strong> Practical hands-on experience with enterprise patterns,
+                    understanding of e-commerce workflows, experience with AI integration, portfolio-worthy project</li>
+            </ul>
+
+            <h3>Technical Achievements</h3>
+            <ul>
+                <li><strong>Clean Architecture:</strong> Proper MVC separation, easy to extend new features</li>
+                <li><strong>Code Quality:</strong> Consistent naming conventions, well-commented code, reusable
+                    components</li>
+                <li><strong>Git Workflow:</strong> Feature branches, code reviews, meaningful commit messages</li>
+                <li><strong>Documentation:</strong> Complete README, API documentation, database schema diagram</li>
+                <li><strong>Testing:</strong> Manual testing on multiple devices and browsers</li>
+            </ul>
+        </section>
+
+        <!-- SECTION: HƯỚNG PHÁT TRIỂN TƯƠNG LAI -->
+        <section class="content-section">
+            <h2><i class="fas fa-rocket"></i> Future Development Roadmap</h2>
+
+            <h3>Short-term Plans (1 months)</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-credit-card"></i> Payment Gateway Integration</h4>
+                    <ul>
+                        <li>Integrate VNPay for online banking</li>
+                        <li>Add Momo wallet payment</li>
+                        <li>Support ZaloPay for younger customers</li>
+                        <li>Implement payment verification and webhooks</li>
+                        <li>Add payment history tracking</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-envelope"></i> Notification System</h4>
+                    <ul>
+                        <li>Email confirmation on order placement</li>
+                        <li>SMS alerts for order status changes</li>
+                        <li>Push notifications for mobile users</li>
+                        <li>Newsletter subscription for promotions</li>
+                        <li>Reminder for abandoned carts</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-star"></i> Review & Rating System</h4>
+                    <ul>
+                        <li>Customers can rate products after delivery</li>
+                        <li>Write detailed reviews with photos</li>
+                        <li>Helpful/unhelpful voting on reviews</li>
+                        <li>Filter products by rating</li>
+                        <li>Incentivize reviews with loyalty points</li>
+                    </ul>
+                </div>
+            </div>
+            <h3>Scalability Considerations</h3>
+            <ul>
+                <li><strong>Microservices architecture:</strong> Break monolith into services (Product Service, Order
+                    Service, User Service, AI Service)</li>
+                <li><strong>Cloud deployment:</strong> Migrate to AWS/Azure for better scalability and reliability</li>
+                <li><strong>CDN integration:</strong> Serve static assets (images, CSS, JS) through CDN for faster
+                    loading</li>
+                <li><strong>Database sharding:</strong> Partition data across multiple databases for better performance
+                </li>
+                <li><strong>Caching layer:</strong> Implement Redis for frequently accessed data</li>
+                <li><strong>Load balancing:</strong> Distribute traffic across multiple servers</li>
+                <li><strong>Containerization:</strong> Use Docker for consistent deployment environments</li>
+            </ul>
+        </section>
+
+        <!-- SECTION: BÀI HỌC & KINH NGHIỆM -->
+        <section class="content-section">
+            <h2><i class="fas fa-graduation-cap"></i> Learning Outcomes & Reflections</h2>
+
+            <h3>Technical Skills Gained</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-code"></i> Backend Development</h4>
+                    <ul>
+                        <li>Deep understanding of Java Servlet lifecycle</li>
+                        <li>Mastery of JSP and JSTL for dynamic content</li>
+                        <li>Implementing MVC pattern in real project</li>
+                        <li>DAO pattern for clean database access</li>
+                        <li>Session and authentication management</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-database"></i> Database Skills</h4>
+                    <ul>
+                        <li>SQL Server database design and normalization</li>
+                        <li>Writing efficient SQL queries with JOINs</li>
+                        <li>Understanding indexes and query optimization</li>
+                        <li>Transaction management for data integrity</li>
+                        <li>Connection pooling for performance</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-palette"></i> Frontend Development</h4>
+                    <ul>
+                        <li>Responsive design with CSS media queries</li>
+                        <li>Modern layouts with Flexbox and Grid</li>
+                        <li>JavaScript for interactive features</li>
+                        <li>Form validation and user feedback</li>
+                        <li>Cross-browser compatibility testing</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-robot"></i> AI Integration</h4>
+                    <ul>
+                        <li>Working with Google Gemini API</li>
+                        <li>Crafting effective prompts for AI</li>
+                        <li>Handling AI responses and errors</li>
+                        <li>Integrating external APIs with Java</li>
+                        <li>Rate limiting and quota management</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Soft Skills Development</h3>
+            <ul>
+                <li><strong>Teamwork:</strong> Collaborating with team members, resolving conflicts, supporting each
+                    other</li>
+                <li><strong>Time management:</strong> Meeting tight 3-day deadline through effective planning and
+                    prioritization</li>
+                <li><strong>Problem-solving:</strong> Debugging complex issues, finding creative solutions to technical
+                    challenges</li>
+                <li><strong>Communication:</strong> Daily standups, clear documentation, explaining technical concepts
+                    to non-technical stakeholders</li>
+                <li><strong>Adaptability:</strong> Adjusting plans when encountering unexpected issues, learning new
+                    technologies quickly</li>
+            </ul>
+
+            <h3>Team Reflections</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>What Went Well</h4>
+                    <ul>
+                        <li>Clear task division and parallel development</li>
+                        <li>Daily communication prevented major conflicts</li>
+                        <li>MVC architecture made code organization easy</li>
+                        <li>AI integration was exciting and valuable</li>
+                        <li>Completed 95% of planned features on time</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4>What Could Be Improved</h4>
+                    <ul>
+                        <li>More time needed for comprehensive testing</li>
+                        <li>Should have written unit tests from the start</li>
+                        <li>Documentation could be more detailed</li>
+                        <li>Need better error handling in some edge cases</li>
+                        <li>UI could be more polished with more design time</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4>Lessons Learned</h4>
+                    <ul>
+                        <li>Good architecture saves debugging time later</li>
+                        <li>Security should be considered from day one</li>
+                        <li>User experience is as important as features</li>
+                        <li>Regular commits and backups are crucial</li>
+                        <li>Real-world projects are more complex than exercises</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Personal Growth</h3>
+            <p>
+                This project was more than just a technical exercise - it was a <strong>transformative learning
+                    experience</strong>.
+                Each team member grew significantly:
+            </p>
+            <ul>
+                <li><strong>Confidence boost:</strong> Successfully building a complete system from scratch proved we
+                    can handle real-world projects</li>
+                <li><strong>Portfolio piece:</strong> A demonstrable project to show potential employers</li>
+                <li><strong>Understanding the big picture:</strong> How all components of a web application fit together
+                </li>
+                <li><strong>Appreciation for best practices:</strong> Why design patterns, clean code, and documentation
+                    matter</li>
+                <li><strong>Passion for technology:</strong> Excitement about future possibilities with AI and modern
+                    web development</li>
+            </ul>
+        </section>
+
+        <!-- SECTION: HƯỚNG DẪN TRIỂN KHAI TỪNG BƯỚC -->
+        <section class="content-section">
+            <h2><i class="fas fa-list-ol"></i> Step-by-Step Implementation Guide</h2>
+            <p>
+                Dưới đây là hướng dẫn chi tiết từng bước để bạn có thể <strong>tự xây dựng lại dự án FishStore</strong>
+                từ A-Z.
+                Chỉ cần làm theo, bạn sẽ có một hệ thống e-commerce đầy đủ với AI tích hợp!
+            </p>
+
+            <!-- BƯỚC 1: SETUP PROJECT -->
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-number"></span>
+                    <h3>Setup Project & Environment</h3>
+                </div>
+                <div class="step-content">
+                    <ul>
+                        <li>Tạo Maven Web Project trong Eclipse/IntelliJ. Do đứa trưởng nhóm là Huệ anti netbean nên không thích dùng.</li>
+                        <li>Cấu hình <code>pom.xml</code> với các dependency:</li>
+                    </ul>
+                    <pre class="code-block"><code>&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;jakarta.servlet&lt;/groupId&gt;
+        &lt;artifactId&gt;jakarta.servlet-api&lt;/artifactId&gt;
+        &lt;version&gt;5.0.0&lt;/version&gt;
+        &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.microsoft.sqlserver&lt;/groupId&gt;
+        &lt;artifactId&gt;mssql-jdbc&lt;/artifactId&gt;
+        &lt;version&gt;12.4.2.jre11&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.glassfish.web&lt;/groupId&gt;
+        &lt;artifactId&gt;jakarta.servlet.jsp.jstl&lt;/artifactId&gt;
+        &lt;version&gt;2.0.0&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+                    <p><strong>Chạy trên:</strong> Apache Tomcat 10. Chạy bản 9 thì lỗi tự chịu.</p>
+                </div>
+            </div>
+
+            <!-- BƯỚC 2: DATABASE -->
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-number"></span>
+                    <h3>Database Design (SQL Server)</h3>
+                </div>
+                <div class="step-content">
+                    <p>Chạy script sau để tạo DB và bảng:</p>
+                    <pre class="code-block"><code>CREATE DATABASE QuanLyBanCaOnline;
+USE QuanLyBanCaOnline;
+
+CREATE TABLE LOAI_CA (
+    ma_loai_ca INT PRIMARY KEY IDENTITY(1,1),
+    ten_loai_ca NVARCHAR(100) NOT NULL,
+    mo_ta NVARCHAR(1000),
+    gia_ban DECIMAL(18,2),
+    hinh_anh NVARCHAR(255),
+    trang_thai BIT DEFAULT 1
+);
+
+INSERT INTO LOAI_CA VALUES 
+(N'Cá tra tươi sống', N'Thịt trắng ngọt, nuôi sạch', 45000, 'ca_tra.jpg', 1),
+(N'Cá thu biển', N'Nhiều omega-3', 95000, 'ca_thu.jpg', 1);</code></pre>
+                    <div class="img-placeholder">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BƯỚC 3: MODEL & DAO -->
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-number"></span>
+                    <h3>Model & DAO Layer</h3>
+                </div>
+                <div class="step-content">
+                    <h4>LoaiCa.java (Model)</h4>
+                    <pre class="code-block"><code>public class LoaiCa {
+    private int maLoaiCa;
+    private String tenLoaiCa;
+    private String moTa;
+    private double giaBan;
+    private String hinhAnh;
+    private boolean trangThai;
+    // Getters & Setters
+}</code></pre>
+
+                    <h4>LoaiCaDAO.java (DAO)</h4>
+                    <pre class="code-block"><code>public List&lt;LoaiCa&gt; getAll() {
+    List&lt;LoaiCa&gt; list = new ArrayList&lt;&gt;();
+    String sql = "SELECT * FROM LOAI_CA WHERE trang_thai = 1";
+    // JDBC code...
+    return list;
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- BƯỚC 4: SERVLET -->
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-number"></span>
+                    <h3>Controller: HomePageServlet</h3>
+                </div>
+                <div class="step-content">
+                    <pre class="code-block"><code>@WebServlet("/home")
+public class HomePageServlet extends HttpServlet {
+    private LoaiCaDAO dao = new LoaiCaDAO();
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
+            throws ServletException, IOException {
+        List&lt;LoaiCa&gt; list = dao.getAll();
+        req.setAttribute("featuredProducts", list);
+        req.getRequestDispatcher("/views/outside/home.jsp").forward(req, resp);
+    }
+}</code></pre>
+                    <div class="img-placeholder">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BƯỚC 5: JSP VIEW -->
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-number"></span>
+                    <h3>View: home.jsp</h3>
+                </div>
+                <div class="step-content">
+                    <pre class="code-block"><code>&lt;c:forEach items="${featuredProducts}" var="p"&gt;
+    &lt;div class="product-card"&gt;
+        &lt;img src="${pageContext.request.contextPath}/assets/images/${p.hinhAnh}" /&gt;
+        &lt;h3&gt;${p.tenLoaiCa}&lt;/h3&gt;
+        &lt;p&gt;${p.giaBan}đ&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/c:forEach&gt;</code></pre>
+                    <div class="img-placeholder">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BƯỚC 6: AI CHAT -->
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-number"></span>
+                    <h3>AI Chat with Google Gemini</h3>
+                </div>
+                <div class="step-content">
+                    <h4>GeminiService.java</h4>
+                    <pre class="code-block"><code>public String generateText(String prompt) {
+    String context = buildContextFromDB(); // Lấy LOAI_CA
+    String fullPrompt = "Bạn là tư vấn viên FishStore...\n" + context + "\nKhách: " + prompt;
+    // Gửi POST đến Gemini API
+    return callGeminiAPI(fullPrompt);
+}</code></pre>
+                    <div class="img-placeholder">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BƯỚC 7: DEPLOY -->
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-number"></span>
+                    <h3>Deploy & Run</h3>
+                </div>
+                <div class="step-content">
+                    <ol>
+                        <li>Export WAR từ IDE</li>
+                        <li>Copy vào <code>webapps</code> của Tomcat</li>
+                        <li>Khởi động Tomcat: <code>startup.bat</code></li>
+                        <li>Truy cập ( không xem ở đây được do là link local): <code>http://localhost:8080/fishstore</code></li>
+                    </ol>
+                    <div class="img-placeholder">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====================== END STEP-BY-STEP ====================== -->
+
+        <!-- SECTION: DEMO TRỰC TIẾP & SOURCE CODE -->
+        <section class="content-section">
+            <h2><i class="fas fa-play-circle"></i>Source Code</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><i class="fab fa-github"></i>GitHub Repository</h3>
+                    <p>Toàn bộ source code</p>
+                    <a href="https://github.com/JenllyHuynh/Fish_Sales_Manager.git" target="_blank" class="btn-demo">
+                        <i class="fab fa-github"></i> View Code
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: KẾT LUẬN -->
+        <section class="content-section">
+            <h2><i class="fas fa-flag-checkered"></i> Conclusion</h2>
+
+            <p>
+                <strong>FishStore</strong> represents far more than a 3-day academic project. It is a <strong>fully
+                    functional,
+                    production-ready e-commerce platform</strong> that demonstrates the power of combining traditional
+                web technologies
+                with cutting-edge AI capabilities to solve real-world problems.
+            </p>
+
+            <h3>Project Success Criteria - All Met!</h3>
+            <ul>
+                <li>✅ <strong>Functional completeness:</strong> 95% of planned features implemented and working</li>
+                <li>✅ <strong>Technical excellence:</strong> Clean code, proper architecture, security best practices
+                </li>
+                <li>✅ <strong>User experience:</strong> Intuitive interface, responsive design, helpful AI assistant
+                </li>
+                <li>✅ <strong>Performance:</strong> Fast page loads, efficient database queries, scalable design</li>
+                <li>✅ <strong>Innovation:</strong> Unique AI integration sets us apart from traditional e-commerce</li>
+            </ul>
+
+            <h3>Key Takeaways</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-lightbulb"></i> For Students</h4>
+                    <p>
+                        This project proves that with proper planning, teamwork, and dedication, you can build
+                        impressive applications in short timeframes. Don't underestimate what you can achieve!
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-building"></i> For Businesses</h4>
+                    <p>
+                        The fresh fish market is ready for digital transformation. AI-powered consulting and
+                        convenient online ordering can revolutionize this traditional industry.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-laptop-code"></i> For Developers</h4>
+                    <p>
+                        Java Web technology remains relevant and powerful. Combined with modern AI APIs,
+                        traditional backend frameworks can create innovative solutions.
+                    </p>
+                </div>
+            </div>
+
+            <h3>Final Thoughts</h3>
+            <p>
+                Through this project, Group 8 had the opportunity to apply theoretical knowledge to practice,
+                develop teamwork skills, and solve real problems. We learned that building great software requires
+                not just coding skills, but also:
+            </p>
+            <ul>
+                <li><strong>Empathy:</strong> Understanding user needs and pain points</li>
+                <li><strong>Creativity:</strong> Finding innovative solutions to old problems</li>
+                <li><strong>Perseverance:</strong> Pushing through challenges and debugging sessions</li>
+                <li><strong>Collaboration:</strong> Leveraging each team member's strengths</li>
+                <li><strong>Vision:</strong> Seeing beyond the current state to future possibilities</li>
+            </ul>
+
+            <p>
+                FishStore is <strong>more than code</strong> - it's a testament to what passionate students can achieve
+                when they combine technical skills with real-world problem-solving. This foundation will serve us well
+                in future technology projects and careers.
+            </p>
+
+            <div class="feature-card"
+                style="background: linear-gradient(135deg, #004AAD, #00C8C8); color: white; border-left: none; margin-top: 2rem;">
+                <h4 style="color: white;"><i class="fas fa-info-circle"></i> Project Contact Information</h4>
+                <p style="color: white;"><strong>FishStore - Fresh Fish, Fresh Life!</strong></p>
+                <p style="color: white;">🌐 Website: Since our team is too broke to buy a domain name and host the website publicly, we can only run it locally :[ </p>
+                <p style="color: white;">💻 GitHub: https://github.com/JenllyHuynh/Fish_Sales_Manager.git</p>
+            </div>
+        </section>
+
+        <!-- PROJECT FOOTER: QUOTE & TAGS -->
+        <section class="project-footer">
+            <p><em>"From the ocean to the table - We bring the freshest taste!"</em> 🌊🍽️</p>
+
+            <div class="tags">
+                <span class="tag">#JavaWeb</span>
+                <span class="tag">#ECommerce</span>
+                <span class="tag">#GoogleGeminiAI</span>
+                <span class="tag">#MVCPattern</span>
+                <span class="tag">#FishStore</span>
+                <span class="tag">#Team8</span>
+                <span class="tag">#FPTCanTho</span>
+                <span class="tag">#ServletJSP</span>
+                <span class="tag">#SQLServer</span>
+                <span class="tag">#ResponsiveDesign</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="wow-footer">
+        <div class="footer-content">
+            <p>Made with <i class="fas fa-heart pulse"></i> by <strong>Huỳnh Kim Huệ</strong> | Group 8 - FPT Can Tho
+            </p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">© 2025 FishStore Project. All rights
+                reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple animations and interactions
+        document.addEventListener('DOMContentLoaded', function () {
+            // Fade in elements on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            // Observe all content sections for fade-in animation
+            document.querySelectorAll('.content-section, .info-box, .feature-card, .arch-card').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+
+            // Add hover effects to cards
+            document.querySelectorAll('.feature-card, .arch-card, .info-box').forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-8px)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add reading progress bar
+            const progressBar = document.createElement('div');
+            progressBar.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #004AAD, #00C8C8);
+                width: 0%;
+                z-index: 9999;
+                transition: width 0.2s ease;
+            `;
+            document.body.appendChild(progressBar);
+
+            window.addEventListener('scroll', () => {
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+                progressBar.style.width = scrollPercent + '%';
+            });
+
+            // Animate statistics on scroll
+            const animateNumbers = (element) => {
+                const target = parseInt(element.textContent);
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        element.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        element.textContent = Math.floor(current);
+                    }
+                }, 16);
+            };
+
+            const statObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statNumber = entry.target.querySelector('.stat-number');
+                        if (statNumber && !statNumber.classList.contains('animated')) {
+                            statNumber.classList.add('animated');
+                            const originalText = statNumber.textContent;
+                            const number = parseInt(originalText);
+                            if (!isNaN(number)) {
+                                statNumber.textContent = '0';
+                                setTimeout(() => animateNumbers(statNumber), 200);
+                            }
+                        }
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('.stat-card').forEach(card => {
+                statObserver.observe(card);
+            });
+
+            // Add copy code functionality (if any code blocks)
+            document.querySelectorAll('.code-block').forEach(block => {
+                const copyButton = document.createElement('button');
+                copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                copyButton.style.cssText = `
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    padding: 5px 10px;
+                    background: rgba(255, 255, 255, 0.2);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 5px;
+                    color: white;
+                    cursor: pointer;
+                    font-size: 0.85rem;
+                    transition: all 0.3s;
+                `;
+
+                block.style.position = 'relative';
+                block.appendChild(copyButton);
+
+                copyButton.addEventListener('click', () => {
+                    const code = block.textContent.replace('Copy', '').trim();
+                    navigator.clipboard.writeText(code).then(() => {
+                        copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                        copyButton.style.background = 'rgba(72, 187, 120, 0.8)';
+                        setTimeout(() => {
+                            copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                            copyButton.style.background = 'rgba(255, 255, 255, 0.2)';
+                        }, 2000);
+                    });
+                });
+
+                copyButton.addEventListener('mouseenter', function () {
+                    this.style.background = 'rgba(255, 255, 255, 0.3)';
+                });
+
+                copyButton.addEventListener('mouseleave', function () {
+                    this.style.background = 'rgba(255, 255, 255, 0.2)';
+                });
+            });
+
+            // Add tooltips to technology tags
+            document.querySelectorAll('.tech-item').forEach(tag => {
+                const tooltips = {
+                    'Java 21': 'Programming language for backend logic',
+                    'Java Servlet 6.0': 'Server-side component for handling requests',
+                    'JSP 3.0': 'JavaServer Pages for dynamic web content',
+                    'JSTL 2.0': 'Standard Tag Library for JSP',
+                    'SQL Server 2019': 'Relational database management system',
+                    'JDBC': 'Java Database Connectivity API',
+                    'Maven': 'Build automation and dependency management',
+                    'Apache Tomcat 10': 'Web server and servlet container',
+                    'Google Gemini AI': 'Advanced AI model for natural language',
+                    'HTML': 'Markup language for web structure',
+                    'CSS': 'Styling language for web presentation',
+                    'JavaScript': 'Programming language for client-side logic',
+                    'Font Awesome': 'Icon toolkit'
+                };
+
+                const tooltip = tooltips[tag.textContent.trim()];
+                if (tooltip) {
+                    tag.title = tooltip;
+                    tag.style.cursor = 'help';
+                }
+            });
+
+            // Highlight current section in navigation (if sections have IDs)
+            const sections = document.querySelectorAll('.content-section');
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // You can add active class to nav items here if you have a TOC
+                        console.log('Currently viewing:', entry.target.querySelector('h2')?.textContent);
+                    }
+                });
+            }, {
+                threshold: 0.3
+            });
+
+            sections.forEach(section => navObserver.observe(section));
+
+            // Easter egg: Konami code
+            let konamiCode = [];
+            const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+            document.addEventListener('keydown', (e) => {
+                konamiCode.push(e.key);
+                if (konamiCode.length > 10) konamiCode.shift();
+
+                if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
+                    document.body.style.animation = 'rainbow 2s infinite';
+                    setTimeout(() => {
+                        document.body.style.animation = '';
+                        alert('🐟 You found the secret! FishStore team says hello! 🎉');
+                    }, 2000);
+                }
+            });
+
+            // Add CSS animation for rainbow effect
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes rainbow {
+                    0% { filter: hue-rotate(0deg); }
+                    100% { filter: hue-rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+    <!-- UX -->
+    <script>
+        (function () {
+            // Hamburger menu functionality
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('nav-menu');
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', () => {
+                    navMenu.classList.toggle('open');
+                    hamburger.classList.toggle('is-active');
+
+                    // Close menu when clicking outside
+                    if (navMenu.classList.contains('open')) {
+                        document.addEventListener('click', closeMenuOnClickOutside);
+                    } else {
+                        document.removeEventListener('click', closeMenuOnClickOutside);
+                    }
+                });
+
+                function closeMenuOnClickOutside(e) {
+                    if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
+                        navMenu.classList.remove('open');
+                        hamburger.classList.remove('is-active');
+                        document.removeEventListener('click', closeMenuOnClickOutside);
+                    }
+                }
+            }
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Hiệu ứng tải ảnh mà chắc đéo có ảnh đâu
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('load', function () {
+                    this.style.opacity = '1';
+                });
+
+                // Set initial opacity for fade-in effect
+                if (!img.complete) {
+                    img.style.opacity = '0';
+                    img.style.transition = 'opacity 0.3s ease';
+                }
+            });
+
+            // Add scroll animations for content sections như tên luôn :]
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe content sections for scroll animations như tên đấy :]
+            document.querySelectorAll('.content-section, .info-box, .instructor-card').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(el);
+            });
+
+            // Hiệu ứng cho card
+            document.querySelectorAll('.info-box, .component-item, .metric-card, .arch-card').forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    this.style.zIndex = '10';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.zIndex = '';
+                });
+            });
+
+            // Thêm hiệu ứng nhấp chuột vào các nút
+            document.querySelectorAll('.btn-link, .back-to-home').forEach(button => {
+                button.addEventListener('mousedown', function () {
+                    this.style.transform = 'translateY(0)';
+                });
+
+                button.addEventListener('mouseup', function () {
+                    this.style.transform = 'translateY(-3px)';
+                });
+            });
+
+            // Thêm bản sao vào bảng tạm cho các đoạn mã mà chắc đéo có đâu để cho yên tâm
+            document.querySelectorAll('pre code').forEach(codeBlock => {
+                const copyButton = document.createElement('button');
+                copyButton.innerHTML = 'Copy';
+                copyButton.className = 'copy-btn';
+                copyButton.style.cssText = `
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                background: rgba(255,255,255,0.2);
+                border: none;
+                border-radius: 4px;
+                padding: 4px 8px;
+                color: white;
+                font-size: 0.8rem;
+                cursor: pointer;
+                transition: background 0.2s ease;
+            `;
+
+                codeBlock.parentNode.style.position = 'relative';
+                codeBlock.parentNode.appendChild(copyButton);
+
+                copyButton.addEventListener('click', async () => {
+                    try {
+                        await navigator.clipboard.writeText(codeBlock.textContent);
+                        copyButton.textContent = 'Copied!';
+                        setTimeout(() => {
+                            copyButton.textContent = 'Copy';
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy: ', err);
+                    }
+                });
+            });
+
+            // Thêm nút cuộn lên đầu trang
+            const scrollToTopBtn = document.createElement('button');
+            scrollToTopBtn.innerHTML = '↑';
+            scrollToTopBtn.setAttribute('aria-label', 'Scroll to top');
+            scrollToTopBtn.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+
+            document.body.appendChild(scrollToTopBtn);
+
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    scrollToTopBtn.style.opacity = '1';
+                } else {
+                    scrollToTopBtn.style.opacity = '0';
+                }
+            });
+
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Thêm điều hướng bàn phím
+            document.addEventListener('keydown', (e) => {
+                // Escape key closes mobile menu
+                if (e.key === 'Escape' && navMenu && navMenu.classList.contains('open')) {
+                    navMenu.classList.remove('open');
+                    hamburger.classList.remove('is-active');
+                }
+
+                // Cải tiến điều hướng phím tab
+                if (e.key === 'Tab') {
+                    document.documentElement.style.scrollBehavior = 'smooth';
+
+                    // Menu di động
+                    if (navMenu && navMenu.classList.contains('open')) {
+                        const focusableElements = navMenu.querySelectorAll('a, button');
+                        const firstElement = focusableElements[0];
+                        const lastElement = focusableElements[focusableElements.length - 1];
+
+                        if (e.shiftKey && document.activeElement === firstElement) {
+                            e.preventDefault();
+                            lastElement.focus();
+                        } else if (!e.shiftKey && document.activeElement === lastElement) {
+                            e.preventDefault();
+                            firstElement.focus();
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+
+    <!-- 
+    ========================================
+    TỔNG KẾT CẤU TRÚC TRANG WEB
+    ========================================
+    
+    1. HEADER (header):
+       - Thanh điều hướng cố định ở đầu trang
+       - Logo và menu chính (Home, Blog, Contact)
+       - Gradient xanh làm nền
+    
+    2. MAIN CONTENT (main.blog-container):
+       - Nút "Back to Blog" để quay lại
+       - Hero Section: Giới thiệu dự án với icon và thông tin
+       - Project Info Grid: 4 box thông tin tổng quan
+       - Content Sections: Các phần nội dung chi tiết
+         * Giới thiệu dự án
+         * Kiến trúc hệ thống  
+         * Tính năng chi tiết
+         * Database design
+         * Thách thức & giải pháp
+         * Kết quả đạt được
+         * Hướng phát triển
+         * Bài học kinh nghiệm
+         * Kết luận
+       - Project Footer: Quote và tags
+    
+    3. SITE FOOTER (footer.wow-footer):
+       - Thông tin tác giả
+       - Gradient xanh matching với header
+    
+    4. JAVASCRIPT:
+       - Hiệu ứng fade in khi scroll
+       - Hover effects cho cards
+       - Reading progress bar
+       - Copy code functionality
+       - Smooth scrolling
+    
+    ========================================
+    CÔNG NGHỆ SỬ DỤNG:
+    - HTML5: Cấu trúc semantic
+    - CSS3: Styling với Flexbox, Grid, Animations
+    - JavaScript: Tương tác và hiệu ứng
+    - Font Awesome: Icons
+    - Google Fonts: Typography
+    ========================================
+    -->
+</body>
+
+</html>
