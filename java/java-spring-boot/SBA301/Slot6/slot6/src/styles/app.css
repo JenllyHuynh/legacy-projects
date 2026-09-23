@@ -1,0 +1,38 @@
+html,
+body,
+#root {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+.app-shell {
+    background: #f6f7f9;
+    transition: background-color 0.2s ease;
+}
+
+.app-shell[data-bs-theme="dark"] {
+    background: #17191c;
+}
+
+.card {
+    border-radius: 0.8rem;
+}
+
+.navbar-brand {
+    font-weight: 700;
+}
+
+.form-control,
+.form-select,
+.btn {
+    border-radius: 0.6rem;
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1rem;
+    }
+}
