@@ -1,91 +1,192 @@
-import React, { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import OrchidDetailModal from '../components/OrchidDetailModal';
+import OrchidFormModal from '../components/OrchidFormModal';
+import OrchidTable from '../components/OrchidTable';
 import {
-    getAllList,deleteOrchid
-
+    addOrchid,
+    deleteOrchid,
+    getAllList,
+    searchOrchidByName,
+    updateOrchid
 } from '../services/orchidService';
-// thực hiện chức năng lấy danh sách.
-export default function OrchidPage(){
-    const [orchids,setOrchids]= useState([]);
+import '../App.css';
 
-    useEffect(() => {
-        loadListOchids();
+const getErrorMessage = (error) =>
+    error.response?.data?.message || error.message || 'Đã xảy ra lỗi. Vui lòng thử lại.';
+
+export default function OrchidPage() {
+    const [orchids, setOrchids] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [editingOrchid, setEditingOrchid] = useState(null);
+    const [selectedOrchid, setSelectedOrchid] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const loadOrchids = useCallback(async (name = '') => {
+        setLoading(true);
+        setErrorMessage('');
+        try {
+            const data = name.trim()
+                ? await searchOrchidByName(name.trim())
+                : await getAllList();
+            setOrchids(data);
+        } catch (error) {
+            setErrorMessage(`Không thể tải danh sách hoa lan: ${getErrorMessage(error)}`);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
-// method thực hiện in ra list danh sách
-    const loadListOchids = async () => {
+    useEffect(() => {
+        let isActive = true;
+
+        const loadInitialOrchids = async () => {
+            try {
+                const data = await getAllList();
+                if (isActive) setOrchids(data);
+            } catch (error) {
+                if (isActive) {
+                    setErrorMessage(`Không thể tải danh sách hoa lan: ${getErrorMessage(error)}`);
+                }
+            } finally {
+                if (isActive) setLoading(false);
+            }
+        };
+
+        loadInitialOrchids();
+        return () => {
+            isActive = false;
+        };
+    }, []);
+
+    const handleSearch = (event) => {
+        event.preventDefault();
+        loadOrchids(searchTerm);
+    };
+
+    const handleSave = async (orchid) => {
+        setErrorMessage('');
         try {
-            const  dataFromList= await  getAllList();
-            setOrchids(dataFromList);
+            if (editingOrchid) {
+                await updateOrchid(editingOrchid.id, orchid);
+            } else {
+                await addOrchid(orchid);
+            }
 
-        } catch (error){
-            console.error("Error fetching orchids:", error);
-
+            const search = editingOrchid ? searchTerm : '';
+            if (!editingOrchid) setSearchTerm('');
+            setIsFormOpen(false);
+            setEditingOrchid(null);
+            await loadOrchids(search);
+        } catch (error) {
+            setErrorMessage(`Không thể lưu hoa lan: ${getErrorMessage(error)}`);
         }
     };
-    // method thực hiện xóa id của sản phẩm.
-    const handleDelete = async (id) => {
-        if (!window.confirm("Bạn có chắc chắn muốn xóa?")) return;
+
+    const handleDelete = async (orchid) => {
+        if (!window.confirm(`Bạn có chắc chắn muốn xóa "${orchid.name}"?`)) return;
+
+        setErrorMessage('');
         try {
-             await deleteOrchid(id);
-            await loadListOchids();
-            alert("Xóa thành công!");
-        }catch (error){
-            console.error("Error deleting orchid:", error);
+            await deleteOrchid(orchid.id);
+            await loadOrchids(searchTerm);
+        } catch (error) {
+            setErrorMessage(`Không thể xóa hoa lan: ${getErrorMessage(error)}`);
         }
-    }
+    };
 
+    const openCreateForm = () => {
+        setEditingOrchid(null);
+        setIsFormOpen(true);
+    };
 
+    const openEditForm = (orchid) => {
+        setEditingOrchid(orchid);
+        setIsFormOpen(true);
+    };
+
+    const closeForm = () => {
+        setIsFormOpen(false);
+        setEditingOrchid(null);
+    };
 
     return (
-        <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto', fontFamily: 'Arial, sans-serif' }}>
-            <h2>Danh Sách Hoa Lan (Orchid List)</h2>
+        <main className="orchid-page">
+            <header className="page-header">
+                <div>
+                    <p className="eyebrow">QUẢN LÝ BỘ SƯU TẬP</p>
+                    <h1>Danh sách hoa lan</h1>
+                    <p className="page-description">
+                        Tìm kiếm, xem chi tiết và quản lý thông tin hoa lan.
+                    </p>
+                </div>
+                <button className="button button-primary" onClick={openCreateForm}>
+                    + Thêm hoa lan
+                </button>
+            </header>
 
-            {/* BẢNG HIỂN THỊ DANH SÁCH (CHỈ ĐỌC - READ) */}
-            <table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                <tr style={{ background: '#e2e2e2' }}>
-                    <th>ID</th>
-                    <th>Hình Ảnh</th>
-                    <th>Tên Hoa Lan</th>
-                    <th>Danh Mục</th>
-                    <th>Mô Tả</th>
-                    <th>Tự Nhiên</th>
-                    <th>Cuốn Hút</th>
-                    <th>Xóa hoa</th>
-                </tr>
-                </thead>
-                <tbody>
-                {orchids.map((item) => (
-                    <tr key={item.id}>
-                        <td>{item.id}</td>
-                        <td>
-                            {item.url && (
-                                <img
-                                    src={item.url}
-                                    // alt={item}
-                                    width="50"
-                                    height="50"
-                                    style={{ objectFit: 'cover' }}
-                                />
-                            )}
-                        </td>
-                        <td>{item.name}</td>
-                        <td>{item.categoryId}</td>
-                        <td>{item.description}</td>
-                        <td>{item.isNatural ? 'Có' : 'Không'}</td>
-                        <td>{item.isAttractive ? 'Có' : 'Không'}</td>
-                        <td>
-                            <button onClick={() => handleDelete(item.id)}>
-                                Xóa
-                            </button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-        </div>
+            <form className="search-bar" onSubmit={handleSearch}>
+                <label className="visually-hidden" htmlFor="orchid-search">
+                    Tìm hoa lan theo tên
+                </label>
+                <input
+                    id="orchid-search"
+                    type="search"
+                    placeholder="Nhập tên hoa lan..."
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                />
+                <button className="button button-secondary" type="submit">
+                    Tìm kiếm
+                </button>
+                {searchTerm && (
+                    <button
+                        className="button button-quiet"
+                        type="button"
+                        onClick={() => {
+                            setSearchTerm('');
+                            loadOrchids();
+                        }}
+                    >
+                        Xóa tìm kiếm
+                    </button>
+                )}
+            </form>
 
-    )
+            {errorMessage && (
+                <p className="error-message" role="alert">
+                    {errorMessage}
+                </p>
+            )}
 
+            <section className="table-card" aria-label="Danh sách hoa lan">
+                {loading ? (
+                    <p className="table-message" role="status">Đang tải danh sách...</p>
+                ) : (
+                    <OrchidTable
+                        orchids={orchids}
+                        onView={setSelectedOrchid}
+                        onEdit={openEditForm}
+                        onDelete={handleDelete}
+                    />
+                )}
+            </section>
 
+            {isFormOpen && (
+                <OrchidFormModal
+                    key={editingOrchid?.id ?? 'new-orchid'}
+                    initialData={editingOrchid}
+                    onClose={closeForm}
+                    onSave={handleSave}
+                />
+            )}
+            {selectedOrchid && (
+                <OrchidDetailModal
+                    orchid={selectedOrchid}
+                    onClose={() => setSelectedOrchid(null)}
+                />
+            )}
+        </main>
+    );
 }

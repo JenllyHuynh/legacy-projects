@@ -1,4 +1,3 @@
-import React from 'react';
 import OrchidPage from './pages/OrchidPage';
 
 function App() {
