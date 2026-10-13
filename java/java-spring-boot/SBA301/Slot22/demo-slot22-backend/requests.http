@@ -1,0 +1,84 @@
+### Dùng được trực tiếp trong IntelliJ IDEA (HTTP Client). Base URL:
+@base = http://localhost:8080
+
+### T01 - GET list (200)
+GET {{base}}/api/categories?page=0&size=10&sort=categoryName,asc
+
+### T02 - GET existing (200)
+GET {{base}}/api/categories/1
+
+### T03 - GET missing (404)
+GET {{base}}/api/categories/32767
+
+### T04 - POST valid (201)
+POST {{base}}/api/categories
+Content-Type: application/json
+
+{
+  "categoryName": "Technology News",
+  "categoryDescription": "Technology and software engineering news",
+  "parentCategoryId": null,
+  "active": true
+}
+
+### T05 - POST invalid (400)
+POST {{base}}/api/categories
+Content-Type: application/json
+
+{
+  "categoryName": "",
+  "categoryDescription": "",
+  "active": true
+}
+
+### T06 - POST duplicate (409) - chạy lại T04 lần 2 cũng ra 409
+POST {{base}}/api/categories
+Content-Type: application/json
+
+{
+  "categoryName": "technology news",
+  "categoryDescription": "dup",
+  "active": true
+}
+
+### T07 - PUT existing (200)
+PUT {{base}}/api/categories/1
+Content-Type: application/json
+
+{
+  "categoryName": "Academic & Research News",
+  "categoryDescription": "Academic and research announcements",
+  "parentCategoryId": null,
+  "active": true
+}
+
+### T08 - PUT missing (404)
+PUT {{base}}/api/categories/32767
+Content-Type: application/json
+
+{
+  "categoryName": "Ghost",
+  "categoryDescription": "Ghost",
+  "active": true
+}
+
+### T09 - DELETE free category (204) - SỬA id thành category bạn vừa tạo ở T04
+DELETE {{base}}/api/categories/4
+
+### T10 - DELETE referenced category (409) - Category 1 có NewsArticle
+DELETE {{base}}/api/categories/1
+
+### T11 - Search keyword (200)
+GET {{base}}/api/categories?keyword=academic&page=0&size=5
+
+### T12 - Pagination (200, bounded)
+GET {{base}}/api/categories?page=0&size=2
+
+### Break-It: text/plain -> 415
+POST {{base}}/api/categories
+Content-Type: text/plain
+
+hello
+
+### Break-It: sai method -> 405
+PATCH {{base}}/api/categories/1
