@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "https://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+        <property name="hibernate.connection.url">${DB_URL}</property>
+        <property name="hibernate.connection.username">${DB_USER}</property>
+        <property name="hibernate.connection.password">${DB_PASSWORD}</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.highlight_sql">true</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+
+        <mapping class="fu.edu.sba301.ch18.entity.Student"/>
+        <mapping class="fu.edu.sba301.ch18.entity.Book"/>
+    </session-factory>
+</hibernate-configuration>
