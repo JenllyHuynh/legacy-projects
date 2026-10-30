@@ -26,7 +26,7 @@ export default function LoginPage({ onLogin }) {
   return (
     <div className="login-page">
       <form className="login-card" onSubmit={handleSubmit} noValidate>
-        <img src="/logo.svg" alt="FUNews logo" className="login-logo" />
+        <img src="/logo.png" alt="FUNews logo" className="login-logo" />
         <h1>FUNewsManagementSystem</h1>
         <p className="muted">Đăng nhập để quản lý tin tức</p>
 

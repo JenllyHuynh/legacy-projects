@@ -2,7 +2,7 @@ export default function Header({ user, onLogout }) {
   return (
     <header className="header">
       <div className="brand">
-        <img src="/logo.svg" alt="FUNews logo" />
+        <img src="/logo.png" alt="FUNews logo" />
         <span>FUNewsManagementSystem</span>
       </div>
       <div className="header-right">
